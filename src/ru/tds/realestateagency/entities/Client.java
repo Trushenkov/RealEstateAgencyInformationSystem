@@ -66,12 +66,12 @@ public class Client {
 
     @Override
     public String toString() {
-        return "Client{" +
-                "lastName='" + lastName + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", middleName='" + middleName + '\'' +
-                ", phoneNumber=" + phoneNumber +
-                ", email='" + email + '\'' +
-                '}';
+        return "Клиент [" +
+                " Фамилия ='" + lastName + '\'' +
+                ", Имя ='" + firstName + '\'' +
+                ", Отчество ='" + middleName + '\'' +
+                ", Номер телефона =" + phoneNumber +
+                ", Электронная почта ='" + email + '\'' +
+                ']';
     }
 }
