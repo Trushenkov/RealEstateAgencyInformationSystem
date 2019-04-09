@@ -1,7 +1,7 @@
 package ru.tds.realestateagency.entities;
 
 /**
- * Класс объекта "Клиент"
+ * Класс для создания сущности "Клиент"
  *
  * @author Трушенков Дмитрий
  */
