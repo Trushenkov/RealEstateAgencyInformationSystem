@@ -4,7 +4,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
-            prefWidth="1000.0" xmlns="http://javafx.com/javafx/8">
+            prefWidth="1000.0" xmlns="http://javafx.com/javafx/8"
+            fx:controller="ru.tds.realestateagency.controllers.MainpageScreenController" xmlns:fx="http://javafx.com/fxml">
     <AnchorPane prefHeight="120.0" prefWidth="1000.0" style="-fx-background-color: #4fc3f7;"
                 AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <ImageView fitHeight="125.0" fitWidth="293.0" layoutX="14.0" layoutY="7.0" pickOnBounds="true"
