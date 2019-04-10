@@ -15,7 +15,7 @@
             </ImageView>
          </children>
       </AnchorPane>
-      <TableView fx:id="tableRealtors" layoutX="14.0" layoutY="155.0" prefHeight="374.0" prefWidth="607.0" AnchorPane.bottomAnchor="71.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="379.0" AnchorPane.topAnchor="155.0">
+      <TableView layoutX="14.0" layoutY="155.0" prefHeight="374.0" prefWidth="607.0" AnchorPane.bottomAnchor="71.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="379.0" AnchorPane.topAnchor="155.0">
          <columns>
             <TableColumn fx:id="tableColumnLastName" prefWidth="176.0" text="Фамилия" />
             <TableColumn fx:id="tableColumnFirstName" minWidth="0.0" prefWidth="122.0" text="Имя" />
