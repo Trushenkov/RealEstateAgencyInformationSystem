@@ -2,12 +2,12 @@
     -fx-background-color: #4fc3f7;
 }
 .button {
-    -fx-min-width: 200px;
+    /*-fx-min-width: 200px;*/
     -fx-background-color: #fff;
     -fx-background-radius: 7px;
     -fx-text-fill: #000;
     -fx-font-size: 12px;
-    -fx-padding: 10px;
+    /*-fx-padding: 10px;*/
     -fx-border-color: #4fc3f7;
     -fx-border-style: solid;
     -fx-border-width: 3px;
