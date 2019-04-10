@@ -1,26 +1,34 @@
 package ru.tds.realestateagency.controllers;
 
 import javafx.fxml.FXML;
-import ru.tds.realestateagency.DatabaseHandler;
+import javafx.scene.control.Button;
+import ru.tds.realestateagency.Helper;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
+/**
+ * Класс-контроллер для обработки событий на главном экране
+ *
+ * @author Трушенков Дмитрий
+ */
 public class MainpageScreenController {
 
     @FXML
+    private Button clientsBtn;
+
+    @FXML
+    private Button realtorsBtn;
+
+    @FXML
     void initialize() {
-        DatabaseHandler dbHandler = new DatabaseHandler();
-        Connection connection = dbHandler.createDbConnection();
-        try {
-            if (connection.isClosed()) {
-                System.out.println("Connection is closed.");
-            } else {
-                System.err.println("Connection is opened.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        clientsBtn.setOnAction(event -> {
+            clientsBtn.getScene().getWindow().hide();
+            new Helper().changeScreen("/ru/tds/realestateagency/views/clientsScreen.fxml");
+        });
+
+        realtorsBtn.setOnAction(event -> {
+            realtorsBtn.getScene().getWindow().hide();
+            new Helper().changeScreen("ru/tds/realestateagency/views/realtorsScreen.fxml");
+        });
     }
+
 
 }
