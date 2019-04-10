@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.tds.realestateagency.controllers.ClientsScreenController">
+    <children>
+        <AnchorPane id="topPane" prefHeight="120.0" prefWidth="1000.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <ImageView fitHeight="125.0" fitWidth="293.0" layoutX="14.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="884.1958770751953" AnchorPane.topAnchor="7.0">
+                    <image>
+                        <Image url="@/ru/tds/realestateagency/images/logo.png" />
+                    </image>
+                </ImageView>
+            </children>
+        </AnchorPane>
+      <TableView fx:id="tableClients" layoutX="14.0" layoutY="155.0" prefHeight="374.0" prefWidth="607.0" AnchorPane.bottomAnchor="71.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="379.0" AnchorPane.topAnchor="155.0">
+        <columns>
+          <TableColumn fx:id="tableColumnLastName" prefWidth="110.0" text="Фамилия" />
+          <TableColumn fx:id="tableColumnFirstName" minWidth="0.0" prefWidth="88.0" text="Имя" />
+            <TableColumn fx:id="tableColumnMiddleName" prefWidth="105.0" text="Отчество" />
+            <TableColumn fx:id="tableColumnPhoneNumber" prefWidth="126.0" text="Номер телефона" />
+            <TableColumn fx:id="tableColumnEmail" prefWidth="177.0" text="Электронная почта" />
+        </columns>
+      </TableView>
+      <TextField fx:id="tfLastName" layoutX="669.0" layoutY="220.0" prefHeight="35.0" prefWidth="280.0" promptText="Фамилия" AnchorPane.rightAnchor="51.0" />
+      <TextField fx:id="tfFirstName" layoutX="669.0" layoutY="270.0" prefHeight="35.0" prefWidth="280.0" promptText="Имя" AnchorPane.rightAnchor="51.0" />
+      <TextField fx:id="tfMiddleName" layoutX="669.0" layoutY="320.0" prefHeight="35.0" prefWidth="280.0" promptText="Отчество" AnchorPane.rightAnchor="51.0" />
+      <TextField fx:id="tfPhoneNumber" layoutX="670.0" layoutY="370.0" prefHeight="35.0" prefWidth="280.0" promptText="Номер телефона" AnchorPane.rightAnchor="50.0" />
+      <TextField fx:id="tfEmail" layoutX="669.0" layoutY="420.0" prefHeight="35.0" prefWidth="280.0" promptText="Электронная почта" AnchorPane.rightAnchor="51.0" />
+      <Button fx:id="createBtn" layoutX="670.0" layoutY="494.0" mnemonicParsing="false" onAction="#createBtnClicked" prefHeight="35.0" prefWidth="125.0" text="Создать" AnchorPane.bottomAnchor="71.0" AnchorPane.rightAnchor="205.0" />
+      <Button fx:id="updateBtn" layoutX="825.0" layoutY="494.0" mnemonicParsing="false" onAction="#updateBtnClicked" prefHeight="35.0" prefWidth="125.0" text="Обновить" AnchorPane.bottomAnchor="71.0" AnchorPane.rightAnchor="50.0" />
+      <Button fx:id="deleteBtn" layoutX="670.0" layoutY="551.0" mnemonicParsing="false" onAction="#deleteBtnClicked" prefHeight="35.0" prefWidth="280.0" text="Удалить" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="50.0" />
+      <Button fx:id="goBackBtn" layoutX="14.0" layoutY="561.0" mnemonicParsing="false" onAction="#goBackBtnClicked" prefHeight="35.0" prefWidth="125.0" text="Назад" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
+      <TextField fx:id="tfSearch" layoutX="669.0" layoutY="155.0" prefHeight="35.0" prefWidth="280.0" promptText="Поиск по ФИО" AnchorPane.rightAnchor="51.0" />
+    </children>
+</AnchorPane>
