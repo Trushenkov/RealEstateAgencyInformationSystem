@@ -26,7 +26,7 @@ public class MainpageScreenController {
 
         realtorsBtn.setOnAction(event -> {
             realtorsBtn.getScene().getWindow().hide();
-            new Helper().changeScreen("ru/tds/realestateagency/views/realtorsScreen.fxml");
+            new Helper().changeScreen("/ru/tds/realestateagency/views/realtorsScreen.fxml");
         });
     }
 
