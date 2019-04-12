@@ -2,10 +2,12 @@ package ru.tds.realestateagency.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import ru.tds.realestateagency.Helper;
 
 /**
  * Класс-контроллер для обработки событий на экране "Работа с риэлторами"
@@ -61,19 +63,40 @@ public class RealtorsScreenController {
 
     }
 
+    /**
+     * Метод для обработки события при нажатии на кнопку "Создать"
+     *
+     * @param actionEvent нажатие на кнопку
+     */
     public void createBtnClicked(ActionEvent actionEvent) {
 
     }
 
+    /**
+     * Метод для обработки события при нажатии на кнопку "Обновить"
+     *
+     * @param actionEvent нажатие на кнопку
+     */
     public void updateBtnClicked(ActionEvent actionEvent) {
 
     }
 
+    /**
+     * Метод для обработки события при нажатии на кнопку "Удалить"
+     *
+     * @param actionEvent нажатие на кнопку
+     */
     public void deleteBtnClicked(ActionEvent actionEvent) {
 
     }
 
+    /**
+     * Метод для обработки события при нажатии на кнопку "Назад"
+     *
+     * @param actionEvent нажатие на кнопку
+     */
     public void goBackBtnClicked(ActionEvent actionEvent) {
-
+        ((Node) actionEvent.getSource()).getScene().getWindow().hide();
+        new Helper().changeScreen("/ru/tds/realestateagency/views/mainpageScreen.fxml");
     }
 }
