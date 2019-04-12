@@ -28,11 +28,11 @@ public class Helper {
             e.printStackTrace();
         }
         Parent root = loader.getRoot();
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(root, 1100, 600);
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.setTitle("Информационная система для агентства недвижимости");
         stage.getScene().getStylesheets().add("ru/tds/realestateagency/css/style.css");
-        stage.showAndWait();
+        stage.show();
     }
 }
