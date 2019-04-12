@@ -17,11 +17,11 @@ public class DatabaseHandler {
      * @author Трушенков Дмитрий
      */
     class Const {
-        static final String DB_HOST = "localhost";
+        static final String DB_HOST = "192.168.3.171";
         static final int DB_PORT = 3306;
         static final String DB_NAME = "realestateagency";
-        static final String DB_USER = "root";
-        static final String DB_PASSWORD = "VeryStrongPassword143";
+        static final String DB_USER = "test";
+        static final String DB_PASSWORD = "w4r=ktp>qrqG";
     }
 
     private Connection connection;
@@ -32,7 +32,7 @@ public class DatabaseHandler {
      * @return соединение с базой данных
      */
     public Connection createDbConnection() {
-        String connectionUrl = "jdbc:mysql://" + Const.DB_HOST + ":" + Const.DB_PORT + "/" + Const.DB_NAME;
+        String connectionUrl = "jdbc:mysql://" + Const.DB_HOST + ":" + Const.DB_PORT + "/" + Const.DB_NAME + "?serverTimezone=UTC";
         try {
             connection = DriverManager.getConnection(connectionUrl, Const.DB_USER, Const.DB_PASSWORD);
         } catch (SQLException e) {
