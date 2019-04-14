@@ -2,6 +2,8 @@ package ru.tds.realestateagency.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -17,6 +19,7 @@ import ru.tds.realestateagency.entities.Realtor;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.function.Predicate;
 
 /**
  * Класс-контроллер для обработки событий на экране "Работа с риэлторами"
@@ -63,7 +66,7 @@ public class RealtorsScreenController {
     private int idRealtor;
 
     @FXML
-    void initialize() {
+    void initialize() throws SQLException {
         tableColumnLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         tableColumnFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         tableColumnMiddleName.setCellValueFactory(new PropertyValueFactory<>("middleName"));
@@ -104,7 +107,47 @@ public class RealtorsScreenController {
                 tfCommissionPart.setText(String.valueOf(tableRealtors.getSelectionModel().getSelectedItem().getCommissionPart()));
             }
         });
+
+        FilteredList<Realtor> filteredList = new FilteredList<>(createListRealtors(getRealtorsTableContent()));
+        tfSearch.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            filteredList.setPredicate((Predicate<? super Realtor>) realtor -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                String lowerCaseNewValue = newValue.toLowerCase();
+
+                try {
+                    ObservableList<Realtor> list = createListRealtors(getRealtorsTableContent());
+                    for (int i = 0; i < list.size(); i++) {
+                        if (Helper.levenstain(lowerCaseNewValue, realtor.getLastName().toLowerCase()) <= 3){
+                            return true;
+                        }
+                        if (Helper.levenstain(lowerCaseNewValue, realtor.getFirstName().toLowerCase()) <= 3){
+                            return true;
+                        }
+                        if (Helper.levenstain(lowerCaseNewValue, realtor.getMiddleName().toLowerCase()) <= 3){
+                            return true;
+                        }
+                    }
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+
+
+
+                return false;
+            });
+        });
+
+        SortedList<Realtor> sortedList = new SortedList<>(filteredList);
+        sortedList.comparatorProperty().bind(tableRealtors.comparatorProperty());
+        tableRealtors.setItems(sortedList);
     }
+
 
     /**
      * Метод для обработки события при нажатии на кнопку "Создать"

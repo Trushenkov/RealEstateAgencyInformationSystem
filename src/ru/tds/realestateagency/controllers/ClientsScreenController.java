@@ -2,6 +2,8 @@ package ru.tds.realestateagency.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -12,10 +14,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import ru.tds.realestateagency.DatabaseHandler;
 import ru.tds.realestateagency.Helper;
 import ru.tds.realestateagency.entities.Client;
+import ru.tds.realestateagency.entities.Realtor;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.function.Predicate;
 
 /**
  * Класс-контроллер для обработки событий на экране "Работа с клиентами"
@@ -97,6 +101,45 @@ public class ClientsScreenController {
                 tfEmail.setText(String.valueOf(tableClients.getSelectionModel().getSelectedItem().getEmail()));
             }
         });
+
+        FilteredList<Client> filteredList = new FilteredList<>(createListClients(getClientsTableContent()));
+        tfSearch.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            filteredList.setPredicate((Predicate<? super Client>) client -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                String lowerCaseNewValue = newValue.toLowerCase();
+
+                try {
+                    ObservableList<Client> list = createListClients(getClientsTableContent());
+                    for (int i = 0; i < list.size(); i++) {
+                        if (Helper.levenstain(lowerCaseNewValue, client.getLastName().toLowerCase()) <= 3){
+                            return true;
+                        }
+                        if (Helper.levenstain(lowerCaseNewValue, client.getFirstName().toLowerCase()) <= 3){
+                            return true;
+                        }
+                        if (Helper.levenstain(lowerCaseNewValue, client.getMiddleName().toLowerCase()) <= 3){
+                            return true;
+                        }
+                    }
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+
+
+
+                return false;
+            });
+        });
+
+        SortedList<Client> sortedList = new SortedList<>(filteredList);
+        sortedList.comparatorProperty().bind(tableClients.comparatorProperty());
+        tableClients.setItems(sortedList);
 
     }
 
