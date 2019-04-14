@@ -144,10 +144,23 @@ public class ClientsScreenController {
             } catch (SQLException e) {
                 System.err.println("Ошибка создания addClientStatement");
             }
+
+            clearTextFields();
         } else {
             System.err.println("Одно из полей:  номер телефона или электронная почта должно быть указано");
         }
 
+    }
+
+    /**
+     * Метод для обнуления текстовых полей
+     */
+    private void clearTextFields() {
+        tfLastName.setText("");
+        tfFirstName.setText("");
+        tfMiddleName.setText("");
+        tfPhoneNumber.setText("");
+        tfEmail.setText("");
     }
 
     /**
@@ -171,6 +184,7 @@ public class ClientsScreenController {
             preparedStatement.setString(3, tfMiddleName.getText());
             preparedStatement.setString(4, tfPhoneNumber.getText());
             preparedStatement.setString(5, tfEmail.getText());
+            preparedStatement.setInt(6, idClient);
             preparedStatement.executeUpdate();
 
             tableClients.setItems(createListClients(getClientsTableContent()));
@@ -178,16 +192,12 @@ public class ClientsScreenController {
             e.printStackTrace();
         }
 
-        System.out.println("Updated client with phoneNumber=" +
-                tableClients.getSelectionModel().getSelectedItem().getPhoneNumber() +
-                " and email=" +
-                tableClients.getSelectionModel().getSelectedItem().getEmail());
+//        System.out.println("Updated client with phoneNumber=" +
+//                tableClients.getSelectionModel().getSelectedItem().getPhoneNumber() +
+//                " and email=" +
+//                tableClients.getSelectionModel().getSelectedItem().getEmail());
 
-        tfLastName.setText("");
-        tfFirstName.setText("");
-        tfMiddleName.setText("");
-        tfPhoneNumber.setText("");
-        tfEmail.setText("");
+        clearTextFields();
     }
 
     /**
