@@ -26,7 +26,7 @@
       <TextField fx:id="tfLastName" layoutX="669.0" layoutY="240.0" prefHeight="35.0" prefWidth="280.0" promptText="Фамилия" AnchorPane.rightAnchor="51.0" />
       <TextField fx:id="tfFirstName" layoutX="669.0" layoutY="290.0" prefHeight="35.0" prefWidth="280.0" promptText="Имя" AnchorPane.rightAnchor="51.0" />
       <TextField fx:id="tfMiddleName" layoutX="669.0" layoutY="340.0" prefHeight="35.0" prefWidth="280.0" promptText="Отчество" AnchorPane.rightAnchor="51.0" />
-      <TextField fx:id="tfСommissionPart" layoutX="670.0" layoutY="390.0" prefHeight="35.0" prefWidth="280.0" promptText="Номер телефона" AnchorPane.rightAnchor="50.0" />
+      <TextField fx:id="tfCommissionPart" layoutX="670.0" layoutY="390.0" prefHeight="35.0" prefWidth="280.0" promptText="Доля от коммиссии  " AnchorPane.rightAnchor="50.0" />
       <Button fx:id="createBtn" layoutX="670.0" layoutY="494.0" mnemonicParsing="false" onAction="#createBtnClicked" prefHeight="35.0" prefWidth="125.0" text="Создать" AnchorPane.bottomAnchor="71.0" AnchorPane.rightAnchor="205.0" />
       <Button fx:id="updateBtn" layoutX="825.0" layoutY="494.0" mnemonicParsing="false" onAction="#updateBtnClicked" prefHeight="35.0" prefWidth="125.0" text="Обновить" AnchorPane.bottomAnchor="71.0" AnchorPane.rightAnchor="50.0" />
       <Button fx:id="deleteBtn" layoutX="670.0" layoutY="551.0" mnemonicParsing="false" onAction="#deleteBtnClicked" prefHeight="35.0" prefWidth="280.0" text="Удалить" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="50.0" />
