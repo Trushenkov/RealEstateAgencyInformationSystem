@@ -10,10 +10,10 @@ public class Client {
     private String lastName;
     private String firstName;
     private String middleName;
-    private int phoneNumber;
+    private String phoneNumber;
     private String email;
 
-    public Client(String lastName, String firstName, String middleName, int phoneNumber, String email) {
+    public Client(String lastName, String firstName, String middleName, String phoneNumber, String email) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.middleName = middleName;
@@ -48,11 +48,11 @@ public class Client {
         this.middleName = middleName;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
