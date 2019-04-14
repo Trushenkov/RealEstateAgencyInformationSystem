@@ -30,6 +30,7 @@ public class ClientsScreenController {
     private static final String CLIENT_MIDDLE_NAME = "middleName";
     private static final String CLIENT_PHONE_NUMBER = "phoneNumber";
     private static final String CLIENT_EMAIL = "email";
+    private static final String CLIENT_ID = "id";
 
     @FXML
     private TableView<Client> tableClients;
@@ -55,9 +56,10 @@ public class ClientsScreenController {
     private TextField tfPhoneNumber;
     @FXML
     private TextField tfEmail;
+    private int idClient;
 
     @FXML
-    void initialize() {
+    void initialize() throws SQLException {
         tableColumnLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         tableColumnFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         tableColumnMiddleName.setCellValueFactory(new PropertyValueFactory<>("middleName"));
@@ -69,6 +71,32 @@ public class ClientsScreenController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        //При клике на элемент данные выделенного объекта заносятся в текстовые поля
+        tableClients.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                DatabaseHandler handler = new DatabaseHandler();
+                PreparedStatement statement = null;
+                try {
+                    statement = handler.createDbConnection().prepareStatement("SELECT " + CLIENT_ID + " FROM " + CLIENT_TABLE + " WHERE " + CLIENT_PHONE_NUMBER + " = ? AND " + CLIENT_EMAIL + " = ?");
+                    statement.setString(1, tableClients.getSelectionModel().getSelectedItem().getPhoneNumber());
+                    statement.setString(2, tableClients.getSelectionModel().getSelectedItem().getEmail());
+                    ResultSet resultSet = statement.executeQuery();
+                    while (resultSet.next()) {
+                        idClient = resultSet.getInt("id");
+                        System.out.println("Id client=" + idClient);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                tfLastName.setText(tableClients.getSelectionModel().getSelectedItem().getLastName());
+                tfFirstName.setText(tableClients.getSelectionModel().getSelectedItem().getFirstName());
+                tfMiddleName.setText(tableClients.getSelectionModel().getSelectedItem().getMiddleName());
+                tfPhoneNumber.setText(String.valueOf(tableClients.getSelectionModel().getSelectedItem().getPhoneNumber()));
+                tfEmail.setText(String.valueOf(tableClients.getSelectionModel().getSelectedItem().getEmail()));
+            }
+        });
 
     }
 
@@ -87,7 +115,7 @@ public class ClientsScreenController {
             client.setEmail(tfEmail.getText());
 
             if (!tfPhoneNumber.getText().isEmpty()) {
-                client.setPhoneNumber(Integer.parseInt(tfPhoneNumber.getText()));
+                client.setPhoneNumber(tfPhoneNumber.getText());
             }
 
             System.out.println(client);
@@ -106,7 +134,7 @@ public class ClientsScreenController {
                 addClientStatement.setString(1, client.getLastName());
                 addClientStatement.setString(2, client.getFirstName());
                 addClientStatement.setString(3, client.getMiddleName());
-                addClientStatement.setInt(4, client.getPhoneNumber());
+                addClientStatement.setString(4, client.getPhoneNumber());
                 addClientStatement.setString(5, client.getEmail());
                 addClientStatement.executeUpdate();
 
@@ -128,7 +156,38 @@ public class ClientsScreenController {
      * @param actionEvent нажатие на кнопку
      */
     public void updateBtnClicked(ActionEvent actionEvent) {
+        String update = "UPDATE " + CLIENT_TABLE + " SET " + CLIENT_LAST_NAME + "=?,"
+                + CLIENT_FIRST_NAME + "=?,"
+                + CLIENT_MIDDLE_NAME + "=?,"
+                + CLIENT_PHONE_NUMBER + "=?,"
+                + CLIENT_EMAIL + "=? " +
+                "WHERE " + CLIENT_ID + "=?";
 
+        DatabaseHandler handler = new DatabaseHandler();
+        try {
+            PreparedStatement preparedStatement = handler.createDbConnection().prepareStatement(update);
+            preparedStatement.setString(1, tfLastName.getText());
+            preparedStatement.setString(2, tfFirstName.getText());
+            preparedStatement.setString(3, tfMiddleName.getText());
+            preparedStatement.setString(4, tfPhoneNumber.getText());
+            preparedStatement.setString(5, tfEmail.getText());
+            preparedStatement.executeUpdate();
+
+            tableClients.setItems(createListClients(getClientsTableContent()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Updated client with phoneNumber=" +
+                tableClients.getSelectionModel().getSelectedItem().getPhoneNumber() +
+                " and email=" +
+                tableClients.getSelectionModel().getSelectedItem().getEmail());
+
+        tfLastName.setText("");
+        tfFirstName.setText("");
+        tfMiddleName.setText("");
+        tfPhoneNumber.setText("");
+        tfEmail.setText("");
     }
 
     /**
@@ -137,7 +196,20 @@ public class ClientsScreenController {
      * @param actionEvent нажатие на кнопку
      */
     public void deleteBtnClicked(ActionEvent actionEvent) {
+        String deleteClient = "DELETE FROM " + CLIENT_TABLE + " WHERE " + CLIENT_ID + "=?";
 
+        DatabaseHandler handler = new DatabaseHandler();
+
+        try {
+            PreparedStatement preparedStatement = handler.createDbConnection().prepareStatement(deleteClient);
+            preparedStatement.setInt(1, idClient);
+            preparedStatement.executeUpdate();
+
+            tableClients.setItems(createListClients(getClientsTableContent()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Ошибка удаления клиента с ID = " + idClient + "из базы данных.");
+        }
     }
 
     /**
@@ -187,7 +259,7 @@ public class ClientsScreenController {
                     resultSet.getString("lastName"),
                     resultSet.getString("firstName"),
                     resultSet.getString("middleName"),
-                    resultSet.getInt("phoneNumber"),
+                    resultSet.getString("phoneNumber"),
                     resultSet.getString("email")
             );
             list.add(client);
