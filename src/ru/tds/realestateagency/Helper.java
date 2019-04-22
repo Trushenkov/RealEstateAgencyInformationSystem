@@ -1,8 +1,11 @@
 package ru.tds.realestateagency;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -13,28 +16,6 @@ import java.io.IOException;
  * @author Трушенков Дмитрий
  */
 public class Helper {
-
-    /**
-     * Метод для перехода на новый экран
-     *
-     * @param pathToFxml путь до файла разметки нового окна
-     */
-    public void changeScreen(String pathToFxml) {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(pathToFxml));
-        try {
-            loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Parent root = loader.getRoot();
-        Scene scene = new Scene(root, 1100, 600);
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.setTitle("Информационная система для агентства недвижимости");
-        stage.getScene().getStylesheets().add("ru/tds/realestateagency/css/style.css");
-        stage.show();
-    }
 
     /**
      * Метод для поиска расстояния Левенштейна
@@ -71,4 +52,51 @@ public class Helper {
     public static int min(int n1, int n2, int n3) {
         return Math.min(Math.min(n1, n2), n3);
     }
+
+    /**
+     * Метод для перехода на новый экран
+     *
+     * @param pathToFxml путь до файла разметки нового окна
+     */
+    public void changeScreen(String pathToFxml) {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource(pathToFxml));
+        try {
+            loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Parent root = loader.getRoot();
+        Scene scene = new Scene(root, 1100, 600);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("Информационная система для агентства недвижимости");
+        stage.getScene().getStylesheets().add("ru/tds/realestateagency/css/style.css");
+        stage.show();
+    }
+
+    /**
+     * Метод для открытия модального окна для уведмоления пользователя об ошибке
+     *
+     * @param path путь до файла разметки модального окна
+     */
+    public void showModalWindow(String path, ActionEvent actionEvent) {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource(path));
+        try {
+            loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Parent root = loader.getRoot();
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("Уведомление об ошибке");
+        stage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setResizable(false);
+        stage.show();
+    }
+    
 }
