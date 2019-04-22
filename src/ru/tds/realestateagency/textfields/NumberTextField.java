@@ -11,14 +11,13 @@ import java.util.Objects;
  *
  * @author Трушенков Дмитрий
  */
-public class NumberPhoneTextField extends TextField {
+public class NumberTextField extends TextField {
 
     private final IntegerProperty maxLength;
 
-    public NumberPhoneTextField() {
+    public NumberTextField() {
         super();
         this.maxLength = new SimpleIntegerProperty(-1);
-        this.setPromptText("Введите номер телефона");
     }
 
     public IntegerProperty maxLengthProperty() {
