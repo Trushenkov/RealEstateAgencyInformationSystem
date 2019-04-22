@@ -14,7 +14,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import ru.tds.realestateagency.DatabaseHandler;
 import ru.tds.realestateagency.Helper;
 import ru.tds.realestateagency.entities.Client;
-import ru.tds.realestateagency.entities.Realtor;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -70,19 +69,15 @@ public class ClientsScreenController {
         tableColumnPhoneNumber.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
         tableColumnEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
 
-        try {
-            tableClients.setItems(createListClients(getClientsTableContent()));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        tableClients.setItems(createListClients(getClientsTableContent()));
 
         //При клике на элемент данные выделенного объекта заносятся в текстовые поля
         tableClients.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                DatabaseHandler handler = new DatabaseHandler();
-                PreparedStatement statement = null;
                 try {
-                    statement = handler.createDbConnection().prepareStatement("SELECT " + CLIENT_ID + " FROM " + CLIENT_TABLE + " WHERE " + CLIENT_PHONE_NUMBER + " = ? AND " + CLIENT_EMAIL + " = ?");
+                    DatabaseHandler handler = new DatabaseHandler();
+
+                    PreparedStatement statement = handler.createDbConnection().prepareStatement("SELECT " + CLIENT_ID + " FROM " + CLIENT_TABLE + " WHERE " + CLIENT_PHONE_NUMBER + " = ? AND " + CLIENT_EMAIL + " = ?");
                     statement.setString(1, tableClients.getSelectionModel().getSelectedItem().getPhoneNumber());
                     statement.setString(2, tableClients.getSelectionModel().getSelectedItem().getEmail());
                     ResultSet resultSet = statement.executeQuery();
@@ -115,13 +110,13 @@ public class ClientsScreenController {
                 try {
                     ObservableList<Client> list = createListClients(getClientsTableContent());
                     for (int i = 0; i < list.size(); i++) {
-                        if (Helper.levenstain(lowerCaseNewValue, client.getLastName().toLowerCase()) <= 3){
+                        if (Helper.levenstain(lowerCaseNewValue, client.getLastName().toLowerCase()) <= 3) {
                             return true;
                         }
-                        if (Helper.levenstain(lowerCaseNewValue, client.getFirstName().toLowerCase()) <= 3){
+                        if (Helper.levenstain(lowerCaseNewValue, client.getFirstName().toLowerCase()) <= 3) {
                             return true;
                         }
-                        if (Helper.levenstain(lowerCaseNewValue, client.getMiddleName().toLowerCase()) <= 3){
+                        if (Helper.levenstain(lowerCaseNewValue, client.getMiddleName().toLowerCase()) <= 3) {
                             return true;
                         }
                     }
@@ -129,8 +124,6 @@ public class ClientsScreenController {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-
-
 
 
                 return false;
@@ -191,6 +184,7 @@ public class ClientsScreenController {
             clearTextFields();
         } else {
             System.err.println("Одно из полей:  номер телефона или электронная почта должно быть указано");
+            new Helper().showModalWindow("/ru/tds/realestateagency/views/alerts/client/errorAddClient.fxml", actionEvent);
         }
 
     }
@@ -219,9 +213,8 @@ public class ClientsScreenController {
                 + CLIENT_EMAIL + "=? " +
                 "WHERE " + CLIENT_ID + "=?";
 
-        DatabaseHandler handler = new DatabaseHandler();
         try {
-            PreparedStatement preparedStatement = handler.createDbConnection().prepareStatement(update);
+            PreparedStatement preparedStatement = new DatabaseHandler().createDbConnection().prepareStatement(update);
             preparedStatement.setString(1, tfLastName.getText());
             preparedStatement.setString(2, tfFirstName.getText());
             preparedStatement.setString(3, tfMiddleName.getText());
@@ -263,6 +256,8 @@ public class ClientsScreenController {
             e.printStackTrace();
             System.err.println("Ошибка удаления клиента с ID = " + idClient + "из базы данных.");
         }
+
+
     }
 
     /**
@@ -293,6 +288,7 @@ public class ClientsScreenController {
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Ошибка получения данных из таблицы клиентов");
+            new Helper().changeScreen("/ru/tds/realestateagency/views/alerts/errorGetTableContent.fxml");
         }
 
         return resultSet;
