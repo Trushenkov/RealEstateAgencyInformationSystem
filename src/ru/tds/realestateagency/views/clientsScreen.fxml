@@ -54,7 +54,7 @@
         <Button fx:id="goBackBtn" layoutX="14.0" layoutY="561.0" mnemonicParsing="false" onAction="#goBackBtnClicked"
                 prefHeight="35.0" prefWidth="125.0" text="Назад" AnchorPane.bottomAnchor="14.0"
                 AnchorPane.leftAnchor="14.0"/>
-        <TextField fx:id="tfSearch" layoutX="669.0" layoutY="155.0" prefHeight="35.0" prefWidth="280.0"
+        <SimpleTextField fx:id="tfSearch" layoutX="669.0" layoutY="155.0" prefHeight="35.0" prefWidth="280.0"
                    promptText="Поиск по ФИО" AnchorPane.rightAnchor="51.0"/>
     </children>
 </AnchorPane>
