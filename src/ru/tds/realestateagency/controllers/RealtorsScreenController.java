@@ -108,7 +108,7 @@ public class RealtorsScreenController {
                 tfMiddleName.setText(tableRealtors.getSelectionModel().getSelectedItem().getMiddleName());
                 tfCommissionPart.setText(String.valueOf(tableRealtors.getSelectionModel().getSelectedItem().getCommissionPart()));
             } else {
-                System.err.println("Выбранный объект не содержит данныхх");
+                System.err.println("Выбранный объект не содержит данных");
             }
         });
 

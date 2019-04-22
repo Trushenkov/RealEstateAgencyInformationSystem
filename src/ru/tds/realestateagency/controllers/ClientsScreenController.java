@@ -7,10 +7,14 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import ru.tds.realestateagency.DatabaseHandler;
 import ru.tds.realestateagency.Helper;
 import ru.tds.realestateagency.entities.Client;
@@ -86,7 +90,12 @@ public class ClientsScreenController {
                         System.out.println("Id client=" + idClient);
                     }
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Уведомление об ошибке");
+                    alert.setHeaderText("Ошибка выбора данных из базы для указанного клиента");
+                    alert.setContentText("Данные из базы не были получены! Проверьте наличие данных в базе.");
+
+                    alert.showAndWait();
                 }
 
                 tfLastName.setText(tableClients.getSelectionModel().getSelectedItem().getLastName());
@@ -97,6 +106,7 @@ public class ClientsScreenController {
             }
         });
 
+        //Поиск клиента по ФИО
         FilteredList<Client> filteredList = new FilteredList<>(createListClients(getClientsTableContent()));
         tfSearch.textProperty().addListener((observable, oldValue, newValue) -> {
 
@@ -107,22 +117,22 @@ public class ClientsScreenController {
 
                 String lowerCaseNewValue = newValue.toLowerCase();
 
+                ObservableList<Client> list = null;
                 try {
-                    ObservableList<Client> list = createListClients(getClientsTableContent());
-                    for (int i = 0; i < list.size(); i++) {
-                        if (Helper.levenstain(lowerCaseNewValue, client.getLastName().toLowerCase()) <= 3) {
-                            return true;
-                        }
-                        if (Helper.levenstain(lowerCaseNewValue, client.getFirstName().toLowerCase()) <= 3) {
-                            return true;
-                        }
-                        if (Helper.levenstain(lowerCaseNewValue, client.getMiddleName().toLowerCase()) <= 3) {
-                            return true;
-                        }
-                    }
-
+                    list = createListClients(getClientsTableContent());
                 } catch (SQLException e) {
                     e.printStackTrace();
+                }
+                for (int i = 0; i < list.size(); i++) {
+                    if (Helper.levenstain(lowerCaseNewValue, client.getLastName().toLowerCase()) <= 3) {
+                        return true;
+                    }
+                    if (Helper.levenstain(lowerCaseNewValue, client.getFirstName().toLowerCase()) <= 3) {
+                        return true;
+                    }
+                    if (Helper.levenstain(lowerCaseNewValue, client.getMiddleName().toLowerCase()) <= 3) {
+                        return true;
+                    }
                 }
 
 
@@ -164,7 +174,6 @@ public class ClientsScreenController {
                     CLIENT_PHONE_NUMBER + ", " +
                     CLIENT_EMAIL + ")" + " VALUES (?,?,?,?,?);";
 
-
             try {
                 PreparedStatement addClientStatement = new DatabaseHandler().createDbConnection().prepareStatement(insertClient);
                 addClientStatement.setString(1, client.getLastName());
@@ -184,7 +193,18 @@ public class ClientsScreenController {
             clearTextFields();
         } else {
             System.err.println("Одно из полей:  номер телефона или электронная почта должно быть указано");
-            new Helper().showModalWindow("/ru/tds/realestateagency/views/alerts/client/errorAddClient.fxml", actionEvent);
+//            new Helper().showModalWindow("/ru/tds/realestateagency/views/alerts/client/errorAddClient.fxml", actionEvent);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Уведомление об ошибке");
+            alert.setHeaderText("Ошибка добавление нового клиента");
+            alert.setContentText("Поля номер телефона и элеткронная почта не обязательны к заполнению, но одно из них должно быть указано.");
+            alert.setResizable(false);
+            Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+            stage.getIcons().add(new Image(this.getClass().getResource("/ru/tds/realestateagency/images/warning.png").toString()));
+            alert.initOwner(this.tableClients.getScene().getWindow());
+            alert.initModality(Modality.WINDOW_MODAL);
+
+            alert.show();
         }
 
     }
@@ -225,7 +245,15 @@ public class ClientsScreenController {
 
             tableClients.setItems(createListClients(getClientsTableContent()));
         } catch (SQLException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Уведомление об ошибке");
+            alert.setHeaderText("Ошибка при обновлении клиента");
+            alert.setContentText("Обновление клиента не выполнено! Попытайтесь снова.");
+            alert.initOwner(this.tableClients.getScene().getWindow());
+            alert.initModality(Modality.WINDOW_MODAL);
+
+            alert.showAndWait();
         }
 
 //        System.out.println("Updated client with phoneNumber=" +
@@ -253,7 +281,7 @@ public class ClientsScreenController {
 
             tableClients.setItems(createListClients(getClientsTableContent()));
         } catch (SQLException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             System.err.println("Ошибка удаления клиента с ID = " + idClient + "из базы данных.");
         }
 
@@ -286,9 +314,20 @@ public class ClientsScreenController {
             PreparedStatement ps = dbhandler.createDbConnection().prepareStatement(selectClients);
             resultSet = ps.executeQuery();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Ошибка получения данных из таблицы клиентов");
-            new Helper().changeScreen("/ru/tds/realestateagency/views/alerts/errorGetTableContent.fxml");
+//            System.err.println("Ошибка получения данных из таблицы клиентов");
+//            new Helper().changeScreen("/ru/tds/realestateagency/views/alerts/errorGetTableContent.fxml");
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Уведомление об ошибке");
+            alert.setHeaderText("Ошибка получения данных из базы");
+            alert.setContentText("Данные не получены из базы. Проверьте подключение к базе!");
+            alert.setResizable(false);
+            Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+            stage.getIcons().add(new Image(this.getClass().getResource("/ru/tds/realestateagency/images/warning.png").toString()));
+            alert.initOwner(this.tableClients.getScene().getWindow());
+            alert.initModality(Modality.WINDOW_MODAL);
+
+            alert.show();
         }
 
         return resultSet;
