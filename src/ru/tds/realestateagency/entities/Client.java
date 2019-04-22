@@ -70,7 +70,7 @@ public class Client {
                 " Фамилия ='" + lastName + '\'' +
                 ", Имя ='" + firstName + '\'' +
                 ", Отчество ='" + middleName + '\'' +
-                ", Номер телефона =" + phoneNumber +
+                ", Номер телефона ='" + phoneNumber + '\'' +
                 ", Электронная почта ='" + email + '\'' +
                 ']';
     }
