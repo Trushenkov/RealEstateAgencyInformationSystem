@@ -44,9 +44,10 @@ public class DatabaseHandler {
         try {
             connection = DriverManager.getConnection(connectionUrl, Const.DB_HOME_USER, Const.DB_HOME_PASSWORD);
         } catch (SQLException e) {
-            System.err.println("Ошибка при создании соединения с базой данных.");
-            e.printStackTrace();
+            //оповещение об ошибке при создании соединения с БД
+            new Helper().changeScreen("/ru/tds/realestateagency/views/alerts/errorCreateDBConnection.fxml");
         }
+
         return connection;
     }
 
