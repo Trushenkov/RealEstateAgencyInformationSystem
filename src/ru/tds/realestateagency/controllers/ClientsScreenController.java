@@ -200,6 +200,7 @@ public class ClientsScreenController {
             alert.setContentText("Поля номер телефона и элеткронная почта не обязательны к заполнению, но одно из них должно быть указано.");
             alert.setResizable(false);
             Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+            stage.getScene().getStylesheets().add("ru/tds/realestateagency/css/style.css");
             stage.getIcons().add(new Image(this.getClass().getResource("/ru/tds/realestateagency/images/warning.png").toString()));
             alert.initOwner(this.tableClients.getScene().getWindow());
             alert.initModality(Modality.WINDOW_MODAL);
@@ -295,7 +296,7 @@ public class ClientsScreenController {
      */
     public void goBackBtnClicked(ActionEvent actionEvent) {
         ((Node) actionEvent.getSource()).getScene().getWindow().hide();
-        new Helper().changeScreen("/ru/tds/realestateagency/views/mainpageScreen.fxml");
+        Helper.changeScreen("/ru/tds/realestateagency/views/mainpageScreen.fxml");
     }
 
     /**

@@ -2,6 +2,7 @@ package ru.tds.realestateagency;
 
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.sql.Connection;
@@ -56,9 +57,11 @@ public class DatabaseHandler {
             alert.setContentText("Соединение с базой данных не было установлено. Проверьте настройки подключения к базе.");
             Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
             stage.getIcons().add(new Image(this.getClass().getResource("/ru/tds/realestateagency/images/warning.png").toString()));
+            stage.getScene().getStylesheets().add("ru/tds/realestateagency/css/style.css");
             alert.setResizable(false);
 
             alert.showAndWait();
+
         }
 
         return connection;

@@ -58,9 +58,9 @@ public class Helper {
      *
      * @param pathToFxml путь до файла разметки нового окна
      */
-    public void changeScreen(String pathToFxml) {
+    public static void changeScreen(String pathToFxml) {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(pathToFxml));
+        loader.setLocation(Helper.class.getResource(pathToFxml));
         try {
             loader.load();
         } catch (IOException e) {
@@ -80,9 +80,9 @@ public class Helper {
      *
      * @param path путь до файла разметки модального окна
      */
-    public void showModalWindow(String path, ActionEvent actionEvent) {
+    public static void showModalWindow(String path, ActionEvent actionEvent) {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(path));
+        loader.setLocation(Helper.class.getResource(path));
         try {
             loader.load();
         } catch (IOException e) {

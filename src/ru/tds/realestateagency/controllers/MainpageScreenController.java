@@ -21,12 +21,12 @@ public class MainpageScreenController {
     void initialize() {
         clientsBtn.setOnAction(event -> {
             clientsBtn.getScene().getWindow().hide();
-            new Helper().changeScreen("/ru/tds/realestateagency/views/clientsScreen.fxml");
+            Helper.changeScreen("/ru/tds/realestateagency/views/clientsScreen.fxml");
         });
 
         realtorsBtn.setOnAction(event -> {
             realtorsBtn.getScene().getWindow().hide();
-            new Helper().changeScreen("/ru/tds/realestateagency/views/realtorsScreen.fxml");
+            Helper.changeScreen("/ru/tds/realestateagency/views/realtorsScreen.fxml");
         });
     }
 

@@ -165,14 +165,14 @@ public class RealtorsScreenController {
             realtor.setMiddleName(tfMiddleName.getText());
 
             if (tfCommissionPart.getText().isEmpty()){
-                new Helper().showModalWindow("/ru/tds/realestateagency/views/alerts/realtor/errorCommissionPart.fxml", actionEvent);
+                Helper.showModalWindow("/ru/tds/realestateagency/views/alerts/realtor/errorCommissionPart.fxml", actionEvent);
                 return;
             }
 
             if (Integer.parseInt(tfCommissionPart.getText()) > 0 && Integer.parseInt(tfCommissionPart.getText()) < 100) {
                 realtor.setCommissionPart(Integer.parseInt(tfCommissionPart.getText()));
             } else {
-                new Helper().showModalWindow("/ru/tds/realestateagency/views/alerts/realtor/errorCommissionPart.fxml", actionEvent);
+                Helper.showModalWindow("/ru/tds/realestateagency/views/alerts/realtor/errorCommissionPart.fxml", actionEvent);
                 return;
             }
 
@@ -207,7 +207,7 @@ public class RealtorsScreenController {
 
         } else {
             System.err.println("Поля: фамилия, имя, отчество обязательны к заполнению.");
-            new Helper().showModalWindow("/ru/tds/realestateagency/views/alerts/realtor/errorAddRealtor.fxml", actionEvent);
+            Helper.showModalWindow("/ru/tds/realestateagency/views/alerts/realtor/errorAddRealtor.fxml", actionEvent);
         }
     }
 
@@ -285,7 +285,7 @@ public class RealtorsScreenController {
      */
     public void goBackBtnClicked(ActionEvent actionEvent) {
         ((Node) actionEvent.getSource()).getScene().getWindow().hide();
-        new Helper().changeScreen("/ru/tds/realestateagency/views/mainpageScreen.fxml");
+        Helper.changeScreen("/ru/tds/realestateagency/views/mainpageScreen.fxml");
     }
 
     /**
