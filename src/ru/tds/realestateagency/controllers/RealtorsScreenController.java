@@ -81,13 +81,15 @@ public class RealtorsScreenController {
         //При клике на элемент данные выделенного объекта заносятся в текстовые поля
         tableRealtors.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                DatabaseHandler handler = new DatabaseHandler();
-                PreparedStatement statement = null;
                 try {
-                    statement = handler.createDbConnection().prepareStatement("SELECT " + REALTOR_ID + " FROM " + REALTOR_TABLE + " WHERE "
-                            + REALTOR_LAST_NAME + " = ? AND "
-                            + REALTOR_FIRST_NAME + " = ? AND "
-                            + REALTOR_MIDDLE_NAME + "=?");
+                    DatabaseHandler handler = new DatabaseHandler();
+                    PreparedStatement statement = handler
+                            .createDbConnection()
+                            .prepareStatement("SELECT " + REALTOR_ID +
+                                    " FROM " + REALTOR_TABLE +
+                                    " WHERE " + REALTOR_LAST_NAME + " = ? AND "
+                                    + REALTOR_FIRST_NAME + " = ? AND "
+                                    + REALTOR_MIDDLE_NAME + "=?");
 
                     statement.setString(1, tableRealtors.getSelectionModel().getSelectedItem().getLastName());
                     statement.setString(2, tableRealtors.getSelectionModel().getSelectedItem().getFirstName());
@@ -105,6 +107,8 @@ public class RealtorsScreenController {
                 tfFirstName.setText(tableRealtors.getSelectionModel().getSelectedItem().getFirstName());
                 tfMiddleName.setText(tableRealtors.getSelectionModel().getSelectedItem().getMiddleName());
                 tfCommissionPart.setText(String.valueOf(tableRealtors.getSelectionModel().getSelectedItem().getCommissionPart()));
+            } else {
+                System.err.println("Выбранный объект не содержит данныхх");
             }
         });
 
@@ -121,13 +125,13 @@ public class RealtorsScreenController {
                 try {
                     ObservableList<Realtor> list = createListRealtors(getRealtorsTableContent());
                     for (int i = 0; i < list.size(); i++) {
-                        if (Helper.levenstain(lowerCaseNewValue, realtor.getLastName().toLowerCase()) <= 3){
+                        if (Helper.levenstain(lowerCaseNewValue, realtor.getLastName().toLowerCase()) <= 3) {
                             return true;
                         }
-                        if (Helper.levenstain(lowerCaseNewValue, realtor.getFirstName().toLowerCase()) <= 3){
+                        if (Helper.levenstain(lowerCaseNewValue, realtor.getFirstName().toLowerCase()) <= 3) {
                             return true;
                         }
-                        if (Helper.levenstain(lowerCaseNewValue, realtor.getMiddleName().toLowerCase()) <= 3){
+                        if (Helper.levenstain(lowerCaseNewValue, realtor.getMiddleName().toLowerCase()) <= 3) {
                             return true;
                         }
                     }
@@ -135,8 +139,6 @@ public class RealtorsScreenController {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-
-
 
 
                 return false;
@@ -161,7 +163,18 @@ public class RealtorsScreenController {
             realtor.setLastName(tfLastName.getText());
             realtor.setFirstName(tfFirstName.getText());
             realtor.setMiddleName(tfMiddleName.getText());
-            realtor.setCommissionPart(Integer.parseInt(tfCommissionPart.getText()));
+
+            if (tfCommissionPart.getText().isEmpty()){
+                new Helper().showModalWindow("/ru/tds/realestateagency/views/alerts/realtor/errorCommissionPart.fxml", actionEvent);
+                return;
+            }
+
+            if (Integer.parseInt(tfCommissionPart.getText()) > 0 && Integer.parseInt(tfCommissionPart.getText()) < 100) {
+                realtor.setCommissionPart(Integer.parseInt(tfCommissionPart.getText()));
+            } else {
+                new Helper().showModalWindow("/ru/tds/realestateagency/views/alerts/realtor/errorCommissionPart.fxml", actionEvent);
+                return;
+            }
 
             System.out.println(realtor);
 
@@ -194,6 +207,7 @@ public class RealtorsScreenController {
 
         } else {
             System.err.println("Поля: фамилия, имя, отчество обязательны к заполнению.");
+            new Helper().showModalWindow("/ru/tds/realestateagency/views/alerts/realtor/errorAddRealtor.fxml", actionEvent);
         }
     }
 
@@ -252,10 +266,8 @@ public class RealtorsScreenController {
     public void deleteBtnClicked(ActionEvent actionEvent) {
         String deleteClient = "DELETE FROM " + REALTOR_TABLE + " WHERE " + REALTOR_ID + "=?";
 
-        DatabaseHandler handler = new DatabaseHandler();
-
         try {
-            PreparedStatement preparedStatement = handler.createDbConnection().prepareStatement(deleteClient);
+            PreparedStatement preparedStatement = new DatabaseHandler().createDbConnection().prepareStatement(deleteClient);
             preparedStatement.setInt(1, idRealtor);
             preparedStatement.executeUpdate();
 
@@ -302,9 +314,9 @@ public class RealtorsScreenController {
     /**
      * Метод для формирования ObservableList из набора данных
      *
-     * @param resultSet набора данных из таблицы клиентов
+     * @param resultSet Набор данных из таблицы клиентов
      * @return ObservableList с объектами типа Client
-     * @throws SQLException
+     * @throws SQLException Если не удается
      */
     private ObservableList<Realtor> createListRealtors(ResultSet resultSet) throws SQLException {
         ObservableList<Realtor> list = FXCollections.observableArrayList();
