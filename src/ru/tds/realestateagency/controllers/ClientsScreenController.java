@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -31,6 +32,7 @@ import java.util.function.Predicate;
  */
 public class ClientsScreenController {
 
+    //константы для работы с таблицей `clients`
     private static final String CLIENT_TABLE = "clients";
     private static final String CLIENT_LAST_NAME = "lastName";
     private static final String CLIENT_FIRST_NAME = "firstName";
@@ -39,6 +41,8 @@ public class ClientsScreenController {
     private static final String CLIENT_EMAIL = "email";
     private static final String CLIENT_ID = "id";
 
+
+    //элементы разметки интерфейса
     @FXML
     private TableView<Client> tableClients;
     @FXML
@@ -63,41 +67,98 @@ public class ClientsScreenController {
     private TextField tfPhoneNumber;
     @FXML
     private TextField tfEmail;
-    private int idClient;
+
+    private int idClient; // для хранения ID клиента из базы
+
+    /**
+     * Метод для создания и открытия модального окна
+     *
+     * @param headerText  текст заголовка
+     * @param contentText текст основого содержимого окна
+     */
+    private void showModalWindow(String headerText, String contentText, Alert.AlertType alertType) {
+        //создание уведомления
+        Alert alert = new Alert(alertType);
+
+
+        //выбор типа модального окна (ERROR или INFORMATION)
+        if (alertType == AlertType.ERROR) {
+            //установка названия окна
+            alert.setTitle("Уведомление об ошибке");
+        } else if (alertType == AlertType.INFORMATION) {
+            //установка названия окна
+            alert.setTitle("Уведомление об успешном выполнении");
+        }
+        //установка заголовка окна
+        alert.setHeaderText(headerText);
+        //установка текста содержимого окна
+        alert.setContentText(contentText);
+        //размер окна не изменяемый
+        alert.setResizable(false);
+        //определене родительского окна
+        alert.initOwner(this.tableClients.getScene().getWindow());
+        //установка типа модального окна
+        alert.initModality(Modality.WINDOW_MODAL);
+
+        if (alert.getAlertType().equals(AlertType.ERROR)){
+            Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+            stage.getIcons().add(new Image(getClass().getResource("/ru/tds/realestateagency/images/warning.png").toString()));
+        } else {
+            Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+            stage.getIcons().add(new Image(getClass().getResource("/ru/tds/realestateagency/images/success.png").toString()));
+        }
+
+        //отображаем окно
+        alert.showAndWait();
+    }
 
     @FXML
     void initialize() throws SQLException {
+        //определение колонок таблицы с соответствующими полями объекта "Клиент"
         tableColumnLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         tableColumnFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         tableColumnMiddleName.setCellValueFactory(new PropertyValueFactory<>("middleName"));
         tableColumnPhoneNumber.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
         tableColumnEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
 
+        //заполняем таблицу данным из БД
         tableClients.setItems(createListClients(getClientsTableContent()));
 
-        //При клике на элемент данные выделенного объекта заносятся в текстовые поля
+        //Заносим данные выделенного объекта в текстовые поля при клике на объект в таблице
         tableClients.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 try {
+
+                    //SQL запрос для получения ID клиента из таблицы в базе
+                    String getIdClient =
+                            "SELECT " + CLIENT_ID +
+                                    " FROM " + CLIENT_TABLE +
+                                    " WHERE " + CLIENT_PHONE_NUMBER + " = ?" +
+                                    " AND " + CLIENT_EMAIL + " = ?";
+
                     DatabaseHandler handler = new DatabaseHandler();
 
-                    PreparedStatement statement = handler.createDbConnection().prepareStatement("SELECT " + CLIENT_ID + " FROM " + CLIENT_TABLE + " WHERE " + CLIENT_PHONE_NUMBER + " = ? AND " + CLIENT_EMAIL + " = ?");
+                    PreparedStatement statement = handler.createDbConnection().prepareStatement(getIdClient);
+
+                    //установка значений для вставки в запрос
                     statement.setString(1, tableClients.getSelectionModel().getSelectedItem().getPhoneNumber());
                     statement.setString(2, tableClients.getSelectionModel().getSelectedItem().getEmail());
+                    //выполнение запроса и сохранение значений в resultSet
                     ResultSet resultSet = statement.executeQuery();
-                    while (resultSet.next()) {
-                        idClient = resultSet.getInt("id");
-                        System.out.println("Id client=" + idClient);
-                    }
-                } catch (SQLException e) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Уведомление об ошибке");
-                    alert.setHeaderText("Ошибка выбора данных из базы для указанного клиента");
-                    alert.setContentText("Данные из базы не были получены! Проверьте наличие данных в базе.");
 
-                    alert.showAndWait();
+                    while (resultSet.next()) {
+                        //получаем id из набора данных, полученного из базы
+                        idClient = resultSet.getInt("id");
+                    }
+
+                } catch (SQLException e) {
+                    showModalWindow(
+                            "Ошибка получения ID клиента из базы",
+                            "Данные из базы не были получены!",
+                            AlertType.ERROR);
                 }
 
+                //устанавливаем значения выделенного объекта в текстовые поля
                 tfLastName.setText(tableClients.getSelectionModel().getSelectedItem().getLastName());
                 tfFirstName.setText(tableClients.getSelectionModel().getSelectedItem().getFirstName());
                 tfMiddleName.setText(tableClients.getSelectionModel().getSelectedItem().getMiddleName());
@@ -115,26 +176,19 @@ public class ClientsScreenController {
                     return true;
                 }
 
-                String lowerCaseNewValue = newValue.toLowerCase();
+                ObservableList<Client> list = createListClients(getClientsTableContent());
 
-                ObservableList<Client> list = null;
-                try {
-                    list = createListClients(getClientsTableContent());
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
                 for (int i = 0; i < list.size(); i++) {
-                    if (Helper.levenstain(lowerCaseNewValue, client.getLastName().toLowerCase()) <= 3) {
+                    if (Helper.levenstain(newValue.toLowerCase(), client.getLastName().toLowerCase()) <= 3) {
                         return true;
                     }
-                    if (Helper.levenstain(lowerCaseNewValue, client.getFirstName().toLowerCase()) <= 3) {
+                    if (Helper.levenstain(newValue.toLowerCase(), client.getFirstName().toLowerCase()) <= 3) {
                         return true;
                     }
-                    if (Helper.levenstain(lowerCaseNewValue, client.getMiddleName().toLowerCase()) <= 3) {
+                    if (Helper.levenstain(newValue.toLowerCase(), client.getMiddleName().toLowerCase()) <= 3) {
                         return true;
                     }
                 }
-
 
                 return false;
             });
@@ -152,60 +206,77 @@ public class ClientsScreenController {
      * @param actionEvent нажатие на кнопку
      */
     public void createBtnClicked(ActionEvent actionEvent) {
+        //Создание объекта "Клиент"
         Client client = new Client();
 
+        //проверка на то пустые ли поля "Номер телефона" и "Электронная почта"
         if (!tfPhoneNumber.getText().isEmpty() || !tfEmail.getText().isEmpty()) {
+            //установка значений для объекта
             client.setLastName(tfLastName.getText());
             client.setFirstName(tfFirstName.getText());
             client.setMiddleName(tfMiddleName.getText());
-            client.setEmail(tfEmail.getText());
 
+            //проверяем не пустое ли поле "Номер телефона"
             if (!tfPhoneNumber.getText().isEmpty()) {
+                //установка значения "номер телефона" для объекта
                 client.setPhoneNumber(tfPhoneNumber.getText());
+            }
+
+            //проверяем не пустое ли поле "Электронная почта"
+            if (!tfEmail.getText().isEmpty()) {
+                //установка значения "электронная почта" для объекта
+                client.setEmail(tfEmail.getText());
             }
 
             System.out.println(client);
 
+            //SQL запрос для добавления нового клиента в базу данных
             String insertClient = "INSERT INTO " +
                     CLIENT_TABLE + "(" +
                     CLIENT_LAST_NAME + ", " +
                     CLIENT_FIRST_NAME + ", " +
                     CLIENT_MIDDLE_NAME + ", " +
                     CLIENT_PHONE_NUMBER + ", " +
-                    CLIENT_EMAIL + ")" + " VALUES (?,?,?,?,?);";
+                    CLIENT_EMAIL + ")" +
+                    " VALUES (?,?,?,?,?);";
 
             try {
                 PreparedStatement addClientStatement = new DatabaseHandler().createDbConnection().prepareStatement(insertClient);
+                //установка значений для вставки в запрос
                 addClientStatement.setString(1, client.getLastName());
                 addClientStatement.setString(2, client.getFirstName());
                 addClientStatement.setString(3, client.getMiddleName());
                 addClientStatement.setString(4, client.getPhoneNumber());
                 addClientStatement.setString(5, client.getEmail());
+                //выполнение запроса
                 addClientStatement.executeUpdate();
 
+                //обновление таблицы после выполнения запроса
                 tableClients.setItems(createListClients(getClientsTableContent()));
 
-                System.out.println(createListClients(getClientsTableContent()).size());
+                //открываем диалоговое окно для уведомления об успешном добавлении
+                showModalWindow(
+                        "Клиент добавлен",
+                        "Новый клиент успешно добавлен!",
+                        AlertType.INFORMATION);
+
             } catch (SQLException e) {
-                System.err.println("Ошибка создания addClientStatement");
+                //открываем диалоговое окно для уведомления об ошибке
+                showModalWindow(
+                        "Ошибка добавления нового клиента",
+                        "Клиент не был добавлен в базу. Повторите еще раз.",
+                        AlertType.ERROR);
             }
 
-            clearTextFields();
-        } else {
-            System.err.println("Одно из полей:  номер телефона или электронная почта должно быть указано");
-//            new Helper().showModalWindow("/ru/tds/realestateagency/views/alerts/client/errorAddClient.fxml", actionEvent);
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Уведомление об ошибке");
-            alert.setHeaderText("Ошибка добавление нового клиента");
-            alert.setContentText("Поля номер телефона и элеткронная почта не обязательны к заполнению, но одно из них должно быть указано.");
-            alert.setResizable(false);
-            Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-            stage.getScene().getStylesheets().add("ru/tds/realestateagency/css/style.css");
-            stage.getIcons().add(new Image(this.getClass().getResource("/ru/tds/realestateagency/images/warning.png").toString()));
-            alert.initOwner(this.tableClients.getScene().getWindow());
-            alert.initModality(Modality.WINDOW_MODAL);
+            clearTextFields(); //обнуляем текстовые поля после добавления клиента в базу
 
-            alert.show();
+        } else {
+            //открываем диалоговое окно для уведомления об ошибке
+            showModalWindow(
+                    "Ошибка добавление нового клиента",
+                    "Поля номер телефона и элеткронная почта не обязательны к заполнению, но одно из них должно быть указано.",
+                    AlertType.ERROR
+            );
         }
 
     }
@@ -227,6 +298,8 @@ public class ClientsScreenController {
      * @param actionEvent нажатие на кнопку
      */
     public void updateBtnClicked(ActionEvent actionEvent) {
+
+        //SQL запрос для обновления клиента
         String update = "UPDATE " + CLIENT_TABLE + " SET " + CLIENT_LAST_NAME + "=?,"
                 + CLIENT_FIRST_NAME + "=?,"
                 + CLIENT_MIDDLE_NAME + "=?,"
@@ -235,34 +308,34 @@ public class ClientsScreenController {
                 "WHERE " + CLIENT_ID + "=?";
 
         try {
-            PreparedStatement preparedStatement = new DatabaseHandler().createDbConnection().prepareStatement(update);
-            preparedStatement.setString(1, tfLastName.getText());
-            preparedStatement.setString(2, tfFirstName.getText());
-            preparedStatement.setString(3, tfMiddleName.getText());
-            preparedStatement.setString(4, tfPhoneNumber.getText());
-            preparedStatement.setString(5, tfEmail.getText());
-            preparedStatement.setInt(6, idClient);
-            preparedStatement.executeUpdate();
+            PreparedStatement updateClientStatement = new DatabaseHandler().createDbConnection().prepareStatement(update);
 
+            //установка значений для вставки в запрос
+            updateClientStatement.setString(1, tfLastName.getText());
+            updateClientStatement.setString(2, tfFirstName.getText());
+            updateClientStatement.setString(3, tfMiddleName.getText());
+            updateClientStatement.setString(4, tfPhoneNumber.getText());
+            updateClientStatement.setString(5, tfEmail.getText());
+            updateClientStatement.setInt(6, idClient);
+            //выполнение SQL запроса
+            updateClientStatement.executeUpdate();
+            //обновление таблицы
             tableClients.setItems(createListClients(getClientsTableContent()));
-        } catch (SQLException e) {
-//            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Уведомление об ошибке");
-            alert.setHeaderText("Ошибка при обновлении клиента");
-            alert.setContentText("Обновление клиента не выполнено! Попытайтесь снова.");
-            alert.initOwner(this.tableClients.getScene().getWindow());
-            alert.initModality(Modality.WINDOW_MODAL);
 
-            alert.showAndWait();
+            //открываем диалоговое окно для уведомления об успешном обновлении
+            showModalWindow(
+                    "Клиент обновлен",
+                    "Обновление клиента выполнено успешно!",
+                    AlertType.INFORMATION);
+        } catch (SQLException e) {
+            //открываем диалоговое окно для уведомления об ошибке
+            showModalWindow(
+                    "Ошибка обновления клиента",
+                    "Обновление клиента не выполнено! Попытайтесь снова.",
+                    AlertType.ERROR);
         }
 
-//        System.out.println("Updated client with phoneNumber=" +
-//                tableClients.getSelectionModel().getSelectedItem().getPhoneNumber() +
-//                " and email=" +
-//                tableClients.getSelectionModel().getSelectedItem().getEmail());
-
-        clearTextFields();
+        clearTextFields(); //Обнуляем текстовые поля после обновления клиента
     }
 
     /**
@@ -271,21 +344,36 @@ public class ClientsScreenController {
      * @param actionEvent нажатие на кнопку
      */
     public void deleteBtnClicked(ActionEvent actionEvent) {
+        //SQL запрос на удаление клиента
         String deleteClient = "DELETE FROM " + CLIENT_TABLE + " WHERE " + CLIENT_ID + "=?";
 
-        DatabaseHandler handler = new DatabaseHandler();
-
         try {
-            PreparedStatement preparedStatement = handler.createDbConnection().prepareStatement(deleteClient);
+            PreparedStatement preparedStatement = new DatabaseHandler().createDbConnection().prepareStatement(deleteClient);
+
+            //установка значений для вставки в запрос
             preparedStatement.setInt(1, idClient);
+            //выполнение запроса на удаление
             preparedStatement.executeUpdate();
-
+            //обновление таблицы после удаления
             tableClients.setItems(createListClients(getClientsTableContent()));
-        } catch (SQLException e) {
-//            e.printStackTrace();
-            System.err.println("Ошибка удаления клиента с ID = " + idClient + "из базы данных.");
-        }
 
+            //обнуляем текстовые поля после удаления клиента
+            clearTextFields();
+
+            //открываем диалоговое окно для уведомления об успешном удалении
+            showModalWindow(
+                    "Клиент удален",
+                    "Удаление клиента выполнено успешно!",
+                    AlertType.INFORMATION);
+
+        } catch (SQLException e) {
+            //открываем диалоговое окно для уведомления об ошибке
+            showModalWindow(
+                    "Ошибка удаления клиента",
+                    "Возникла ошибка при удалении клиента с ID = " + idClient,
+                    AlertType.ERROR
+            );
+        }
 
     }
 
@@ -305,30 +393,21 @@ public class ClientsScreenController {
      * @return ResultSet - набор данных из таблицы
      */
     private ResultSet getClientsTableContent() {
-
+        //SQL запрос на выбор всех данных из таблицы `clients`
         String selectClients = "SELECT * FROM " + CLIENT_TABLE;
 
         ResultSet resultSet = null;
         try {
             DatabaseHandler dbhandler = new DatabaseHandler();
-
             PreparedStatement ps = dbhandler.createDbConnection().prepareStatement(selectClients);
+            //выполняем запрос и сохраняем полученные значения в resultSet
             resultSet = ps.executeQuery();
-        } catch (Exception e) {
-//            System.err.println("Ошибка получения данных из таблицы клиентов");
-//            new Helper().changeScreen("/ru/tds/realestateagency/views/alerts/errorGetTableContent.fxml");
-
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Уведомление об ошибке");
-            alert.setHeaderText("Ошибка получения данных из базы");
-            alert.setContentText("Данные не получены из базы. Проверьте подключение к базе!");
-            alert.setResizable(false);
-            Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-            stage.getIcons().add(new Image(this.getClass().getResource("/ru/tds/realestateagency/images/warning.png").toString()));
-            alert.initOwner(this.tableClients.getScene().getWindow());
-            alert.initModality(Modality.WINDOW_MODAL);
-
-            alert.show();
+        } catch (SQLException e) {
+            //открываем диалоговое окно для уведомления об ошибке
+            showModalWindow(
+                    "Ошибка получения данных из базы",
+                    "Данные не получены из базы. Проверьте подключение к базе!",
+                    AlertType.ERROR);
         }
 
         return resultSet;
@@ -337,21 +416,32 @@ public class ClientsScreenController {
     /**
      * Метод для формирования ObservableList из набора данных
      *
-     * @param resultSet набора данных из таблицы клиентов
+     * @param resultSet набор данных из таблицы клиентов
      * @return ObservableList с объектами типа Client
-     * @throws SQLException
      */
-    private ObservableList<Client> createListClients(ResultSet resultSet) throws SQLException {
+    private ObservableList<Client> createListClients(ResultSet resultSet) {
+        //создаем список клиентов
         ObservableList<Client> list = FXCollections.observableArrayList();
-        while (resultSet.next()) {
-            Client client = new Client(
-                    resultSet.getString("lastName"),
-                    resultSet.getString("firstName"),
-                    resultSet.getString("middleName"),
-                    resultSet.getString("phoneNumber"),
-                    resultSet.getString("email")
-            );
-            list.add(client);
+
+        try {
+            while (resultSet.next()) {
+                //создаем нового клиента
+                Client client = new Client(
+                        resultSet.getString("lastName"),
+                        resultSet.getString("firstName"),
+                        resultSet.getString("middleName"),
+                        resultSet.getString("phoneNumber"),
+                        resultSet.getString("email")
+                );
+                //добавляем клиента в список
+                list.add(client);
+            }
+        } catch (SQLException e) {
+            //открываем диалоговое окно для уведомления об ошибке
+            showModalWindow(
+                    "Ошибка формирования коллекции клиентов",
+                    "Возникла ошибка при формировании списка клиентов из набора данных, полученных из базы",
+                    AlertType.ERROR);
         }
         return list;
     }
