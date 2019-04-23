@@ -7,11 +7,8 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
@@ -42,7 +39,15 @@ public class ClientsScreenController {
     private static final String CLIENT_ID = "id";
 
 
-    //элементы разметки интерфейса
+    //Элементы разметки интерфейса
+    @FXML
+    private Button createBtn;
+    @FXML
+    private Button updateBtn;
+    @FXML
+    private Button deleteBtn;
+    @FXML
+    private Button goBackBtn;
     @FXML
     private TableView<Client> tableClients;
     @FXML
@@ -80,8 +85,7 @@ public class ClientsScreenController {
         //создание уведомления
         Alert alert = new Alert(alertType);
 
-
-        //выбор типа модального окна (ERROR или INFORMATION)
+        //установка названия окна в зависимости от типа модального окна (ERROR или INFORMATION)
         if (alertType == AlertType.ERROR) {
             //установка названия окна
             alert.setTitle("Уведомление об ошибке");
@@ -100,7 +104,7 @@ public class ClientsScreenController {
         //установка типа модального окна
         alert.initModality(Modality.WINDOW_MODAL);
 
-        if (alert.getAlertType().equals(AlertType.ERROR)){
+        if (alert.getAlertType().equals(AlertType.ERROR)) {
             Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
             stage.getIcons().add(new Image(getClass().getResource("/ru/tds/realestateagency/images/warning.png").toString()));
         } else {
@@ -113,7 +117,11 @@ public class ClientsScreenController {
     }
 
     @FXML
-    void initialize() throws SQLException {
+    void initialize() {
+
+        updateBtn.setDisable(true);
+        deleteBtn.setDisable(true);
+
         //определение колонок таблицы с соответствующими полями объекта "Клиент"
         tableColumnLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         tableColumnFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
@@ -127,6 +135,11 @@ public class ClientsScreenController {
         //Заносим данные выделенного объекта в текстовые поля при клике на объект в таблице
         tableClients.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
+
+                createBtn.setDisable(true);
+                updateBtn.setDisable(false);
+                deleteBtn.setDisable(false);
+
                 try {
 
                     //SQL запрос для получения ID клиента из таблицы в базе
@@ -164,10 +177,22 @@ public class ClientsScreenController {
                 tfMiddleName.setText(tableClients.getSelectionModel().getSelectedItem().getMiddleName());
                 tfPhoneNumber.setText(String.valueOf(tableClients.getSelectionModel().getSelectedItem().getPhoneNumber()));
                 tfEmail.setText(String.valueOf(tableClients.getSelectionModel().getSelectedItem().getEmail()));
+            } else {
+                createBtn.setDisable(false);
+                updateBtn.setDisable(true);
+                deleteBtn.setDisable(true);
             }
         });
 
         //Поиск клиента по ФИО
+        findClientByFullName();
+
+    }
+
+    /**
+     * Метод для предоставления возможности поиска клиента по ФИО
+     */
+    private void findClientByFullName() {
         FilteredList<Client> filteredList = new FilteredList<>(createListClients(getClientsTableContent()));
         tfSearch.textProperty().addListener((observable, oldValue, newValue) -> {
 
@@ -197,7 +222,6 @@ public class ClientsScreenController {
         SortedList<Client> sortedList = new SortedList<>(filteredList);
         sortedList.comparatorProperty().bind(tableClients.comparatorProperty());
         tableClients.setItems(sortedList);
-
     }
 
     /**
@@ -256,20 +280,23 @@ public class ClientsScreenController {
 
                 //открываем диалоговое окно для уведомления об успешном добавлении
                 showModalWindow(
-                        "Клиент добавлен",
+                        "Операция успешно выполнена",
                         "Новый клиент успешно добавлен!",
                         AlertType.INFORMATION);
+
+                //обнуляем текстовые поля после добавления клиента в базу
+                clearTextFields();
+
+                //Поиск клиента по ФИО
+                findClientByFullName();
 
             } catch (SQLException e) {
                 //открываем диалоговое окно для уведомления об ошибке
                 showModalWindow(
                         "Ошибка добавления нового клиента",
-                        "Клиент не был добавлен в базу. Повторите еще раз.",
+                        "Клиент не был добавлен в базу. Повторите еще раз",
                         AlertType.ERROR);
             }
-
-            clearTextFields(); //обнуляем текстовые поля после добавления клиента в базу
-
         } else {
             //открываем диалоговое окно для уведомления об ошибке
             showModalWindow(
@@ -324,18 +351,26 @@ public class ClientsScreenController {
 
             //открываем диалоговое окно для уведомления об успешном обновлении
             showModalWindow(
-                    "Клиент обновлен",
+                    "Операция успешно выполнена",
                     "Обновление клиента выполнено успешно!",
                     AlertType.INFORMATION);
+
+            //Обнуляем текстовые поля после обновления клиента
+            clearTextFields();
+
+            //Поиск клиента по ФИО
+            findClientByFullName();
+
         } catch (SQLException e) {
             //открываем диалоговое окно для уведомления об ошибке
             showModalWindow(
                     "Ошибка обновления клиента",
-                    "Обновление клиента не выполнено! Попытайтесь снова.",
+                    "Обновление клиента не выполнено! Повторите еще раз",
                     AlertType.ERROR);
         }
 
-        clearTextFields(); //Обнуляем текстовые поля после обновления клиента
+
+
     }
 
     /**
@@ -357,14 +392,19 @@ public class ClientsScreenController {
             //обновление таблицы после удаления
             tableClients.setItems(createListClients(getClientsTableContent()));
 
-            //обнуляем текстовые поля после удаления клиента
-            clearTextFields();
+
 
             //открываем диалоговое окно для уведомления об успешном удалении
             showModalWindow(
-                    "Клиент удален",
+                    "Операция успешно выполнена",
                     "Удаление клиента выполнено успешно!",
                     AlertType.INFORMATION);
+
+            //обнуляем текстовые поля после удаления клиента
+            clearTextFields();
+
+            //Поиск клиента по ФИО
+            findClientByFullName();
 
         } catch (SQLException e) {
             //открываем диалоговое окно для уведомления об ошибке
@@ -384,6 +424,7 @@ public class ClientsScreenController {
      */
     public void goBackBtnClicked(ActionEvent actionEvent) {
         ((Node) actionEvent.getSource()).getScene().getWindow().hide();
+        //переход на главный экран
         Helper.changeScreen("/ru/tds/realestateagency/views/mainpageScreen.fxml");
     }
 
@@ -398,14 +439,13 @@ public class ClientsScreenController {
 
         ResultSet resultSet = null;
         try {
-            DatabaseHandler dbhandler = new DatabaseHandler();
-            PreparedStatement ps = dbhandler.createDbConnection().prepareStatement(selectClients);
+            PreparedStatement ps = new DatabaseHandler().createDbConnection().prepareStatement(selectClients);
             //выполняем запрос и сохраняем полученные значения в resultSet
             resultSet = ps.executeQuery();
         } catch (SQLException e) {
             //открываем диалоговое окно для уведомления об ошибке
             showModalWindow(
-                    "Ошибка получения данных из базы",
+                    "Ошибка получения данных из таблицы клиентов",
                     "Данные не получены из базы. Проверьте подключение к базе!",
                     AlertType.ERROR);
         }
