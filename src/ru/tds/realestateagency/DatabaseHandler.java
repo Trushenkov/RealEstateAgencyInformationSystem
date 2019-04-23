@@ -1,6 +1,7 @@
 package ru.tds.realestateagency;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -47,11 +48,11 @@ public class DatabaseHandler {
     public Connection createDbConnection() {
         String connectionUrl = "jdbc:mysql://" + Const.DB_HOST + ":" + Const.DB_PORT+ "/" + Const.DB_NAME+ "?serverTimezone=UTC";
         try {
-            connection = DriverManager.getConnection(connectionUrl, Const.DB_USER, Const.DB_HOME_PASSWORD);
+            connection = DriverManager.getConnection(connectionUrl, Const.DB_USER, Const.DB_PASSWORD);
         } catch (SQLException e) {
             //оповещение об ошибке при создании соединения с БД
 //            new Helper().changeScreen("/ru/tds/realestateagency/views/alerts/errorCreateDBConnection.fxml");
-            Alert alert = new Alert(Alert.AlertType.ERROR);
+            Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Уведомление об ошибке");
             alert.setHeaderText("Ошибка соединения с базой данных");
             alert.setContentText("Соединение с базой данных не было установлено. Проверьте настройки подключения к базе.");
