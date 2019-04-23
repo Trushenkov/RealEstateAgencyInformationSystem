@@ -22,7 +22,7 @@
             <TableColumn fx:id="tableColumnLastName" prefWidth="176.0" text="Фамилия" />
             <TableColumn fx:id="tableColumnFirstName" minWidth="0.0" prefWidth="122.0" text="Имя" />
             <TableColumn fx:id="tableColumnMiddleName" prefWidth="133.0" text="Отчество" />
-            <TableColumn fx:id="tableColumnСommissionPart" prefWidth="175.0" text="Доля от комиссии" />
+            <TableColumn fx:id="tableColumnCommissionPart" prefWidth="175.0" text="Доля от комиссии" />
          </columns>
       </TableView>
       <SimpleTextField fx:id="tfLastName" layoutX="669.0" layoutY="240.0" prefHeight="35.0" prefWidth="280.0" promptText="Фамилия" AnchorPane.rightAnchor="51.0" />
