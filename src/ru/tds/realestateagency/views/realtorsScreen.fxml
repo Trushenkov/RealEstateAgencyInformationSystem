@@ -93,7 +93,7 @@
                   <Insets right="10.0" />
                </HBox.margin>
             </FontAwesomeIconView>
-              <NumberTextField fx:id="tfCommissionPart" prefHeight="35.0" prefWidth="280.0" promptText="Доля от коммиссии  " />
+              <NumberTextField fx:id="tfCommissionPart" maxLength="3" prefHeight="35.0" prefWidth="280.0" promptText="Доля от коммиссии  " />
          </children>
       </HBox>
     </children>
