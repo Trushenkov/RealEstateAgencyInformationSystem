@@ -142,26 +142,42 @@ public class ClientsScreenController {
 
                 try {
 
-                    //SQL запрос для получения ID клиента из таблицы в базе
-                    String getIdClient =
+                    String getIdClientWithEmail =
                             "SELECT " + CLIENT_ID +
                                     " FROM " + CLIENT_TABLE +
-                                    " WHERE " + CLIENT_PHONE_NUMBER + " = ?" +
-                                    " AND " + CLIENT_EMAIL + " = ?";
+                                    " WHERE " + CLIENT_EMAIL + " = ?";
 
-                    DatabaseHandler handler = new DatabaseHandler();
+                    //SQL запрос для получения ID клиента из таблицы в базе
+                    String getIdClientWithPhone =
+                            "SELECT " + CLIENT_ID +
+                                    " FROM " + CLIENT_TABLE +
+                                    " WHERE " + CLIENT_PHONE_NUMBER + " = ?";
 
-                    PreparedStatement statement = handler.createDbConnection().prepareStatement(getIdClient);
+                    PreparedStatement statement = null;
 
-                    //установка значений для вставки в запрос
-                    statement.setString(1, tableClients.getSelectionModel().getSelectedItem().getPhoneNumber());
-                    statement.setString(2, tableClients.getSelectionModel().getSelectedItem().getEmail());
+                    //проверка на пустое значение поля электронная почта
+                    if (tableClients.getSelectionModel().getSelectedItem().getEmail() != null) {
+                        statement = new DatabaseHandler().createDbConnection().prepareStatement(getIdClientWithEmail);
+
+                        //установка значений для вставки в запрос
+                        statement.setString(1, tableClients.getSelectionModel().getSelectedItem().getEmail());
+                    }
+
+                    //проверка на пустое значение поля номер телефона
+                    if (tableClients.getSelectionModel().getSelectedItem().getPhoneNumber() != null) {
+                        statement = new DatabaseHandler().createDbConnection().prepareStatement(getIdClientWithPhone);
+
+                        //установка значений для вставки в запрос
+                        statement.setString(1, tableClients.getSelectionModel().getSelectedItem().getPhoneNumber());
+                    }
+
                     //выполнение запроса и сохранение значений в resultSet
                     ResultSet resultSet = statement.executeQuery();
 
                     while (resultSet.next()) {
                         //получаем id из набора данных, полученного из базы
                         idClient = resultSet.getInt("id");
+                        System.out.println(idClient);
                     }
 
                 } catch (SQLException e) {
@@ -370,7 +386,6 @@ public class ClientsScreenController {
         }
 
 
-
     }
 
     /**
@@ -391,7 +406,6 @@ public class ClientsScreenController {
             preparedStatement.executeUpdate();
             //обновление таблицы после удаления
             tableClients.setItems(createListClients(getClientsTableContent()));
-
 
 
             //открываем диалоговое окно для уведомления об успешном удалении
