@@ -71,7 +71,7 @@ public class Helper {
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.setTitle("Информационная система для агентства недвижимости");
-        stage.getScene().getStylesheets().add("ru/tds/realestateagency/css/style.css");
+        stage.getScene().getStylesheets().add("ru/tds/realestateagency/css/fullpackstyling.css");
         stage.show();
     }
 

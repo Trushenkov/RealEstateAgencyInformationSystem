@@ -15,10 +15,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("views/mainpageScreen.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("views/main.fxml"));
         primaryStage.setTitle("Информационная система для агентства недвижимости");
-        primaryStage.setScene(new Scene(root, 1100, 600));
-        primaryStage.getScene().getStylesheets().add("ru/tds/realestateagency/css/style.css");
+        primaryStage.setScene(new Scene(root));
+        primaryStage.getScene().getStylesheets().add("ru/tds/realestateagency/css/fullpackstyling.css");
         primaryStage.show();
     }
 

@@ -290,6 +290,14 @@ public class RealtorsScreenController {
             preparedStatement.setString(1, tfLastName.getText());
             preparedStatement.setString(2, tfFirstName.getText());
             preparedStatement.setString(3, tfMiddleName.getText());
+            if (tfCommissionPart.getText().isEmpty()){
+                //открываем диалоговое окно для уведомления об ошибке
+                showModalWindow(
+                        "Ошибка добавление нового риэлтора",
+                        "Доля от комиссии - обязательно числовое поле, которое может принимать значение от 0 до 100",
+                        AlertType.ERROR);
+                return;
+            }
             if (Integer.parseInt(tfCommissionPart.getText()) >= 0 && Integer.parseInt(tfCommissionPart.getText()) <= 100) {
                 preparedStatement.setInt(4, Integer.parseInt(tfCommissionPart.getText()));
             } else {
@@ -385,7 +393,7 @@ public class RealtorsScreenController {
     public void goBackBtnClicked(ActionEvent actionEvent) {
         ((Node) actionEvent.getSource()).getScene().getWindow().hide();
         //переход на главный экран
-        Helper.changeScreen("/ru/tds/realestateagency/views/mainpageScreen.fxml");
+        Helper.changeScreen("/ru/tds/realestateagency/views/main.fxml");
     }
 
     /**

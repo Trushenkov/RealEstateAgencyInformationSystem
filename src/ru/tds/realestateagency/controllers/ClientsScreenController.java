@@ -439,7 +439,7 @@ public class ClientsScreenController {
     public void goBackBtnClicked(ActionEvent actionEvent) {
         ((Node) actionEvent.getSource()).getScene().getWindow().hide();
         //переход на главный экран
-        Helper.changeScreen("/ru/tds/realestateagency/views/mainpageScreen.fxml");
+        Helper.changeScreen("/ru/tds/realestateagency/views/main.fxml");
     }
 
     /**
