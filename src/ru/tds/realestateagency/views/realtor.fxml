@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import ru.tds.realestateagency.textfields.NumberTextField?>
+<?import ru.tds.realestateagency.textfields.SimpleTextField?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+            prefWidth="950.0" stylesheets="@../css/fullpackstyling.css" xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ru.tds.realestateagency.controllers.RealtorsScreenController">
+    <children>
+        <AnchorPane id="topPane" prefHeight="140.0" prefWidth="1000.0" style="-fx-background-color: #2D75E8"
+                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <FontAwesomeIconView fill="WHITE" glyphName="BRIEFCASE" layoutX="50.0" layoutY="105.0" size="80"/>
+                <Label layoutX="148.0" layoutY="95.0" text="Агентство недвижимости" textFill="WHITE">
+                    <font>
+                        <Font size="13.0"/>
+                    </font>
+                </Label>
+                <Label layoutX="142.0" layoutY="25.0" text="Риэлторы" textFill="WHITE">
+                    <font>
+                        <Font size="48.0"/>
+                    </font>
+                </Label>
+            </children>
+        </AnchorPane>
+        <TableView fx:id="tableRealtors" layoutX="14.0" layoutY="248.0" prefHeight="300.0" prefWidth="629.0"
+                   stylesheets="@../css/fullpackstyling.css" AnchorPane.bottomAnchor="52.0" AnchorPane.leftAnchor="14.0"
+                   AnchorPane.rightAnchor="307.0" AnchorPane.topAnchor="248.0">
+            <columns>
+                <TableColumn fx:id="tableColumnLastName" prefWidth="176.0" text="Фамилия"/>
+                <TableColumn fx:id="tableColumnFirstName" minWidth="0.0" prefWidth="122.0" text="Имя"/>
+                <TableColumn fx:id="tableColumnMiddleName" prefWidth="133.0" text="Отчество"/>
+                <TableColumn fx:id="tableColumnCommissionPart" prefWidth="175.0" text="Доля от комиссии"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
+        <Button fx:id="goBackBtn" alignment="CENTER" layoutX="14.0" layoutY="563.0" mnemonicParsing="false"
+                onAction="#goBackBtnClicked" prefHeight="30.0" prefWidth="105.0" text="Назад"
+                AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="14.0">
+            <cursor>
+                <Cursor fx:constant="HAND"/>
+            </cursor>
+            <graphic>
+                <FontAwesomeIconView fill="#2d75e8" glyphName="CHEVRON_LEFT" size="1.3em"/>
+            </graphic>
+        </Button>
+        <HBox alignment="CENTER" layoutX="672.0" layoutY="152.0" prefHeight="28.0" prefWidth="260.0" spacing="5.0"
+              AnchorPane.rightAnchor="18.0">
+            <children>
+                <FontAwesomeIconView fill="#2d75e8" glyphName="SEARCH"/>
+                <TextField fx:id="tfSearch" prefHeight="30.0" prefWidth="255.0" promptText="Поиск по ФИО"/>
+            </children>
+        </HBox>
+        <VBox layoutX="672.0" layoutY="254.0" prefHeight="210.0" prefWidth="260.0" spacing="15.0"
+              AnchorPane.bottomAnchor="136.0" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="254.0">
+            <children>
+                <HBox alignment="CENTER" layoutX="646.0" layoutY="220.0" prefHeight="25.0" prefWidth="188.0"
+                      AnchorPane.rightAnchor="50.0">
+                    <children>
+                        <FontAwesomeIconView fill="#2d75e8" glyphName="USER" text="">
+                            <HBox.margin>
+                                <Insets right="5.0"/>
+                            </HBox.margin>
+                        </FontAwesomeIconView>
+                        <SimpleTextField fx:id="tfLastName" prefHeight="30.0" prefWidth="235.0" promptText="Фамилия"
+                                         stylesheets="@../css/fullpackstyling.css">
+                            <font>
+                                <Font name="Segoe UI" size="13.0"/>
+                            </font>
+                        </SimpleTextField>
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER" layoutX="646.0" layoutY="275.0" prefHeight="25.0" prefWidth="188.0"
+                      AnchorPane.rightAnchor="50.0">
+                    <children>
+                        <FontAwesomeIconView fill="#2d75e8" glyphName="USER" text="">
+                            <HBox.margin>
+                                <Insets right="5.0"/>
+                            </HBox.margin>
+                        </FontAwesomeIconView>
+                        <SimpleTextField fx:id="tfFirstName" prefHeight="30.0" prefWidth="235.0" promptText="Имя"
+                                         stylesheets="@../css/fullpackstyling.css">
+                            <font>
+                                <Font name="Segoe UI" size="13.0"/>
+                            </font>
+                        </SimpleTextField>
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER" layoutX="646.0" layoutY="330.0" prefHeight="25.0" prefWidth="188.0"
+                      AnchorPane.rightAnchor="50.0">
+                    <children>
+                        <FontAwesomeIconView fill="#2d75e8" glyphName="USER" text="">
+                            <HBox.margin>
+                                <Insets right="5.0"/>
+                            </HBox.margin>
+                        </FontAwesomeIconView>
+                        <SimpleTextField fx:id="tfMiddleName" prefHeight="30.0" prefWidth="235.0" promptText="Отчество"
+                                         stylesheets="@../css/fullpackstyling.css">
+                            <font>
+                                <Font name="Segoe UI" size="13.0"/>
+                            </font>
+                        </SimpleTextField>
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER" layoutX="712.0" layoutY="385.0" prefHeight="25.0" prefWidth="188.0"
+                      AnchorPane.rightAnchor="50.0">
+                    <children>
+                        <FontAwesomeIconView fill="#2f5f7f" glyphName="PERCENT">
+                            <HBox.margin>
+                                <Insets right="10.0"/>
+                            </HBox.margin>
+                        </FontAwesomeIconView>
+                        <NumberTextField fx:id="tfCommissionPart" maxLength="3" prefHeight="30.0" prefWidth="235.0"
+                                         promptText="Доля от коммиссии  "/>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+        <HBox layoutX="14.0" layoutY="152.0" prefHeight="80.0" prefWidth="630.0" spacing="100.0"
+              AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="307.0">
+            <children>
+                <Pane layoutX="36.0" layoutY="152.0" prefHeight="80.0" prefWidth="200.0"
+                      style="-fx-background-color: #EEAC4C;">
+                    <children>
+                        <Label layoutX="21.0" layoutY="57.0" text="Количество риэлторов" textFill="WHITE">
+                            <font>
+                                <Font size="13.0"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="totalRealtorsLabel" layoutX="75.0" layoutY="14.0" text="0" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="36.0"/>
+                            </font>
+                        </Label>
+                    </children>
+                </Pane>
+                <Pane layoutX="257.0" layoutY="152.0" prefHeight="80.0" prefWidth="200.0"
+                      style="-fx-background-color: #5cb55b;">
+                    <children>
+                        <Label layoutX="11.0" layoutY="57.0" text="Связаны с потребностью" textFill="WHITE">
+                            <font>
+                                <Font size="13.0"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="clientsWithNeedsLabel" layoutX="75.0" layoutY="14.0" text="0" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="36.0"/>
+                            </font>
+                        </Label>
+                    </children>
+                </Pane>
+                <Pane layoutX="478.0" layoutY="152.0" prefHeight="80.0" prefWidth="200.0"
+                      style="-fx-background-color: #d7534e;">
+                    <children>
+                        <Label layoutX="8.0" layoutY="57.0" text="Связаны с предложением" textFill="WHITE">
+                            <font>
+                                <Font size="13.0"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="clientsWithOffersLabel" layoutX="75.0" layoutY="14.0" text="0" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="36.0"/>
+                            </font>
+                        </Label>
+                    </children>
+                </Pane>
+            </children>
+        </HBox>
+        <HBox alignment="CENTER" layoutX="675.0" layoutY="470.0" prefHeight="30.0" spacing="15.0"
+              AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="470.0">
+            <children>
+                <Button id="createBtn" fx:id="createBtn" mnemonicParsing="false" onAction="#createBtnClicked"
+                        prefHeight="30.0" prefWidth="120.0" text="Создать">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                    <graphic>
+                        <FontAwesomeIconView fill="#2d75e8" glyphName="USER_PLUS" size="1.3em"/>
+                    </graphic>
+                </Button>
+                <Button id="updateBtn" fx:id="updateBtn" mnemonicParsing="false" onAction="#updateBtnClicked"
+                        prefHeight="30.0" prefWidth="120.0" text="Обновить">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                    <graphic>
+                        <FontAwesomeIconView fill="#2d75e8" glyphName="REFRESH" size="1.3em"/>
+                    </graphic>
+                </Button>
+            </children>
+        </HBox>
+        <Button id="deleteBtn" fx:id="deleteBtn" layoutX="675.0" layoutY="518.0" mnemonicParsing="false"
+                onAction="#deleteBtnClicked" prefHeight="30.0" prefWidth="255.0" text="Удалить"
+                AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="518.0">
+            <cursor>
+                <Cursor fx:constant="HAND"/>
+            </cursor>
+            <graphic>
+                <FontAwesomeIconView fill="#2d75e8" glyphName="USER_TIMES" size="1.5em"/>
+            </graphic>
+        </Button>
+
+    </children>
+</AnchorPane>
