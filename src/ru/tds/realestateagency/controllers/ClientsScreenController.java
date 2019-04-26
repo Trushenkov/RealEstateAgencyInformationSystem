@@ -38,6 +38,12 @@ public class ClientsScreenController {
     private static final String CLIENT_EMAIL = "email";
     private static final String CLIENT_ID = "id";
 
+    @FXML
+    private Label clientsWithNeedsLabel;
+    @FXML
+    private Label clientsWithOffersLabel;
+    @FXML
+    private Label totalClientsLabel;
 
     //Элементы разметки интерфейса
     @FXML
@@ -107,9 +113,11 @@ public class ClientsScreenController {
         if (alert.getAlertType().equals(AlertType.ERROR)) {
             Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
             stage.getIcons().add(new Image(getClass().getResource("/ru/tds/realestateagency/images/warning.png").toString()));
+            stage.getScene().getStylesheets().add("ru/tds/realestateagency/css/fullpackstyling.css");
         } else {
             Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
             stage.getIcons().add(new Image(getClass().getResource("/ru/tds/realestateagency/images/success.png").toString()));
+            stage.getScene().getStylesheets().add("ru/tds/realestateagency/css/fullpackstyling.css");
         }
 
         //отображаем окно
@@ -260,12 +268,16 @@ public class ClientsScreenController {
             if (!tfPhoneNumber.getText().isEmpty()) {
                 //установка значения "номер телефона" для объекта
                 client.setPhoneNumber(tfPhoneNumber.getText());
+            } else {
+                client.setPhoneNumber("");
             }
 
             //проверяем не пустое ли поле "Электронная почта"
             if (!tfEmail.getText().isEmpty()) {
                 //установка значения "электронная почта" для объекта
                 client.setEmail(tfEmail.getText());
+            } else {
+                client.setEmail("");
             }
 
             System.out.println(client);
@@ -357,6 +369,17 @@ public class ClientsScreenController {
             updateClientStatement.setString(1, tfLastName.getText());
             updateClientStatement.setString(2, tfFirstName.getText());
             updateClientStatement.setString(3, tfMiddleName.getText());
+
+            if (tfPhoneNumber.getText().isEmpty() && tfEmail.getText().isEmpty()) {
+                //открываем диалоговое окно для уведомления об ошибке
+                showModalWindow(
+                        "Ошибка добавление нового клиента",
+                        "Поля номер телефона и элеткронная почта не обязательны к заполнению, но одно из них должно быть указано.",
+                        AlertType.ERROR
+                );
+                return;
+            }
+
             updateClientStatement.setString(4, tfPhoneNumber.getText());
             updateClientStatement.setString(5, tfEmail.getText());
             updateClientStatement.setInt(6, idClient);

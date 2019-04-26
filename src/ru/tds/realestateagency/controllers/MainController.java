@@ -62,9 +62,9 @@ public class MainController {
     void handleButtonClicks(ActionEvent event) {
         ((Node) event.getSource()).getScene().getWindow().hide();
         if (event.getSource().equals(btnClients)) {
-            Helper.changeScreen("/ru/tds/realestateagency/views/clientsScreen.fxml");
+            Helper.changeScreen("/ru/tds/realestateagency/views/client.fxml");
         } else if (event.getSource().equals(btnRealtors)) {
-            Helper.changeScreen("/ru/tds/realestateagency/views/realtorsScreen.fxml");
+            Helper.changeScreen("/ru/tds/realestateagency/views/realtor.fxml");
         }
     }
 

@@ -37,6 +37,14 @@ public class RealtorsScreenController {
     private static final String REALTOR_MIDDLE_NAME = "middleName";
     private static final String REALTOR_COMMISSION_PART = "commissionPart";
 
+
+    @FXML
+    private Label totalRealtorsLabel;
+    @FXML
+    private Label clientsWithOffersLabel;
+    @FXML
+    private Label clientsWithNeedsLabel;
+
     //Элементы разметки интерфейса
     @FXML
     private Button createBtn;
