@@ -1,80 +1,96 @@
-.button
-{
-    -fx-background-color : #F3F3F3;
-}
-.button:hover
-{
-    -fx-background-color : #A1C1F4 ;
-}
-.button:pressed
-{
-    -fx-background-color : #73A3EF ;
+/* BUTTONS */
+/*.button {*/
+/*    -fx-background-color: #F3F3F3;*/
+/*}*/
+
+.button:hover, #createBtn:hover, #updateBtn:hover, #deleteBtn:hover, #goBackBtn:hover {
+    -fx-background-color: #A1C1F4;
 }
 
+.button:pressed, #createBtn:pressed, #updateBtn:pressed, #deleteBtn:pressed, #goBackBtn:pressed {
+    -fx-background-color: #73A3EF;
+    -fx-scale-y: 0.95;
+    -fx-scale-x: 0.97;
+}
+
+.button, #createBtn, #updateBtn, #deleteBtn, #goBackBtn {
+    -fx-border-width: 1px;
+    -fx-border-color: #73a3ef;
+    -fx-text-fill: #616161;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+
+    /*-fx-font-size: 12px;*/
+    /*-fx-border-color: #2D75E8;*/
+    /*-fx-border-style: solid;*/
+    /*-fx-border-width: 1px;*/
+    /*-fx-border-radius: 500px;*/
+}
+
+/* TABLE */
 .table-view .column-header,
 .table-view .column-header-background .filler {
-    -fx-cell-size : 20;
-    -fx-background-color:   #2D75E8;
+    -fx-cell-size: 20;
+    -fx-background-color: #2D75E8;
 }
-.table-view .column-header .label{
 
+.table-view .column-header .label {
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-alignment: CENTER_LEFT;
 }
-.table-view .cell{
+
+.table-view .cell {
     -fx-cell-size: 30;
-    -fx-alignment: center-left;
     -fx-text-fill: #000000;
     -fx-alignment: CENTER_LEFT;
 }
 
 .table-row-cell:selected {
-    -fx-background-color:  rgb(127, 172, 243);
+    -fx-background-color: rgb(127, 172, 243);
 }
-.table-row-cell:selected .text {
-    -fx-fill : white ;
 
+.table-row-cell:selected .text {
+    -fx-fill: white;
 }
+
 /* scroll bar starts here */
 
 /* The increment and decrement button CSS class of scrollbar */
-.table-view .increment-button ,.table-view .decrement-button {
-    -fx-background-color:transparent;
+.table-view .increment-button, .table-view .decrement-button {
+    -fx-background-color: transparent;
     -fx-background-radius: 2em;
 
 }
 
 /* The main scrollbar **track** CSS class  */
 .table-view .scroll-bar:horizontal .track,
-.table-view .scroll-bar:vertical .track{
+.table-view .scroll-bar:vertical .track {
     -fx-background-color: transparent;
-    -fx-border-color:derive(  #2D75E8,80%);
+    -fx-border-color: derive(#2D75E8, 80%);
     -fx-background-radius: 2em;
-    -fx-border-radius:2em;
+    -fx-border-radius: 2em;
 }
 
 /* The main scrollbar **thumb** CSS class which we drag every time (movable) */
 .table-view .scroll-bar:horizontal .thumb,
 .table-view .scroll-bar:vertical .thumb {
-    -fx-background-color:derive( #2D75E8,90%);
+    -fx-background-color: derive(#2D75E8, 90%);
     -fx-background-insets: 2, 0, 0;
     -fx-background-radius: 2em;
-
 }
 
-/* chart properties */
-
-.chart {
-    -fx-padding: 10px;
+/* TextField */
+.text-field {
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 13px;
     -fx-background-color: transparent;
-    -fx-legend-visible: false;
-}
-.chart-plot-background {
-    -fx-background-color:transparent;
+    -fx-prompt-text-fill: #616161;
+    -fx-border-color: #4fc3f7;
+    -fx-border-width: 0px 0px 1px 0px;
 }
 
-.chart-pie {
-    -fx-border-color: derive(-fx-pie-color, 1%);
-    -fx-border-width: 0px;
+.text-field:focused {
+    -fx-border-color: #ff5722;
+    /*-fx-text-fill: #ff5722;*/
 }
