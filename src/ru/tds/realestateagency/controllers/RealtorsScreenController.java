@@ -37,15 +37,14 @@ public class RealtorsScreenController {
     private static final String REALTOR_MIDDLE_NAME = "middleName";
     private static final String REALTOR_COMMISSION_PART = "commissionPart";
 
-
+    //Элементы разметки интерфейса
     @FXML
     private Label totalRealtorsLabel;
     @FXML
-    private Label clientsWithOffersLabel;
+    private Label realtorsWithNeedsLabel;
     @FXML
-    private Label clientsWithNeedsLabel;
+    private Label realtorsWithOffersLabel;
 
-    //Элементы разметки интерфейса
     @FXML
     private Button createBtn;
     @FXML
@@ -63,7 +62,7 @@ public class RealtorsScreenController {
     @FXML
     private TableColumn<Realtor, String> tableColumnMiddleName;
     @FXML
-    private TableColumn<Realtor, Integer> tableColumnCommissionPart;
+    private TableColumn<Realtor, Integer> tableColumnCommisionPart;
     @FXML
     private TextField tfCommissionPart;
     @FXML
@@ -129,7 +128,7 @@ public class RealtorsScreenController {
         tableColumnLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         tableColumnFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         tableColumnMiddleName.setCellValueFactory(new PropertyValueFactory<>("middleName"));
-        tableColumnCommissionPart.setCellValueFactory(new PropertyValueFactory<>("commissionPart"));
+        tableColumnCommisionPart.setCellValueFactory(new PropertyValueFactory<>("commissionPart"));
 
         //заполняем таблицу данным из БД
         tableRealtors.setItems(createListRealtors(getRealtorsTableContent()));
