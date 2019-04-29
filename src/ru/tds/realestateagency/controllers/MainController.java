@@ -65,6 +65,8 @@ public class MainController {
             Helper.changeScreen("/ru/tds/realestateagency/views/client.fxml");
         } else if (event.getSource().equals(btnRealtors)) {
             Helper.changeScreen("/ru/tds/realestateagency/views/realtor.fxml");
+        }  else if (event.getSource().equals(btnHouses)) {
+            Helper.changeScreen("/ru/tds/realestateagency/views/buildings2.fxml");
         }
     }
 
