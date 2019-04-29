@@ -1,6 +1,7 @@
 package ru.tds.realestateagency.controllers;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -137,6 +138,13 @@ public class ClientsScreenController {
         tableColumnPhoneNumber.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
         tableColumnEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
 
+        createListClients(getClientsTableContent()).addListener(new ListChangeListener<Client>() {
+            @Override
+            public void onChanged(Change<? extends Client> c) {
+                updateTableContent();
+            }
+        });
+
         //заполняем таблицу данным из БД
         tableClients.setItems(createListClients(getClientsTableContent()));
 
@@ -211,6 +219,13 @@ public class ClientsScreenController {
         //Поиск клиента по ФИО
         findClientByFullName();
 
+    }
+
+    /**
+     * Метод для заполнения таблицы данными из базы
+     */
+    private void updateTableContent() {
+        tableClients.setItems(createListClients(getClientsTableContent()));
     }
 
     /**
@@ -304,7 +319,7 @@ public class ClientsScreenController {
                 addClientStatement.executeUpdate();
 
                 //обновление таблицы после выполнения запроса
-                tableClients.setItems(createListClients(getClientsTableContent()));
+//                tableClients.setItems(createListClients(getClientsTableContent()));
 
                 //открываем диалоговое окно для уведомления об успешном добавлении
                 showModalWindow(
@@ -386,7 +401,7 @@ public class ClientsScreenController {
             //выполнение SQL запроса
             updateClientStatement.executeUpdate();
             //обновление таблицы
-            tableClients.setItems(createListClients(getClientsTableContent()));
+//            tableClients.setItems(createListClients(getClientsTableContent()));
 
             //открываем диалоговое окно для уведомления об успешном обновлении
             showModalWindow(
@@ -428,7 +443,7 @@ public class ClientsScreenController {
             //выполнение запроса на удаление
             preparedStatement.executeUpdate();
             //обновление таблицы после удаления
-            tableClients.setItems(createListClients(getClientsTableContent()));
+//            tableClients.setItems(createListClients(getClientsTableContent()));
 
 
             //открываем диалоговое окно для уведомления об успешном удалении
