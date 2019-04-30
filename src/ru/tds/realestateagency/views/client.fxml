@@ -55,7 +55,7 @@
     <HBox alignment="CENTER" layoutX="672.0" layoutY="152.0" prefHeight="28.0" prefWidth="260.0" spacing="5.0"
           AnchorPane.rightAnchor="18.0">
         <FontAwesomeIconView fill="#2d75e8" glyphName="SEARCH"/>
-        <SimpleTextField fx:id="tfSearch" prefHeight="30.0" prefWidth="255.0" promptText="Поиск по ФИО"/>
+        <SimpleTextField fx:id="tfSearch" prefHeight="30.0" prefWidth="235.0" promptText="Поиск по ФИО"/>
     </HBox>
     <VBox layoutX="672.0" layoutY="254.0" prefHeight="210.0" prefWidth="260.0" spacing="15.0"
           AnchorPane.bottomAnchor="136.0" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="254.0">
@@ -134,7 +134,7 @@
                     <Font size="13.0"/>
                 </font>
             </Label>
-            <Label fx:id="totalClientsLabel" layoutX="75.0" layoutY="14.0" text="0" textFill="WHITE">
+            <Label fx:id="numberOfClientsLabel" layoutX="75.0" layoutY="14.0" text="0" textFill="WHITE">
                 <font>
                     <Font name="System Bold" size="36.0"/>
                 </font>

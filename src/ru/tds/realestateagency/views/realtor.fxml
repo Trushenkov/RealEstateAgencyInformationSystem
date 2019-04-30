@@ -52,7 +52,7 @@
     <HBox alignment="CENTER" layoutX="672.0" layoutY="152.0" prefHeight="28.0" prefWidth="260.0" spacing="5.0"
           AnchorPane.rightAnchor="18.0">
         <FontAwesomeIconView fill="#2d75e8" glyphName="SEARCH"/>
-        <SimpleTextField fx:id="tfSearch" prefHeight="30.0" prefWidth="255.0" promptText="Поиск по ФИО"/>
+        <SimpleTextField fx:id="tfSearch" prefHeight="30.0" prefWidth="235.0" promptText="Поиск по ФИО"/>
     </HBox>
     <VBox layoutX="672.0" layoutY="254.0" prefHeight="160.0" prefWidth="260.0" spacing="15.0"
           AnchorPane.bottomAnchor="187.0" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="254.0">

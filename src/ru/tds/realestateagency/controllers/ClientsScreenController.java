@@ -39,14 +39,15 @@ public class ClientsScreenController {
     private static final String CLIENT_EMAIL = "email";
     private static final String CLIENT_ID = "id";
 
+
+
+    //Элементы разметки интерфейса
+    @FXML
+    private Label numberOfClientsLabel;
     @FXML
     private Label clientsWithNeedsLabel;
     @FXML
     private Label clientsWithOffersLabel;
-    @FXML
-    private Label totalClientsLabel;
-
-    //Элементы разметки интерфейса
     @FXML
     private Button createBtn;
     @FXML
@@ -138,15 +139,26 @@ public class ClientsScreenController {
         tableColumnPhoneNumber.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
         tableColumnEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
 
-        createListClients(getClientsTableContent()).addListener(new ListChangeListener<Client>() {
+        ObservableList<Client> listClients = createListClients(getClientsTableContent());
+
+        listClients.addListener(new ListChangeListener<Client>() {
             @Override
             public void onChanged(Change<? extends Client> c) {
                 updateTableContent();
+                numberOfClientsLabel.setText(String.valueOf(listClients.size()));
             }
         });
 
+
+        //подсказки при наведении на поля в таблице
+        createTableTooltip();
+
         //заполняем таблицу данным из БД
-        tableClients.setItems(createListClients(getClientsTableContent()));
+        tableClients.setItems(listClients);
+
+        //считаем и устанавливаем количество клиентов
+        numberOfClientsLabel.setText(String.valueOf(listClients.size()));
+
 
         //Заносим данные выделенного объекта в текстовые поля при клике на объект в таблице
         tableClients.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -220,6 +232,32 @@ public class ClientsScreenController {
         findClientByFullName();
 
     }
+
+    /**
+     * Метод для создания всплывающих подсказок при наведении на соответствующие поля таблицы
+     */
+    private void createTableTooltip() {
+        //Названия полей в таблице
+        Label lastNameLabel = new Label("Фамилия");
+        Label firstNameLabel = new Label("Имя");
+        Label middleNameLabel = new Label("Отчество");
+        Label numberPhoneLabel = new Label("Номер телефона");
+        Label emailLabel = new Label("Электронная почта");
+
+        //Подсказки при наведении
+        lastNameLabel.setTooltip(new Tooltip(lastNameLabel.getText()));
+        firstNameLabel.setTooltip(new Tooltip(firstNameLabel.getText()));
+        middleNameLabel.setTooltip(new Tooltip(middleNameLabel.getText()));
+        numberPhoneLabel.setTooltip(new Tooltip(numberPhoneLabel.getText()));
+        emailLabel.setTooltip(new Tooltip(emailLabel.getText()));
+
+        //установка подсказок на соответствующие поля таблицы
+        tableColumnLastName.setGraphic(lastNameLabel);
+        tableColumnFirstName.setGraphic(firstNameLabel);
+        tableColumnMiddleName.setGraphic(middleNameLabel);
+        tableColumnPhoneNumber.setGraphic(numberPhoneLabel);
+        tableColumnEmail.setGraphic(emailLabel);
+}
 
     /**
      * Метод для заполнения таблицы данными из базы
@@ -388,8 +426,8 @@ public class ClientsScreenController {
             if (tfPhoneNumber.getText().isEmpty() && tfEmail.getText().isEmpty()) {
                 //открываем диалоговое окно для уведомления об ошибке
                 showModalWindow(
-                        "Ошибка добавление нового клиента",
-                        "Поля номер телефона и элеткронная почта не обязательны к заполнению, но одно из них должно быть указано.",
+                        "Ошибка обновления клиента",
+                        "Поля номер телефона и электронная почта не обязательны к заполнению, но одно из них должно быть указано.",
                         AlertType.ERROR
                 );
                 return;
