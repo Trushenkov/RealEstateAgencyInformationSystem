@@ -15,7 +15,7 @@
     <AnchorPane id="topPane" prefHeight="140.0" prefWidth="1000.0" style="-fx-background-color: #2D75E8"
                 AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <FontAwesomeIconView fill="WHITE" glyphName="BRIEFCASE" layoutX="50.0" layoutY="105.0" size="80"/>
-        <Label layoutX="148.0" layoutY="95.0" text="Агентство недвижимости" textFill="WHITE">
+        <Label layoutX="145.0" layoutY="95.0" text="Главная > Риэлторы" textFill="WHITE">
             <font>
                 <Font size="13.0"/>
             </font>
