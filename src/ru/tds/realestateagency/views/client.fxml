@@ -105,7 +105,7 @@
                     <Insets right="5.0"/>
                 </HBox.margin>
             </FontAwesomeIconView>
-            <NumberTextField fx:id="tfPhoneNumber" prefHeight="30.0" prefWidth="235.0" promptText="Номер телефона">
+            <NumberTextField fx:id="tfPhoneNumber" maxLength="11" prefHeight="30.0" prefWidth="235.0" promptText="Номер телефона">
                 <font>
                     <Font name="Segoe UI" size="13.0"/>
                 </font>
