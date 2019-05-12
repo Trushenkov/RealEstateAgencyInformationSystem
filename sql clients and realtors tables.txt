@@ -1,0 +1,38 @@
+use realestateagency;
+
+CREATE TABLE `clients` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `lastName` varchar(255) DEFAULT NULL,
+  `firstName` varchar(255) DEFAULT NULL,
+  `middleName` varchar(255) DEFAULT NULL,
+  `phoneNumber` varchar(11) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+SELECT * FROM `clients`;
+
+INSERT 
+INTO `clients` (`lastName`, `firstName` , `middleName`, `phoneNumber`, `email`)
+VALUES 
+('Синяев','Юрий','Николаевич','89534317658','asdg@mail.ru'),
+('Кочкин','Игорь','Олегович','89025673827','kochkin-86@yandex.ru'),
+('Фомин','Александр','Иванович','89376980876','aleksand__@gmail.com'),
+('Луконина','Валерия','Романовна','89005902375','valeria_r@mail.ru');
+
+CREATE TABLE `realtors` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `lastName` varchar(255) NOT NULL,
+  `firstName` varchar(255) NOT NULL,
+  `middleName` varchar(255) NOT NULL,
+  `commissionPart` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `realtors` (`lastName`, `firstName`, `middleName`, `commissionPart`)
+VALUES 
+('Сидоров','Евгений','Александрович',45),
+('Левашин','Владимир','Николаевич',63),
+('Нелепов','Олег','Константинович',50),
+('Малинина','Екатерина','Алексеевна',40),
+('Филина','Валерия','Сергеевна',56);
