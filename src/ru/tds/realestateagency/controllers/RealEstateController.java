@@ -178,57 +178,16 @@ public class RealEstateController {
     @FXML
     private Button deleteFlatButton;
 
-
-    @FXML
-    void goBackBtnClicked(ActionEvent event) {
-        ((Node) event.getSource()).getScene().getWindow().hide();
-        //переход на главный экран
-        Helper.changeScreen("/ru/tds/realestateagency/views/main.fxml");
-    }
-
-//    @FXML
-//    void createBtnClicked(ActionEvent event) {
-//
-//    }
-//
-//    @FXML
-//    void updateBtnClicked(ActionEvent event) {
-//
-//    }
-//
-//    @FXML
-//    void deleteBtnClicked(ActionEvent event) {
-//
-//    }
-
-    @FXML
-    void createBtnClicked(ActionEvent event) {
-
-    }
-
-    @FXML
-    public void updateBtnClicked(ActionEvent event) {
-
-    }
-
-    @FXML
-    void deleteBtnClicked(ActionEvent event) {
-
-    }
-
-
     @FXML
     public void initialize() {
         showHomesButton.setStyle("-fx-background-color: #0d47a1");
         headerTypeBuildingLabel.setText("Главная > Объекты недвижимости > Дом");
-        homesAnchorPane.toBack();
-        landsAnchorPane.toFront();
-        flatsAnchorPane.toBack();
+        homesAnchorPane.toFront();
         stackPane.setBackground(new Background(new BackgroundFill(Color.rgb(255, 255, 255), CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
     /**
-     * Метод для смены вкладок внутри экрана при нажатии на соответствующую кнопку
+     * Метод для смены вкладок внутри экрана при нажатии на соответствующий тип объекта недвижимости
      *
      * @param actionEvent нажатие на кнопку
      */
