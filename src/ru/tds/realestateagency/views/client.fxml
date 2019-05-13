@@ -9,7 +9,7 @@
 <?import ru.tds.realestateagency.textfields.SimpleTextField?>
 <?import ru.tds.realestateagency.textfields.NumberTextField?>
 <?import ru.tds.realestateagency.textfields.EmailTextField?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
             prefWidth="950.0"
             stylesheets="@../css/fullpackstyling.css"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
