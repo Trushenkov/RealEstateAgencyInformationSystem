@@ -6,12 +6,15 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import ru.tds.realestateagency.DatabaseHandler;
@@ -42,6 +45,8 @@ public class ClientsScreenController {
 
 
     //Элементы разметки интерфейса
+    @FXML
+    private AnchorPane mainPane;
     @FXML
     private Label numberOfClientsLabel;
     @FXML
@@ -128,6 +133,15 @@ public class ClientsScreenController {
 
     @FXML
     void initialize() {
+
+        //Обработка нажатия на главную панель окна, обнуление текстовых полей при нажатии и отмена выбора строки в таблице
+        mainPane.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                clearTextFields();
+                tableClients.getSelectionModel().clearSelection();
+            }
+        });
 
         updateBtn.setDisable(true);
         deleteBtn.setDisable(true);
@@ -306,7 +320,7 @@ public class ClientsScreenController {
      *
      * @param actionEvent нажатие на кнопку
      */
-    public void createBtnClicked(ActionEvent actionEvent) {
+    public void createClient(ActionEvent actionEvent) {
         //Создание объекта "Клиент"
         Client client = new Client();
 
@@ -405,7 +419,7 @@ public class ClientsScreenController {
      *
      * @param actionEvent нажатие на кнопку
      */
-    public void updateBtnClicked(ActionEvent actionEvent) {
+    public void updateClient(ActionEvent actionEvent) {
 
         //SQL запрос для обновления клиента
         String update = "UPDATE " + CLIENT_TABLE + " SET " + CLIENT_LAST_NAME + "=?,"
@@ -469,7 +483,7 @@ public class ClientsScreenController {
      *
      * @param actionEvent нажатие на кнопку
      */
-    public void deleteBtnClicked(ActionEvent actionEvent) {
+    public void deleteClient(ActionEvent actionEvent) {
         //SQL запрос на удаление клиента
         String deleteClient = "DELETE FROM " + CLIENT_TABLE + " WHERE " + CLIENT_ID + "=?";
 
