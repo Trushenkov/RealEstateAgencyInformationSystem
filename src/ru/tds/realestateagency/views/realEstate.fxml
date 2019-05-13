@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" stylesheets="@../css/fullpackstyling.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.tds.realestateagency.controllers.RealEstateController">
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" stylesheets="@../css/fullpackstyling.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.tds.realestateagency.controllers.RealEstateController">
     <AnchorPane id="topPane" prefHeight="140.0" prefWidth="1000.0" style="-fx-background-color: #2D75E8" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <Label fx:id="headerTypeBuildingLabel" layoutX="144.0" layoutY="95.0" text="Главная &gt; Объекты недвижимости" textFill="WHITE">
             <font>
@@ -33,7 +33,7 @@
         <FontAwesomeIconView fill="WHITE" glyphName="BUILDING_ALT" layoutX="60.0" layoutY="106.0" size="80" />
     </AnchorPane>
     <AnchorPane layoutY="140.0" prefHeight="460.0" prefWidth="200.0" style="-fx-background-color: #2D75E8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="140.0">
-        <VBox alignment="CENTER" spacing="10.0">
+        <VBox alignment="CENTER">
             <Button id="side-button" fx:id="showHomesButton" alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onAction="#switchContent" prefHeight="45.0" prefWidth="200.0" stylesheets="@../css/fullpackstyling.css" text="Дом" textFill="WHITE">
                 <cursor>
                     <Cursor fx:constant="HAND" />
@@ -214,7 +214,7 @@
                     <TableColumn fx:id="homeTableColumnFlatNumber" prefWidth="108.4285888671875" text="Номер квартиры" />
                     <TableColumn fx:id="homeTableColumnLatitude" prefWidth="51.20245361328125" text="Широта" />
                     <TableColumn fx:id="homeTableColumnLongitude" prefWidth="55.023193359375" text="Долгота" />
-                    <TableColumn fx:id="homeTableColumnFloor" prefWidth="42.04132080078125" text="Этажность дома" />
+                    <TableColumn fx:id="homeTableColumnNumberOfFloors" prefWidth="42.04132080078125" text="Этажность дома" />
                     <TableColumn fx:id="homeTableColumnNumberOfRooms" prefWidth="102.18316650390625" text="Кол-во комнат" />
                     <TableColumn fx:id="homeTableColumnSquare" prefWidth="71.35296630859375" text="Площадь" />
                 </columns>
