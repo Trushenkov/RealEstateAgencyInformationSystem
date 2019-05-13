@@ -1,5 +1,7 @@
 ﻿use realestateagency;
 
+//Table "clients"
+DROP TABLE IF EXISTS `clients`;
 CREATE TABLE `clients` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `lastName` varchar(255) DEFAULT NULL,
@@ -7,8 +9,9 @@ CREATE TABLE `clients` (
   `middleName` varchar(255) DEFAULT NULL,
   `phoneNumber` varchar(11) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`))
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8;
 
 SELECT * FROM `clients`;
 
@@ -20,14 +23,18 @@ VALUES
 ('Фомин','Александр','Иванович','89376980876','aleksand__@gmail.com'),
 ('Луконина','Валерия','Романовна','89005902375','valeria_r@mail.ru');
 
+
+//Table "realtors"
+DROP TABLE IF EXISTS `realtors`;
 CREATE TABLE `realtors` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `lastName` varchar(255) NOT NULL,
   `firstName` varchar(255) NOT NULL,
   `middleName` varchar(255) NOT NULL,
   `commissionPart` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`))
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8;
 
 INSERT INTO `realtors` (`lastName`, `firstName`, `middleName`, `commissionPart`)
 VALUES 
@@ -36,3 +43,72 @@ VALUES
 ('Нелепов','Олег','Константинович',50),
 ('Малинина','Екатерина','Алексеевна',40),
 ('Филина','Валерия','Сергеевна',56);
+
+//Table "home"
+DROP TABLE IF EXISTS `home`;
+CREATE TABLE `realestateagency`.`home` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `city` VARCHAR(255) NULL,
+  `street` VARCHAR(255) NULL,
+  `homeNumber` VARCHAR(255) NULL,
+  `flatNumber` VARCHAR(255) NULL,
+  `latitude` DOUBLE NULL,
+  `longitude` DOUBLE NULL,
+  `numberOfFloors` INT(11) NULL,
+  `numberOfRooms` INT(11) NULL,
+  `square` DOUBLE NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+INSERT INTO `home` (`city`, `street`, `homeNumber`, `flatNumber`, `latitude`, `longitude`, `numberOfFloors`, `numberOfRooms`, `square`)
+VALUES
+('Пенза', 'Кирова', '21', '47', -90, 56, 9, 3, 78),
+('Пенза', 'Стасова', '97', '56', -80, 34, 16, 2, 54),
+('Пенза', 'Лермонтова', '66', '', 65, 21, 16, 4, 98);
+
+
+DROP TABLE IF EXISTS `flat`;
+//Table "flat"
+CREATE TABLE `realestateagency`.`flat` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `city` VARCHAR(255) NULL,
+  `street` VARCHAR(255) NULL,
+  `homeNumber` VARCHAR(255) NULL,
+  `flatNumber` VARCHAR(255) NULL,
+  `latitude` DOUBLE NULL,
+  `longitude` DOUBLE NULL,
+  `floor` INT(11) NULL,
+  `numberOfRooms` INT(11) NULL,
+  `square` DOUBLE NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+INSERT INTO `flat` (`city`, `street`, `homeNumber`, `flatNumber`, `latitude`, `longitude`, `floor`, `numberOfRooms`, `square`)
+VALUES
+('Пенза', 'Беляева', '15', '34', 57, 23, 2, 2, 59),
+('Пенза', 'Пушкина', '26', '54', -79, 43, 5, 4, 54),
+('Пенза', 'Воронова', '78', '34', 69, 31, 9, 3, 80);
+
+DROP TABLE IF EXISTS `land`;
+//Table "land"
+CREATE TABLE `realestateagency`.`land` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `city` VARCHAR(255) NULL,
+  `street` VARCHAR(255) NULL,
+  `homeNumber` VARCHAR(255) NULL,
+  `flatNumber` VARCHAR(255) NULL,
+  `latitude` DOUBLE NULL,
+  `longitude` DOUBLE NULL,
+  `square` DOUBLE NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+INSERT INTO `land` (`city`, `street`, `homeNumber`, `flatNumber`, `latitude`, `longitude`, `square`)
+VALUES
+('Пенза', 'Аустрина', '15', '34', 57, 23, 99),
+('Пенза', 'Крымская', '26', '54', -79, 43, 134),
+('Пенза', 'Бакунина', '78', '34', 69, 31, 197);
+
