@@ -30,15 +30,15 @@
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
             </columnResizePolicy>
         </TableView>
-        <Button fx:id="createBtn" id="createBtn" layoutX="670.0" layoutY="494.0" mnemonicParsing="false" onAction="#createBtnClicked" prefHeight="35.0" prefWidth="125.0" text="Создать" AnchorPane.bottomAnchor="71.0" AnchorPane.rightAnchor="205.0">
+        <Button fx:id="createBtn" id="createBtn" layoutX="670.0" layoutY="494.0" mnemonicParsing="false" onAction="#createClient" prefHeight="35.0" prefWidth="125.0" text="Создать" AnchorPane.bottomAnchor="71.0" AnchorPane.rightAnchor="205.0">
          <graphic>
             <FontAwesomeIconView fill="#2f5f7f" glyphName="USER_PLUS" size="1.3em" />
          </graphic></Button>
-        <Button fx:id="updateBtn" id="updateBtn" layoutX="825.0" layoutY="494.0" mnemonicParsing="false" onAction="#updateBtnClicked" prefHeight="35.0" prefWidth="125.0" text="Обновить" AnchorPane.bottomAnchor="71.0" AnchorPane.rightAnchor="50.0">
+        <Button fx:id="updateBtn" id="updateBtn" layoutX="825.0" layoutY="494.0" mnemonicParsing="false" onAction="#updateClient" prefHeight="35.0" prefWidth="125.0" text="Обновить" AnchorPane.bottomAnchor="71.0" AnchorPane.rightAnchor="50.0">
          <graphic>
             <FontAwesomeIconView fill="#2f5f7f" glyphName="REFRESH" size="1.3em" />
          </graphic></Button>
-        <Button fx:id="deleteBtn" id="deleteBtn" layoutX="670.0" layoutY="551.0" mnemonicParsing="false" onAction="#deleteBtnClicked" prefHeight="35.0" prefWidth="280.0" text="Удалить" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="50.0">
+        <Button fx:id="deleteBtn" id="deleteBtn" layoutX="670.0" layoutY="551.0" mnemonicParsing="false" onAction="#deleteClient" prefHeight="35.0" prefWidth="280.0" text="Удалить" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="50.0">
          <graphic>
             <FontAwesomeIconView fill="#2f5f7f" glyphName="USER_TIMES" size="1.3em" />
          </graphic></Button>
