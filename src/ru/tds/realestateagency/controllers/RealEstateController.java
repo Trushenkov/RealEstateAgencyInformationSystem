@@ -24,6 +24,7 @@ import ru.tds.realestateagency.entities.Home;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 
 public class RealEstateController {
@@ -97,7 +98,7 @@ public class RealEstateController {
     @FXML
     private TableColumn<Home, String> homeTableColumnHomeNumber;
     @FXML
-    private TableColumn<Home, String > homeTableColumnFlatNumber;
+    private TableColumn<Home, String> homeTableColumnFlatNumber;
     @FXML
     private TableColumn<Home, Double> homeTableColumnLatitude;
     @FXML
@@ -233,6 +234,10 @@ public class RealEstateController {
     @FXML
     private Button deleteFlatButton;
 
+    ObservableList<Home> listOfHomes;
+
+    ArrayList<Integer> idArrayList;
+
     @FXML
     public void initialize() {
 
@@ -260,9 +265,9 @@ public class RealEstateController {
         homeTableColumnNumberOfRooms.setCellValueFactory(new PropertyValueFactory<>("numberOfRooms"));
         homeTableColumnSquare.setCellValueFactory(new PropertyValueFactory<>("square"));
 
-        ObservableList<Home> listHomes = createListHomes(getHomeTableContent());
+        listOfHomes = createListHomes(getHomeTableContent());
 
-        listHomes.addListener(new ListChangeListener<Home>() {
+        listOfHomes.addListener(new ListChangeListener<Home>() {
             @Override
             public void onChanged(Change<? extends Home> c) {
                 updateHomeTableContent();
@@ -270,7 +275,7 @@ public class RealEstateController {
         });
 
         //заполняем таблицу данным из БД
-        tableHomes.setItems(listHomes);
+        tableHomes.setItems(listOfHomes);
 
         //Заносим данные выделенного объекта в текстовые поля при клике на объект в таблице
         tableHomes.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -295,6 +300,12 @@ public class RealEstateController {
                 updateHomeButton.setDisable(true);
                 deleteHomeButton.setDisable(true);
             }
+
+            int idSelectedItemFromDb = idArrayList.get(tableHomes.getSelectionModel().getSelectedIndex());
+            System.out.println("Выбран объект, у которого id в базе = " + idSelectedItemFromDb);
+            System.out.println(tableHomes.getSelectionModel().getSelectedIndex());
+
+            System.out.println(idArrayList);
         });
     }
 
@@ -336,7 +347,6 @@ public class RealEstateController {
         Helper.changeScreen("/ru/tds/realestateagency/views/main.fxml");
     }
 
-
     /**
      * Метод для добавления нового объекта недвижимости типа "Дом" в базу данных
      *
@@ -344,20 +354,58 @@ public class RealEstateController {
      */
     public void createHome(ActionEvent actionEvent) {
 
-        if (isCorrectLatitude() && isCorrectLongitude()) {
+        Home home = new Home();
 
-            //Создание объекта "Дом"
-            Home home = new Home(
-                    homeTextFieldCity.getText(),
-                    homeTextFieldStreet.getText(),
-                    homeTextFieldHomeNumber.getText(),
-                    homeTextFieldFlatNumber.getText(),
-                    Double.valueOf(homeTextFieldLatitude.getText()),
-                    Double.valueOf(homeTextFieldLongitude.getText()),
-                    Integer.parseInt(homeTextFieldNumberOfFloors.getText()),
-                    Integer.parseInt(homeTextFieldNumberOfRooms.getText()),
-                    Double.valueOf(homeTextFieldSquare.getText())
-            );
+        if (!homeTextFieldCity.getText().isEmpty() ||
+                !homeTextFieldStreet.getText().isEmpty() ||
+                !homeTextFieldHomeNumber.getText().isEmpty() ||
+                !homeTextFieldFlatNumber.getText().isEmpty() ||
+                !homeTextFieldLatitude.getText().isEmpty() ||
+                !homeTextFieldLongitude.getText().isEmpty() ||
+                !homeTextFieldNumberOfFloors.getText().isEmpty() ||
+                !homeTextFieldNumberOfRooms.getText().isEmpty() ||
+                !homeTextFieldSquare.getText().isEmpty()
+        ) {
+
+            home.setCity(homeTextFieldCity.getText());
+            home.setStreet(homeTextFieldStreet.getText());
+            home.setHomeNumber(homeTextFieldHomeNumber.getText());
+            home.setFlatNumber(homeTextFieldFlatNumber.getText());
+
+            if (!homeTextFieldNumberOfFloors.getText().isEmpty()) {
+                home.setNumberOfFloors(Integer.parseInt(homeTextFieldNumberOfFloors.getText()));
+            }
+            if (!homeTextFieldNumberOfRooms.getText().isEmpty()) {
+                home.setNumberOfRooms(Integer.parseInt(homeTextFieldNumberOfRooms.getText()));
+            }
+            if (!homeTextFieldSquare.getText().isEmpty()) {
+                home.setSquare(Double.valueOf(homeTextFieldSquare.getText()));
+            }
+
+            if (!homeTextFieldLatitude.getText().isEmpty()) {
+                if (isCorrectLatitude()) {
+                    home.setLatitude(Double.valueOf(homeTextFieldLatitude.getText()));
+                } else {
+                    showModalWindow(
+                            "Ошибка добавления нового объекта 'Дом' ",
+                            "Широта может принимать значения от -90 до 90",
+                            Alert.AlertType.ERROR);
+                    return;
+                }
+            }
+
+
+            if (!homeTextFieldLongitude.getText().isEmpty()) {
+                if (isCorrectLongitude()) {
+                    home.setLongitude(Double.valueOf(homeTextFieldLongitude.getText()));
+                } else {
+                    showModalWindow(
+                            "Ошибка добавления нового объекта 'Дом' ",
+                            "Долгота может принимать значения от -180 до 180",
+                            Alert.AlertType.ERROR);
+                    return;
+                }
+            }
 
             System.out.println(home);
 
@@ -393,13 +441,18 @@ public class RealEstateController {
                 addHomeStatement.executeUpdate();
 
                 //обновление таблицы после выполнения запроса
-//                tableClients.setItems(createListHomes(getHomeTableContent()));
+//                tableHomes.setItems(createListHomes(getHomeTableContent()));
+//                listHomes.add(home);
+
+
 
                 //открываем диалоговое окно для уведомления об успешном добавлении
                 showModalWindow(
                         "Операция успешно выполнена",
                         "Объект недвижимости 'Дом' успешно добавлен!",
                         Alert.AlertType.INFORMATION);
+
+                listOfHomes.add(home);
 
                 //обнуляем текстовые поля после добавления клиента в базу
                 clearHomeTextFields();
@@ -414,16 +467,14 @@ public class RealEstateController {
                         "Объект недвижимости 'Дом'  не был добавлен в базу. Повторите еще раз",
                         Alert.AlertType.ERROR);
             }
-
-
         } else {
             showModalWindow(
                     "Ошибка добавления нового объекта 'Дом' ",
-                    "Широта может принимать значения от -90 до 90. \nДолгота может принимать значения от -180 до 180",
+                    "Ниодно поле объекта не заполнено. Для добавления нового объекта необходимо заполнить хотя бы одно поле",
                     Alert.AlertType.ERROR);
         }
-
     }
+
 
     /**
      * Метод для обнуления текстовых полей на вкладке "Дом"
@@ -491,8 +542,8 @@ public class RealEstateController {
      */
     private ObservableList<Home> createListHomes(ResultSet resultSet) {
         //создаем список клиентов
-        ObservableList<Home> listHomes = FXCollections.observableArrayList();
-
+        ObservableList<Home> list = FXCollections.observableArrayList();
+        idArrayList = new ArrayList<>();
         try {
             while (resultSet.next()) {
                 //Создание объекта "Дом"
@@ -508,7 +559,8 @@ public class RealEstateController {
                         resultSet.getDouble(10)
                 );
                 //добавляем клиента в список
-                listHomes.add(home);
+                list.add(home);
+                idArrayList.add(resultSet.getInt(1));
             }
         } catch (SQLException e) {
             //открываем диалоговое окно для уведомления об ошибке
@@ -517,7 +569,7 @@ public class RealEstateController {
                     "Возникла ошибка при формировании списка объектов недвижимости 'Дом' из набора данных, полученных из базы",
                     Alert.AlertType.ERROR);
         }
-        return listHomes;
+        return list;
     }
 
     /**
