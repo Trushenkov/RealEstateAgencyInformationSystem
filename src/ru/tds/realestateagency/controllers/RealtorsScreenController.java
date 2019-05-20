@@ -377,6 +377,8 @@ public class RealtorsScreenController {
                     "Удаление риэлтора выполнено успешно!",
                     AlertType.INFORMATION);
 
+
+
             //обнуляем текстовые поля после удаления клиента
             clearTextFields();
 

@@ -494,9 +494,6 @@ public class ClientsScreenController {
             preparedStatement.setInt(1, idClient);
             //выполнение запроса на удаление
             preparedStatement.executeUpdate();
-            //обновление таблицы после удаления
-//            tableClients.setItems(createListClients(getClientsTableContent()));
-
 
             //открываем диалоговое окно для уведомления об успешном удалении
             showModalWindow(
