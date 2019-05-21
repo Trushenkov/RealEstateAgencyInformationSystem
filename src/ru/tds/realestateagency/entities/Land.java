@@ -7,13 +7,13 @@ package ru.tds.realestateagency.entities;
  */
 public class Land {
 
-    private final String city;
-    private final String street;
-    private final String homeNumber;
-    private final String flatNumber;
-    private final double latitude;
-    private final double longitude;
-    private final double square;
+    private String city;
+    private String street;
+    private String homeNumber;
+    private String flatNumber;
+    private double latitude;
+    private double longitude;
+    private double square;
 
     public Land(final String city,
                 final String street,
@@ -28,6 +28,37 @@ public class Land {
         this.flatNumber = flatNumber;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.square = square;
+    }
+
+    public Land() {
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public void setHomeNumber(String homeNumber) {
+        this.homeNumber = homeNumber;
+    }
+
+    public void setFlatNumber(String flatNumber) {
+        this.flatNumber = flatNumber;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setSquare(double square) {
         this.square = square;
     }
 

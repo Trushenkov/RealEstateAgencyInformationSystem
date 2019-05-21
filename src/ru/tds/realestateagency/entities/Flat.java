@@ -7,15 +7,15 @@ package ru.tds.realestateagency.entities;
  */
 public class Flat {
 
-    private final String city;
-    private final String street;
-    private final String homeNumber;
-    private final String flatNumber;
-    private final double latitude;
-    private final double longitude;
-    private final int floor;
-    private final int numberOfRooms;
-    private final double square;
+    private String city;
+    private String street;
+    private String homeNumber;
+    private String flatNumber;
+    private double latitude;
+    private double longitude;
+    private int floor;
+    private int numberOfRooms;
+    private double square;
 
     public Flat(final String city,
                 final String street,
@@ -34,6 +34,45 @@ public class Flat {
         this.longitude = longitude;
         this.floor = floor;
         this.numberOfRooms = numberOfRooms;
+        this.square = square;
+    }
+
+    public Flat() {
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public void setHomeNumber(String homeNumber) {
+        this.homeNumber = homeNumber;
+    }
+
+    public void setFlatNumber(String flatNumber) {
+        this.flatNumber = flatNumber;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setFloor(int floor) {
+        this.floor = floor;
+    }
+
+    public void setNumberOfRooms(int numberOfRooms) {
+        this.numberOfRooms = numberOfRooms;
+    }
+
+    public void setSquare(double square) {
         this.square = square;
     }
 
