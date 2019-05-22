@@ -109,7 +109,8 @@ public class RealtorsScreenController {
 
         //заполняем таблицу данным из БД
         tableRealtors.setItems(createListRealtors(getRealtorsTableContent()));
-
+        //устанавливаем количество риэлторов
+        totalRealtorsLabel.setText(String.valueOf(listRealtors.size()));
         //Заносим данные выделенного объекта в текстовые поля при клике на объект в таблице
         tableRealtors.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 
@@ -202,6 +203,8 @@ public class RealtorsScreenController {
                 addRealtorStatement.setInt(4, realtor.getCommissionPart());
                 //выполнение запроса
                 addRealtorStatement.executeUpdate();
+
+                listRealtors.add(realtor);
 
                 //обновление таблицы после выполнения запроса
                 tableRealtors.setItems(createListRealtors(getRealtorsTableContent()));
@@ -323,8 +326,7 @@ public class RealtorsScreenController {
             //выполнение запроса на удаление
             preparedStatement.executeUpdate();
 
-            //обновление таблицы после удаления
-            tableRealtors.setItems(createListRealtors(getRealtorsTableContent()));
+
 
             //открываем диалоговое окно для уведомления об успешном удалении
             showModalWindow(
@@ -336,6 +338,8 @@ public class RealtorsScreenController {
 
             //обнуляем текстовые поля после удаления клиента
             clearTextFields();
+
+            listRealtors.remove(tableRealtors.getSelectionModel().getSelectedIndex());
 
             findByFullName();
 
