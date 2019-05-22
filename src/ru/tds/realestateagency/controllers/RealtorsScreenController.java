@@ -89,6 +89,7 @@ public class RealtorsScreenController {
             idSelectedRealtor = 0;
             clearTextFields();
             tableRealtors.getSelectionModel().clearSelection();
+            updateBtn.setDisable(true);
         });
 
         updateBtn.setDisable(true);
@@ -112,19 +113,13 @@ public class RealtorsScreenController {
         //устанавливаем количество риэлторов
         totalRealtorsLabel.setText(String.valueOf(listRealtors.size()));
         //Заносим данные выделенного объекта в текстовые поля при клике на объект в таблице
-        tableRealtors.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        tableRealtors.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, selectedRealtor) -> {
 
-            if (newValue != null) {
+            if (selectedRealtor != null) {
 
                 idSelectedRealtor = idRealtorsFromDatabase.get(tableRealtors.getSelectionModel().getSelectedIndex());
                 System.out.println("Выбран объект, у которого id в базе = " + idSelectedRealtor);
                 System.out.println(idRealtorsFromDatabase);
-
-                if (idSelectedRealtor == 0 ) {
-                    updateBtn.setDisable(true);
-                } else {
-                    updateBtn.setDisable(false);
-                }
 
                 //устанавливаем значения выделенного объекта в текстовые поля
                 tfLastName.setText(tableRealtors.getSelectionModel().getSelectedItem().getLastName());
@@ -132,8 +127,45 @@ public class RealtorsScreenController {
                 tfMiddleName.setText(tableRealtors.getSelectionModel().getSelectedItem().getMiddleName());
                 tfCommissionPart.setText(String.valueOf(tableRealtors.getSelectionModel().getSelectedItem().getCommissionPart()));
 
+                updateBtn.setDisable(true);
                 createBtn.setDisable(true);
                 deleteBtn.setDisable(false);
+
+                //Слушатели для текстовых полей для проверки на изменение какого либо значения
+                // и предоставление пользователю возможности для обновления клиента
+
+                tfLastName.textProperty().addListener((observable1, oldValue1, newValueLastNameTextField) -> {
+                    if (!selectedRealtor.getLastName().equals(newValueLastNameTextField)) {
+                        updateBtn.setDisable(false);
+                    } else if (selectedRealtor.getLastName().equals(newValueLastNameTextField)) {
+                        updateBtn.setDisable(true);
+                    }
+                });
+
+                tfFirstName.textProperty().addListener((observable1, oldValue1, newValueFirstNameTextField) -> {
+                    if (!selectedRealtor.getFirstName().equals(newValueFirstNameTextField)) {
+                        updateBtn.setDisable(false);
+                    } else if (selectedRealtor.getFirstName().equals(newValueFirstNameTextField)) {
+                        updateBtn.setDisable(true);
+                    }
+                });
+
+                tfMiddleName.textProperty().addListener((observable1, oldValue1, newValueMiddleNameTextField) -> {
+                    if (!selectedRealtor.getMiddleName().equals(newValueMiddleNameTextField)) {
+                        updateBtn.setDisable(false);
+                    } else if (selectedRealtor.getMiddleName().equals(newValueMiddleNameTextField)) {
+                        updateBtn.setDisable(true);
+                    }
+                });
+
+                tfCommissionPart.textProperty().addListener((observable1, oldValue1, newValuePhoneNumberTextField) -> {
+                    if (selectedRealtor.getCommissionPart() != Integer.parseInt(newValuePhoneNumberTextField)) {
+                        updateBtn.setDisable(false);
+                    } else if (selectedRealtor.getCommissionPart() == Integer.parseInt((newValuePhoneNumberTextField))) {
+                        updateBtn.setDisable(true);
+                    }
+                });
+
             } else {
                 createBtn.setDisable(false);
                 updateBtn.setDisable(true);
@@ -148,7 +180,6 @@ public class RealtorsScreenController {
 
     /**
      * Метод для обработки события при нажатии на кнопку "Создать"
-     *
      */
     public void createRealtor() {
         //Создание объекта "Риэлтор"
@@ -239,7 +270,6 @@ public class RealtorsScreenController {
 
     /**
      * Метод для обработки события при нажатии на кнопку "Обновить"
-     *
      */
     public void updateRealtor() {
 
@@ -250,55 +280,67 @@ public class RealtorsScreenController {
                 + REALTOR_MIDDLE_NAME + "=?,"
                 + REALTOR_COMMISSION_PART + "=?" + " WHERE " + REALTOR_ID + "=?";
 
-        try {
-            PreparedStatement preparedStatement = new DatabaseHandler().createDbConnection().prepareStatement(updateRealtor);
-            //установка значений для вставки в запрос
-            preparedStatement.setString(1, tfLastName.getText());
-            preparedStatement.setString(2, tfFirstName.getText());
-            preparedStatement.setString(3, tfMiddleName.getText());
-            if (tfCommissionPart.getText().isEmpty()){
+        if (!tfLastName.getText().isEmpty() && !tfFirstName.getText().isEmpty() && !tfMiddleName.getText().isEmpty()) {
+
+            if (tfCommissionPart.getText().isEmpty()) {
                 //открываем диалоговое окно для уведомления об ошибке
                 showModalWindow(
-                        "Ошибка добавление нового риэлтора",
+                        "Ошибка обновления риэлтора",
                         "Доля от комиссии - обязательно числовое поле, которое может принимать значение от 0 до 100",
                         AlertType.ERROR);
                 return;
             }
-            if (Integer.parseInt(tfCommissionPart.getText()) >= 0 && Integer.parseInt(tfCommissionPart.getText()) <= 100) {
-                preparedStatement.setInt(4, Integer.parseInt(tfCommissionPart.getText()));
-            } else {
+
+            try {
+                PreparedStatement preparedStatement = new DatabaseHandler().createDbConnection().prepareStatement(updateRealtor);
+                //установка значений для вставки в запрос
+                preparedStatement.setString(1, tfLastName.getText());
+                preparedStatement.setString(2, tfFirstName.getText());
+                preparedStatement.setString(3, tfMiddleName.getText());
+
+
+                if (Integer.parseInt(tfCommissionPart.getText()) >= 0 && Integer.parseInt(tfCommissionPart.getText()) <= 100) {
+                    preparedStatement.setInt(4, Integer.parseInt(tfCommissionPart.getText()));
+                } else {
+                    //открываем диалоговое окно для уведомления об ошибке
+                    showModalWindow(
+                            "Ошибка обновления риэлтора",
+                            "Доля от комиссии - обязательно числовое поле, которое может принимать значение от 0 до 100",
+                            AlertType.ERROR);
+                    return;
+                }
+                preparedStatement.setInt(5, idSelectedRealtor);
+                //выполнение SQL запроса
+                preparedStatement.executeUpdate();
+
+                //обновление таблицы
+                tableRealtors.setItems(createListRealtors(getRealtorsTableContent()));
+
+                //открываем диалоговое окно для уведомления об успешном обновлении
+                showModalWindow(
+                        "Операция успешно выполнена",
+                        "Обновление риэлтора выполнено успешно!",
+                        AlertType.INFORMATION);
+
+            } catch (SQLException e) {
                 //открываем диалоговое окно для уведомления об ошибке
                 showModalWindow(
-                        "Ошибка добавление нового риэлтора",
-                        "Доля от комиссии - обязательно числовое поле, которое может принимать значение от 0 до 100",
+                        "Ошибка обновления риэлтора",
+                        "Обновление риэлтора не выполнено! Повторите еще раз",
                         AlertType.ERROR);
-                return;
             }
-            preparedStatement.setInt(5, idSelectedRealtor);
-            //выполнение SQL запроса
-            preparedStatement.executeUpdate();
 
-            //обновление таблицы
-            tableRealtors.setItems(createListRealtors(getRealtorsTableContent()));
+            findByFullName();
 
-            //открываем диалоговое окно для уведомления об успешном обновлении
-            showModalWindow(
-                    "Операция успешно выполнена",
-                    "Обновление риэлтора выполнено успешно!",
-                    AlertType.INFORMATION);
-
-        } catch (SQLException e) {
+            //обнуляем текстовые поля после обновления риэлтора
+            clearTextFields();
+        } else {
             //открываем диалоговое окно для уведомления об ошибке
             showModalWindow(
                     "Ошибка обновления риэлтора",
-                    "Обновление риэлтора не выполнено! Повторите еще раз",
+                    "Поля: фамилия, имя, отчество обязательны к заполнению.",
                     AlertType.ERROR);
         }
-
-        findByFullName();
-
-        //обнуляем текстовые поля после обновления риэлтора
-        clearTextFields();
     }
 
     /**
@@ -313,7 +355,6 @@ public class RealtorsScreenController {
 
     /**
      * Метод для обработки события при нажатии на кнопку "Удалить"
-     *
      */
     public void deleteRealtor() {
         //SQL запрос на удаление риэлтора
@@ -327,13 +368,11 @@ public class RealtorsScreenController {
             preparedStatement.executeUpdate();
 
 
-
             //открываем диалоговое окно для уведомления об успешном удалении
             showModalWindow(
                     "Операция успешно выполнена",
                     "Удаление риэлтора выполнено успешно!",
                     AlertType.INFORMATION);
-
 
 
             //обнуляем текстовые поля после удаления клиента
@@ -429,25 +468,25 @@ public class RealtorsScreenController {
         FilteredList<Realtor> filteredList = new FilteredList<>(createListRealtors(getRealtorsTableContent()));
         tfSearch.textProperty().addListener((observable, oldValue, newValue) ->
                 filteredList.setPredicate((Predicate<? super Realtor>) realtor -> {
-            if (newValue == null || newValue.isEmpty()) {
-                return true;
-            }
+                    if (newValue == null || newValue.isEmpty()) {
+                        return true;
+                    }
 
-            ObservableList<Realtor> list = createListRealtors(getRealtorsTableContent());
-            for (int i = 0; i < list.size(); i++) {
-                if (Helper.levenstain(newValue.toLowerCase(), realtor.getLastName().toLowerCase()) <= 3) {
-                    return true;
-                }
-                if (Helper.levenstain(newValue.toLowerCase(), realtor.getFirstName().toLowerCase()) <= 3) {
-                    return true;
-                }
-                if (Helper.levenstain(newValue.toLowerCase(), realtor.getMiddleName().toLowerCase()) <= 3) {
-                    return true;
-                }
-            }
+                    ObservableList<Realtor> list = createListRealtors(getRealtorsTableContent());
+                    for (int i = 0; i < list.size(); i++) {
+                        if (Helper.levenstain(newValue.toLowerCase(), realtor.getLastName().toLowerCase()) <= 3) {
+                            return true;
+                        }
+                        if (Helper.levenstain(newValue.toLowerCase(), realtor.getFirstName().toLowerCase()) <= 3) {
+                            return true;
+                        }
+                        if (Helper.levenstain(newValue.toLowerCase(), realtor.getMiddleName().toLowerCase()) <= 3) {
+                            return true;
+                        }
+                    }
 
-            return false;
-        }));
+                    return false;
+                }));
 
         SortedList<Realtor> sortedList = new SortedList<>(filteredList);
         sortedList.comparatorProperty().bind(tableRealtors.comparatorProperty());

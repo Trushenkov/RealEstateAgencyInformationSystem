@@ -94,6 +94,7 @@ public class ClientsScreenController {
             idSelectedClient = 0;
             clearTextFields();
             tableClients.getSelectionModel().clearSelection();
+            updateBtn.setDisable(true);
         });
 
         updateBtn.setDisable(true);
@@ -127,17 +128,12 @@ public class ClientsScreenController {
 
         //Заносим данные выделенного объекта в текстовые поля при клике на объект в таблице
         tableClients.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, selectedClient) -> {
+
             if (selectedClient != null) {
 
                 idSelectedClient = idClientsFromDatabase.get(tableClients.getSelectionModel().getSelectedIndex());
                 System.out.println("Выбран объект, у которого id в базе = " + idSelectedClient);
                 System.out.println(idClientsFromDatabase);
-
-                if (idSelectedClient == 0 ) {
-                    updateBtn.setDisable(true);
-                } else {
-                    updateBtn.setDisable(false);
-                }
 
                 //устанавливаем значения выделенного объекта в текстовые поля
                 tfLastName.setText(tableClients.getSelectionModel().getSelectedItem().getLastName());
@@ -146,9 +142,9 @@ public class ClientsScreenController {
                 tfPhoneNumber.setText(String.valueOf(tableClients.getSelectionModel().getSelectedItem().getPhoneNumber()));
                 tfEmail.setText(String.valueOf(tableClients.getSelectionModel().getSelectedItem().getEmail()));
 
+                updateBtn.setDisable(true);
                 createBtn.setDisable(true);
                 deleteBtn.setDisable(false);
-
 
                 //Слушатели для текстовых полей для проверки на изменение какого либо значения
                 // и предоставление пользователю возможности для обновления клиента
@@ -384,56 +380,56 @@ public class ClientsScreenController {
                 + CLIENT_EMAIL + "=? " +
                 "WHERE " + CLIENT_ID + "=?";
 
-        try {
-            PreparedStatement updateClientStatement = new DatabaseHandler().createDbConnection().prepareStatement(update);
+        if (!tfPhoneNumber.getText().isEmpty() || !tfEmail.getText().isEmpty()) {
 
-            //установка значений для вставки в запрос
-            updateClientStatement.setString(1, tfLastName.getText());
-            updateClientStatement.setString(2, tfFirstName.getText());
-            updateClientStatement.setString(3, tfMiddleName.getText());
+            try {
+                PreparedStatement updateClientStatement = new DatabaseHandler().createDbConnection().prepareStatement(update);
 
-            if (tfPhoneNumber.getText().isEmpty() && tfEmail.getText().isEmpty()) {
+                //установка значений для вставки в запрос
+                updateClientStatement.setString(1, tfLastName.getText());
+                updateClientStatement.setString(2, tfFirstName.getText());
+                updateClientStatement.setString(3, tfMiddleName.getText());
+
+
+                updateClientStatement.setString(4, tfPhoneNumber.getText());
+                updateClientStatement.setString(5, tfEmail.getText());
+                updateClientStatement.setInt(6, idSelectedClient);
+                //выполнение SQL запроса
+                updateClientStatement.executeUpdate();
+
+                //заполняем таблицу данным из БД
+                tableClients.setItems(listClients);
+                //считаем и устанавливаем количество клиентов
+                numberOfClientsLabel.setText(String.valueOf(listClients.size()));
+
+
+                //открываем диалоговое окно для уведомления об успешном обновлении
+                showModalWindow(
+                        "Операция успешно выполнена",
+                        "Обновление клиента выполнено успешно!",
+                        AlertType.INFORMATION);
+
+                //Обнуляем текстовые поля после обновления клиента
+                clearTextFields();
+
+                //Поиск клиента по ФИО
+                findClientByFullName();
+
+            } catch (SQLException e) {
                 //открываем диалоговое окно для уведомления об ошибке
                 showModalWindow(
                         "Ошибка обновления клиента",
-                        "Поля номер телефона и электронная почта не обязательны к заполнению, но одно из них должно быть указано.",
-                        AlertType.ERROR
-                );
-                return;
+                        "Обновление клиента не выполнено! Повторите еще раз",
+                        AlertType.ERROR);
             }
 
-            updateClientStatement.setString(4, tfPhoneNumber.getText());
-            updateClientStatement.setString(5, tfEmail.getText());
-            updateClientStatement.setInt(6, idSelectedClient);
-            //выполнение SQL запроса
-            updateClientStatement.executeUpdate();
-
-            //заполняем таблицу данным из БД
-            tableClients.setItems(listClients);
-            //считаем и устанавливаем количество клиентов
-            numberOfClientsLabel.setText(String.valueOf(listClients.size()));
-
-
-            //открываем диалоговое окно для уведомления об успешном обновлении
-            showModalWindow(
-                    "Операция успешно выполнена",
-                    "Обновление клиента выполнено успешно!",
-                    AlertType.INFORMATION);
-
-            //Обнуляем текстовые поля после обновления клиента
-            clearTextFields();
-
-            //Поиск клиента по ФИО
-            findClientByFullName();
-
-        } catch (SQLException e) {
-            //открываем диалоговое окно для уведомления об ошибке
+        } else {
             showModalWindow(
                     "Ошибка обновления клиента",
-                    "Обновление клиента не выполнено! Повторите еще раз",
-                    AlertType.ERROR);
+                    "Поля номер телефона и электронная почта не обязательны к заполнению, но одно из них должно быть указано.",
+                    AlertType.ERROR
+            );
         }
-
 
     }
 

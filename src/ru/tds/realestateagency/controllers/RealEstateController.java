@@ -244,6 +244,18 @@ public class RealEstateController {
 
     @FXML
     public void initialize() {
+
+        //Кнопки
+        updateHomeButton.setDisable(true);
+        deleteHomeButton.setDisable(true);
+
+        updateFlatButton.setDisable(true);
+        deleteFlatButton.setDisable(true);
+
+        updateLandButton.setDisable(true);
+        deleteLandButton.setDisable(true);
+
+
         //формирование коллекций с текстовыми полями для каждого типа объекта недвижимости
         listOfHomeTextFields = createListOfHomesTextFields();
         listOfFlatTextFields = createListOfFlatTextFields();
