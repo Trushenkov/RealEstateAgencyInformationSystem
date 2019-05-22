@@ -6,14 +6,12 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -44,7 +42,6 @@ public class ClientsScreenController {
     private static final String CLIENT_ID = "id";
 
 
-
     //Элементы разметки интерфейса
     @FXML
     private AnchorPane mainPane;
@@ -60,8 +57,6 @@ public class ClientsScreenController {
     private Button updateBtn;
     @FXML
     private Button deleteBtn;
-    @FXML
-    private Button goBackBtn;
     @FXML
     private TableView<Client> tableClients;
     @FXML
@@ -138,13 +133,10 @@ public class ClientsScreenController {
     void initialize() {
 
         //Обработка нажатия на главную панель окна, обнуление текстовых полей при нажатии и отмена выбора строки в таблице
-        mainPane.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                idSelectedClient = 0;
-                clearTextFields();
-                tableClients.getSelectionModel().clearSelection();
-            }
+        mainPane.setOnMousePressed(event -> {
+            idSelectedClient = 0;
+            clearTextFields();
+            tableClients.getSelectionModel().clearSelection();
         });
 
         updateBtn.setDisable(true);
@@ -159,12 +151,9 @@ public class ClientsScreenController {
 
         listClients = createListClients(getClientsTableContent());
 
-        listClients.addListener(new ListChangeListener<Client>() {
-            @Override
-            public void onChanged(Change<? extends Client> c) {
-                updateTableContent();
-                numberOfClientsLabel.setText(String.valueOf(listClients.size()));
-            }
+        listClients.addListener((ListChangeListener<Client>) c -> {
+            updateTableContent();
+            numberOfClientsLabel.setText(String.valueOf(listClients.size()));
         });
 
 
@@ -258,13 +247,6 @@ public class ClientsScreenController {
         //Поиск клиента по ФИО
         findClientByFullName();
 
-
-        tfLastName.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != oldValue){
-//                updateBtn.setDisable(false);
-            }
-        });
-
     }
 
     /**
@@ -305,30 +287,28 @@ public class ClientsScreenController {
      */
     private void findClientByFullName() {
         FilteredList<Client> filteredList = new FilteredList<>(createListClients(getClientsTableContent()));
-        tfSearch.textProperty().addListener((observable, oldValue, newValue) -> {
+        tfSearch.textProperty().addListener((observable, oldValue, newValue) ->
+                filteredList.setPredicate((Predicate<? super Client>) client -> {
+            if (newValue == null || newValue.isEmpty()) {
+                return true;
+            }
 
-            filteredList.setPredicate((Predicate<? super Client>) client -> {
-                if (newValue == null || newValue.isEmpty()) {
+            ObservableList<Client> list = createListClients(getClientsTableContent());
+
+            for (int i = 0; i < list.size(); i++) {
+                if (Helper.levenstain(newValue.toLowerCase(), client.getLastName().toLowerCase()) <= 3) {
                     return true;
                 }
-
-                ObservableList<Client> list = createListClients(getClientsTableContent());
-
-                for (int i = 0; i < list.size(); i++) {
-                    if (Helper.levenstain(newValue.toLowerCase(), client.getLastName().toLowerCase()) <= 3) {
-                        return true;
-                    }
-                    if (Helper.levenstain(newValue.toLowerCase(), client.getFirstName().toLowerCase()) <= 3) {
-                        return true;
-                    }
-                    if (Helper.levenstain(newValue.toLowerCase(), client.getMiddleName().toLowerCase()) <= 3) {
-                        return true;
-                    }
+                if (Helper.levenstain(newValue.toLowerCase(), client.getFirstName().toLowerCase()) <= 3) {
+                    return true;
                 }
+                if (Helper.levenstain(newValue.toLowerCase(), client.getMiddleName().toLowerCase()) <= 3) {
+                    return true;
+                }
+            }
 
-                return false;
-            });
-        });
+            return false;
+        }));
 
         SortedList<Client> sortedList = new SortedList<>(filteredList);
         sortedList.comparatorProperty().bind(tableClients.comparatorProperty());
@@ -338,9 +318,8 @@ public class ClientsScreenController {
     /**
      * Метод для обработки события при нажатии на кнопку "Создать"
      *
-     * @param actionEvent нажатие на кнопку
      */
-    public void createClient(ActionEvent actionEvent) {
+    public void createClient() {
         //Создание объекта "Клиент"
         Client client = new Client();
 
@@ -436,9 +415,8 @@ public class ClientsScreenController {
     /**
      * Метод для обработки события при нажатии на кнопку "Обновить"
      *
-     * @param actionEvent нажатие на кнопку
      */
-    public void updateClient(ActionEvent actionEvent) {
+    public void updateClient() {
 
 
 
@@ -506,9 +484,8 @@ public class ClientsScreenController {
     /**
      * Метод для обработки события при нажатии на кнопку "Удалить"
      *
-     * @param actionEvent нажатие на кнопку
      */
-    public void deleteClient(ActionEvent actionEvent) {
+    public void deleteClient() {
         //SQL запрос на удаление клиента
         String deleteClient = "DELETE FROM " + CLIENT_TABLE + " WHERE " + CLIENT_ID + "=?";
 
@@ -538,7 +515,7 @@ public class ClientsScreenController {
             //открываем диалоговое окно для уведомления об ошибке
             showModalWindow(
                     "Ошибка удаления клиента",
-                    "Возникла ошибка при удалении клиента с ID = " + idSelectedClient,
+                    String.format("Возникла ошибка при удалении клиента с ID = %d", idSelectedClient),
                     AlertType.ERROR
             );
         }
