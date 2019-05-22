@@ -86,49 +86,6 @@ public class ClientsScreenController {
     private int idSelectedClient;// для хранения ID клиента из базы
     private ObservableList<Client> listClients;
 
-    /**
-     * Метод для создания и открытия модального окна
-     *
-     * @param headerText  текст заголовка
-     * @param contentText текст основого содержимого окна
-     */
-    private void showModalWindow(String headerText, String contentText, Alert.AlertType alertType) {
-        //создание уведомления
-        Alert alert = new Alert(alertType);
-
-        //установка названия окна в зависимости от типа модального окна (ERROR или INFORMATION)
-        if (alertType == AlertType.ERROR) {
-            //установка названия окна
-            alert.setTitle("Уведомление об ошибке");
-        } else if (alertType == AlertType.INFORMATION) {
-            //установка названия окна
-            alert.setTitle("Уведомление об успешном выполнении");
-        }
-        //установка заголовка окна
-        alert.setHeaderText(headerText);
-        //установка текста содержимого окна
-        alert.setContentText(contentText);
-        //размер окна не изменяемый
-        alert.setResizable(false);
-        //определене родительского окна
-        alert.initOwner(this.tableClients.getScene().getWindow());
-        //установка типа модального окна
-        alert.initModality(Modality.WINDOW_MODAL);
-
-        if (alert.getAlertType().equals(AlertType.ERROR)) {
-            Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-            stage.getIcons().add(new Image(getClass().getResource("/ru/tds/realestateagency/images/warning.png").toString()));
-            stage.getScene().getStylesheets().add("ru/tds/realestateagency/css/fullpackstyling.css");
-        } else {
-            Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-            stage.getIcons().add(new Image(getClass().getResource("/ru/tds/realestateagency/images/success.png").toString()));
-            stage.getScene().getStylesheets().add("ru/tds/realestateagency/css/fullpackstyling.css");
-        }
-
-        //отображаем окно
-        alert.showAndWait();
-    }
-
     @FXML
     void initialize() {
 
@@ -190,7 +147,6 @@ public class ClientsScreenController {
                 tfEmail.setText(String.valueOf(tableClients.getSelectionModel().getSelectedItem().getEmail()));
 
                 createBtn.setDisable(true);
-//                updateBtn.setDisable(true);
                 deleteBtn.setDisable(false);
 
 
@@ -591,4 +547,48 @@ public class ClientsScreenController {
         }
         return list;
     }
+
+    /**
+     * Метод для создания и открытия модального окна
+     *
+     * @param headerText  текст заголовка
+     * @param contentText текст основого содержимого окна
+     */
+    private void showModalWindow(String headerText, String contentText, Alert.AlertType alertType) {
+        //создание уведомления
+        Alert alert = new Alert(alertType);
+
+        //установка названия окна в зависимости от типа модального окна (ERROR или INFORMATION)
+        if (alertType == AlertType.ERROR) {
+            //установка названия окна
+            alert.setTitle("Уведомление об ошибке");
+        } else if (alertType == AlertType.INFORMATION) {
+            //установка названия окна
+            alert.setTitle("Уведомление об успешном выполнении");
+        }
+        //установка заголовка окна
+        alert.setHeaderText(headerText);
+        //установка текста содержимого окна
+        alert.setContentText(contentText);
+        //размер окна не изменяемый
+        alert.setResizable(false);
+        //определене родительского окна
+        alert.initOwner(this.tableClients.getScene().getWindow());
+        //установка типа модального окна
+        alert.initModality(Modality.WINDOW_MODAL);
+
+        if (alert.getAlertType().equals(AlertType.ERROR)) {
+            Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+            stage.getIcons().add(new Image(getClass().getResource("/ru/tds/realestateagency/images/warning.png").toString()));
+            stage.getScene().getStylesheets().add("ru/tds/realestateagency/css/fullpackstyling.css");
+        } else {
+            Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+            stage.getIcons().add(new Image(getClass().getResource("/ru/tds/realestateagency/images/success.png").toString()));
+            stage.getScene().getStylesheets().add("ru/tds/realestateagency/css/fullpackstyling.css");
+        }
+
+        //отображаем окно
+        alert.showAndWait();
+    }
+
 }

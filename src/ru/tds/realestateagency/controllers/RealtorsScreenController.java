@@ -1,18 +1,17 @@
 package ru.tds.realestateagency.controllers;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -23,6 +22,7 @@ import ru.tds.realestateagency.entities.Realtor;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.function.Predicate;
 
 /**
@@ -49,15 +49,12 @@ public class RealtorsScreenController {
     private Label realtorsWithNeedsLabel;
     @FXML
     private Label realtorsWithOffersLabel;
-
     @FXML
     private Button createBtn;
     @FXML
     private Button updateBtn;
     @FXML
     private Button deleteBtn;
-    @FXML
-    private Button goBackBtn;
     @FXML
     private TableView<Realtor> tableRealtors;
     @FXML
@@ -79,60 +76,19 @@ public class RealtorsScreenController {
     @FXML
     private TextField tfFirstName;
 
-    private int idRealtor;// для хранения ID риэлтора из базы
+    private int idSelectedRealtor;// для хранения ID риэлтора из базы
+    private ArrayList<Integer> idRealtorsFromDatabase;
+    private ObservableList<Realtor> listRealtors;
 
-    /**
-     * Метод для создания и открытия модального окна
-     *
-     * @param headerText  текст заголовка
-     * @param contentText текст основого содержимого окна
-     */
-    private void showModalWindow(String headerText, String contentText, Alert.AlertType alertType) {
-        //создание уведомления
-        Alert alert = new Alert(alertType);
-
-        //установка названия окна в зависимости от типа модального окна (ERROR или INFORMATION)
-        if (alertType == Alert.AlertType.ERROR) {
-            //установка названия окна
-            alert.setTitle("Уведомление об ошибке");
-        } else if (alertType == Alert.AlertType.INFORMATION) {
-            //установка названия окна
-            alert.setTitle("Уведомление об успешном выполнении");
-        }
-
-        //установка заголовка окна
-        alert.setHeaderText(headerText);
-        //установка текста содержимого окна
-        alert.setContentText(contentText);
-        //размер окна не изменяемый
-        alert.setResizable(false);
-        //определене родительского окна
-        alert.initOwner(this.tableRealtors.getScene().getWindow());
-        //установка типа модального окна
-        alert.initModality(Modality.WINDOW_MODAL);
-
-        if (alert.getAlertType().equals(Alert.AlertType.ERROR)) {
-            Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-            stage.getIcons().add(new Image(getClass().getResource("/ru/tds/realestateagency/images/warning.png").toString()));
-        } else {
-            Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-            stage.getIcons().add(new Image(getClass().getResource("/ru/tds/realestateagency/images/success.png").toString()));
-        }
-
-        //отображаем окно
-        alert.showAndWait();
-    }
 
     @FXML
     void initialize() {
 
         //Обработка нажатия на главную панель окна, обнуление текстовых полей при нажатии и отмена выбора строки в таблице
-        mainPane.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                clearTextFields();
-                tableRealtors.getSelectionModel().clearSelection();
-            }
+        mainPane.setOnMousePressed(event -> {
+            idSelectedRealtor = 0;
+            clearTextFields();
+            tableRealtors.getSelectionModel().clearSelection();
         });
 
         updateBtn.setDisable(true);
@@ -144,6 +100,13 @@ public class RealtorsScreenController {
         tableColumnMiddleName.setCellValueFactory(new PropertyValueFactory<>("middleName"));
         tableColumnCommisionPart.setCellValueFactory(new PropertyValueFactory<>("commissionPart"));
 
+        listRealtors = createListRealtors(getRealtorsTableContent());
+
+        listRealtors.addListener((ListChangeListener<Realtor>) c -> {
+            updateTableContent();
+            totalRealtorsLabel.setText(String.valueOf(listRealtors.size()));
+        });
+
         //заполняем таблицу данным из БД
         tableRealtors.setItems(createListRealtors(getRealtorsTableContent()));
 
@@ -151,37 +114,15 @@ public class RealtorsScreenController {
         tableRealtors.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 
             if (newValue != null) {
-                createBtn.setDisable(true);
-                updateBtn.setDisable(false);
-                deleteBtn.setDisable(false);
-                try {
 
-                    //SQL запрос для получения ID риэлтора из таблицы в базе
-                    String getIdRealtor = "SELECT " + REALTOR_ID +
-                            " FROM " + REALTOR_TABLE +
-                            " WHERE " + REALTOR_LAST_NAME + " = ? AND "
-                            + REALTOR_FIRST_NAME + " = ? AND "
-                            + REALTOR_MIDDLE_NAME + "=?";
+                idSelectedRealtor = idRealtorsFromDatabase.get(tableRealtors.getSelectionModel().getSelectedIndex());
+                System.out.println("Выбран объект, у которого id в базе = " + idSelectedRealtor);
+                System.out.println(idRealtorsFromDatabase);
 
-                    DatabaseHandler handler = new DatabaseHandler();
-                    PreparedStatement statement = handler.createDbConnection().prepareStatement(getIdRealtor);
-
-                    //установка значений для вставки в запрос
-                    statement.setString(1, tableRealtors.getSelectionModel().getSelectedItem().getLastName());
-                    statement.setString(2, tableRealtors.getSelectionModel().getSelectedItem().getFirstName());
-                    statement.setString(3, tableRealtors.getSelectionModel().getSelectedItem().getMiddleName());
-
-                    //выполнение запроса и сохранение значений в resultSet
-                    ResultSet resultSet = statement.executeQuery();
-                    while (resultSet.next()) {
-                        //получаем id из набора данных, полученного из базы
-                        idRealtor = resultSet.getInt("id");
-                    }
-                } catch (SQLException e) {
-                    showModalWindow(
-                            "Ошибка получения ID риэлтора из базы",
-                            "Данные из базы не были получены!",
-                            Alert.AlertType.ERROR);
+                if (idSelectedRealtor == 0 ) {
+                    updateBtn.setDisable(true);
+                } else {
+                    updateBtn.setDisable(false);
                 }
 
                 //устанавливаем значения выделенного объекта в текстовые поля
@@ -189,6 +130,9 @@ public class RealtorsScreenController {
                 tfFirstName.setText(tableRealtors.getSelectionModel().getSelectedItem().getFirstName());
                 tfMiddleName.setText(tableRealtors.getSelectionModel().getSelectedItem().getMiddleName());
                 tfCommissionPart.setText(String.valueOf(tableRealtors.getSelectionModel().getSelectedItem().getCommissionPart()));
+
+                createBtn.setDisable(true);
+                deleteBtn.setDisable(false);
             } else {
                 createBtn.setDisable(false);
                 updateBtn.setDisable(true);
@@ -204,9 +148,8 @@ public class RealtorsScreenController {
     /**
      * Метод для обработки события при нажатии на кнопку "Создать"
      *
-     * @param actionEvent нажатие на кнопку
      */
-    public void createBtnClicked(ActionEvent actionEvent) {
+    public void createRealtor() {
         //Создание объекта "Риэлтор"
         Realtor realtor = new Realtor();
 
@@ -294,9 +237,8 @@ public class RealtorsScreenController {
     /**
      * Метод для обработки события при нажатии на кнопку "Обновить"
      *
-     * @param actionEvent нажатие на кнопку
      */
-    public void updateBtnClicked(ActionEvent actionEvent) {
+    public void updateRealtor() {
 
         //SQL запрос для обновления риэлтора
         String updateRealtor = "UPDATE " + REALTOR_TABLE + " SET "
@@ -329,7 +271,7 @@ public class RealtorsScreenController {
                         AlertType.ERROR);
                 return;
             }
-            preparedStatement.setInt(5, idRealtor);
+            preparedStatement.setInt(5, idSelectedRealtor);
             //выполнение SQL запроса
             preparedStatement.executeUpdate();
 
@@ -369,16 +311,15 @@ public class RealtorsScreenController {
     /**
      * Метод для обработки события при нажатии на кнопку "Удалить"
      *
-     * @param actionEvent нажатие на кнопку
      */
-    public void deleteBtnClicked(ActionEvent actionEvent) {
+    public void deleteRealtor() {
         //SQL запрос на удаление риэлтора
         String deleteRealtor = "DELETE FROM " + REALTOR_TABLE + " WHERE " + REALTOR_ID + "=?";
 
         try {
             PreparedStatement preparedStatement = new DatabaseHandler().createDbConnection().prepareStatement(deleteRealtor);
             //установка значений для вставки в запрос
-            preparedStatement.setInt(1, idRealtor);
+            preparedStatement.setInt(1, idSelectedRealtor);
             //выполнение запроса на удаление
             preparedStatement.executeUpdate();
 
@@ -402,7 +343,7 @@ public class RealtorsScreenController {
             //открываем диалоговое окно для уведомления об ошибке
             showModalWindow(
                     "Ошибка удаления риэлтора",
-                    "Возникла ошибка при удалении риэлтора с ID = " + idRealtor,
+                    "Возникла ошибка при удалении риэлтора с ID = " + idSelectedRealtor,
                     AlertType.ERROR
             );
         }
@@ -413,7 +354,7 @@ public class RealtorsScreenController {
      *
      * @param actionEvent нажатие на кнопку
      */
-    public void goBackBtnClicked(ActionEvent actionEvent) {
+    public void goHomeScreen(ActionEvent actionEvent) {
         ((Node) actionEvent.getSource()).getScene().getWindow().hide();
         //переход на главный экран
         Helper.changeScreen("/ru/tds/realestateagency/views/main.fxml");
@@ -453,6 +394,7 @@ public class RealtorsScreenController {
      */
     private ObservableList<Realtor> createListRealtors(ResultSet resultSet) {
         ObservableList<Realtor> list = FXCollections.observableArrayList();
+        idRealtorsFromDatabase = new ArrayList<>();
         try {
             while (resultSet.next()) {
                 //создаем нового риэлтора
@@ -464,6 +406,7 @@ public class RealtorsScreenController {
                         ));
                 //добавляем риэлтора в список
                 list.add(realtor);
+                idRealtorsFromDatabase.add(resultSet.getInt("id"));
             }
         } catch (SQLException e) {
             //открываем диалоговое окно для уведомления об ошибке
@@ -480,32 +423,79 @@ public class RealtorsScreenController {
      */
     private void findByFullName() {
         FilteredList<Realtor> filteredList = new FilteredList<>(createListRealtors(getRealtorsTableContent()));
-        tfSearch.textProperty().addListener((observable, oldValue, newValue) -> {
+        tfSearch.textProperty().addListener((observable, oldValue, newValue) ->
+                filteredList.setPredicate((Predicate<? super Realtor>) realtor -> {
+            if (newValue == null || newValue.isEmpty()) {
+                return true;
+            }
 
-            filteredList.setPredicate((Predicate<? super Realtor>) realtor -> {
-                if (newValue == null || newValue.isEmpty()) {
+            ObservableList<Realtor> list = createListRealtors(getRealtorsTableContent());
+            for (int i = 0; i < list.size(); i++) {
+                if (Helper.levenstain(newValue.toLowerCase(), realtor.getLastName().toLowerCase()) <= 3) {
                     return true;
                 }
-
-                ObservableList<Realtor> list = createListRealtors(getRealtorsTableContent());
-                for (int i = 0; i < list.size(); i++) {
-                    if (Helper.levenstain(newValue.toLowerCase(), realtor.getLastName().toLowerCase()) <= 3) {
-                        return true;
-                    }
-                    if (Helper.levenstain(newValue.toLowerCase(), realtor.getFirstName().toLowerCase()) <= 3) {
-                        return true;
-                    }
-                    if (Helper.levenstain(newValue.toLowerCase(), realtor.getMiddleName().toLowerCase()) <= 3) {
-                        return true;
-                    }
+                if (Helper.levenstain(newValue.toLowerCase(), realtor.getFirstName().toLowerCase()) <= 3) {
+                    return true;
                 }
+                if (Helper.levenstain(newValue.toLowerCase(), realtor.getMiddleName().toLowerCase()) <= 3) {
+                    return true;
+                }
+            }
 
-                return false;
-            });
-        });
+            return false;
+        }));
 
         SortedList<Realtor> sortedList = new SortedList<>(filteredList);
         sortedList.comparatorProperty().bind(tableRealtors.comparatorProperty());
         tableRealtors.setItems(sortedList);
+    }
+
+    /**
+     * Метод для заполнения таблицы данными из базы
+     */
+    private void updateTableContent() {
+        tableRealtors.setItems(createListRealtors(getRealtorsTableContent()));
+    }
+
+    /**
+     * Метод для создания и открытия модального окна
+     *
+     * @param headerText  текст заголовка
+     * @param contentText текст основого содержимого окна
+     */
+    private void showModalWindow(String headerText, String contentText, Alert.AlertType alertType) {
+        //создание уведомления
+        Alert alert = new Alert(alertType);
+
+        //установка названия окна в зависимости от типа модального окна (ERROR или INFORMATION)
+        if (alertType == Alert.AlertType.ERROR) {
+            //установка названия окна
+            alert.setTitle("Уведомление об ошибке");
+        } else if (alertType == Alert.AlertType.INFORMATION) {
+            //установка названия окна
+            alert.setTitle("Уведомление об успешном выполнении");
+        }
+
+        //установка заголовка окна
+        alert.setHeaderText(headerText);
+        //установка текста содержимого окна
+        alert.setContentText(contentText);
+        //размер окна не изменяемый
+        alert.setResizable(false);
+        //определене родительского окна
+        alert.initOwner(this.tableRealtors.getScene().getWindow());
+        //установка типа модального окна
+        alert.initModality(Modality.WINDOW_MODAL);
+
+        if (alert.getAlertType().equals(Alert.AlertType.ERROR)) {
+            Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+            stage.getIcons().add(new Image(getClass().getResource("/ru/tds/realestateagency/images/warning.png").toString()));
+        } else {
+            Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+            stage.getIcons().add(new Image(getClass().getResource("/ru/tds/realestateagency/images/success.png").toString()));
+        }
+
+        //отображаем окно
+        alert.showAndWait();
     }
 }

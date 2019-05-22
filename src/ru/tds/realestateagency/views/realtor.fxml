@@ -40,7 +40,7 @@
         </columnResizePolicy>
     </TableView>
     <Button fx:id="goBackBtn" alignment="CENTER" layoutX="14.0" layoutY="563.0" mnemonicParsing="false"
-            onAction="#goBackBtnClicked" prefHeight="30.0" prefWidth="105.0" text="Назад" AnchorPane.bottomAnchor="7.0"
+            onAction="#goHomeScreen" prefHeight="30.0" prefWidth="105.0" text="Назад" AnchorPane.bottomAnchor="7.0"
             AnchorPane.leftAnchor="14.0">
         <cursor>
             <Cursor fx:constant="HAND"/>
@@ -153,7 +153,7 @@
     </HBox>
     <HBox alignment="CENTER" layoutX="675.0" layoutY="423.0" prefHeight="30.0" spacing="15.0"
           AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="423.0">
-        <Button id="createBtn" fx:id="createBtn" mnemonicParsing="false" onAction="#createBtnClicked"
+        <Button id="createBtn" fx:id="createBtn" mnemonicParsing="false" onAction="#createRealtor"
                 prefHeight="30.0" prefWidth="120.0" text="Создать">
             <cursor>
                 <Cursor fx:constant="HAND"/>
@@ -162,7 +162,7 @@
                 <FontAwesomeIconView fill="#2d75e8" glyphName="USER_PLUS" size="1.3em"/>
             </graphic>
         </Button>
-        <Button id="updateBtn" fx:id="updateBtn" mnemonicParsing="false" onAction="#updateBtnClicked"
+        <Button id="updateBtn" fx:id="updateBtn" mnemonicParsing="false" onAction="#updateRealtor"
                 prefHeight="30.0" prefWidth="120.0" text="Обновить">
             <cursor>
                 <Cursor fx:constant="HAND"/>
@@ -173,7 +173,7 @@
         </Button>
     </HBox>
     <Button id="deleteBtn" fx:id="deleteBtn" layoutX="675.0" layoutY="471.0" mnemonicParsing="false"
-            onAction="#deleteBtnClicked" prefHeight="30.0" prefWidth="255.0" text="Удалить"
+            onAction="#deleteRealtor" prefHeight="30.0" prefWidth="255.0" text="Удалить"
             AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="471.0">
         <cursor>
             <Cursor fx:constant="HAND"/>
