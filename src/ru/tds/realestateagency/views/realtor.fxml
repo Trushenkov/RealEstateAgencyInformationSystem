@@ -6,9 +6,10 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<?import ru.tds.realestateagency.textfields.SimpleTextField?>
-<?import ru.tds.realestateagency.textfields.NumberTextField?>
-<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+<?import ru.tds.realestateagency.textfields.StringRussianTextField?>
+<?import ru.tds.realestateagency.textfields.IntegerTextField?>
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="600.0"
             prefWidth="950.0" stylesheets="@../css/fullpackstyling.css" xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ru.tds.realestateagency.controllers.RealtorsScreenController">
@@ -52,7 +53,7 @@
     <HBox alignment="CENTER" layoutX="672.0" layoutY="152.0" prefHeight="28.0" prefWidth="260.0" spacing="5.0"
           AnchorPane.rightAnchor="18.0">
         <FontAwesomeIconView fill="#2d75e8" glyphName="SEARCH" size="12.5"/>
-        <SimpleTextField fx:id="tfSearch" prefHeight="30.0" prefWidth="235.0" promptText="Поиск по ФИО"/>
+        <StringRussianTextField fx:id="tfSearch" prefHeight="30.0" prefWidth="235.0" promptText="Поиск по ФИО"/>
     </HBox>
     <VBox layoutX="672.0" layoutY="254.0" prefHeight="160.0" prefWidth="260.0" spacing="15.0"
           AnchorPane.bottomAnchor="187.0" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="254.0">
@@ -63,11 +64,11 @@
                     <Insets right="5.0"/>
                 </HBox.margin>
             </FontAwesomeIconView>
-            <SimpleTextField fx:id="tfLastName" prefHeight="30.0" prefWidth="235.0" promptText="Фамилия">
+            <StringRussianTextField fx:id="tfLastName" prefHeight="30.0" prefWidth="235.0" promptText="Фамилия">
                 <font>
                     <Font name="Segoe UI" size="13.0"/>
                 </font>
-            </SimpleTextField>
+            </StringRussianTextField>
         </HBox>
         <HBox alignment="CENTER" layoutX="646.0" layoutY="275.0" prefHeight="25.0" prefWidth="188.0"
               AnchorPane.rightAnchor="50.0">
@@ -76,11 +77,11 @@
                     <Insets right="5.0"/>
                 </HBox.margin>
             </FontAwesomeIconView>
-            <SimpleTextField fx:id="tfFirstName" prefHeight="30.0" prefWidth="235.0" promptText="Имя">
+            <StringRussianTextField fx:id="tfFirstName" prefHeight="30.0" prefWidth="235.0" promptText="Имя">
                 <font>
                     <Font name="Segoe UI" size="13.0"/>
                 </font>
-            </SimpleTextField>
+            </StringRussianTextField>
         </HBox>
         <HBox alignment="CENTER" layoutX="646.0" layoutY="330.0" prefHeight="25.0" prefWidth="188.0"
               AnchorPane.rightAnchor="50.0">
@@ -89,11 +90,11 @@
                     <Insets right="5.0"/>
                 </HBox.margin>
             </FontAwesomeIconView>
-            <SimpleTextField fx:id="tfMiddleName" prefHeight="30.0" prefWidth="235.0" promptText="Отчество">
+            <StringRussianTextField fx:id="tfMiddleName" prefHeight="30.0" prefWidth="235.0" promptText="Отчество">
                 <font>
                     <Font name="Segoe UI" size="13.0"/>
                 </font>
-            </SimpleTextField>
+            </StringRussianTextField>
         </HBox>
         <HBox alignment="CENTER" layoutX="712.0" layoutY="385.0" prefHeight="25.0" prefWidth="188.0"
               AnchorPane.rightAnchor="50.0">
@@ -102,11 +103,12 @@
                     <Insets right="5.0"/>
                 </HBox.margin>
             </FontAwesomeIconView>
-            <NumberTextField fx:id="tfCommissionPart" prefHeight="30.0" prefWidth="235.0" promptText="Доля от комиссии">
+            <IntegerTextField fx:id="tfCommissionPart" prefHeight="30.0" prefWidth="235.0"
+                              promptText="Доля от комиссии">
                 <font>
                     <Font name="Segoe UI" size="13.0"/>
                 </font>
-            </NumberTextField>
+            </IntegerTextField>
         </HBox>
     </VBox>
     <HBox layoutX="14.0" layoutY="152.0" prefHeight="80.0" prefWidth="630.0" spacing="60.0" AnchorPane.leftAnchor="14.0"
