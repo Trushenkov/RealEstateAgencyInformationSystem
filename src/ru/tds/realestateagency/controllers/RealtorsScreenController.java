@@ -86,9 +86,9 @@ public class RealtorsScreenController {
 
         //Обработка нажатия на главную панель окна, обнуление текстовых полей при нажатии и отмена выбора строки в таблице
         mainPane.setOnMousePressed(event -> {
-            idSelectedRealtor = 0;
             clearTextFields();
             tableRealtors.getSelectionModel().clearSelection();
+            idSelectedRealtor = 0;
             updateBtn.setDisable(true);
         });
 
@@ -109,17 +109,18 @@ public class RealtorsScreenController {
         });
 
         //заполняем таблицу данным из БД
-        tableRealtors.setItems(createListRealtors(getRealtorsTableContent()));
+        tableRealtors.setItems(listRealtors);
         //устанавливаем количество риэлторов
         totalRealtorsLabel.setText(String.valueOf(listRealtors.size()));
+
         //Заносим данные выделенного объекта в текстовые поля при клике на объект в таблице
         tableRealtors.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, selectedRealtor) -> {
+
+            System.out.println("selected realtor: " + selectedRealtor);
 
             if (selectedRealtor != null) {
 
                 idSelectedRealtor = idRealtorsFromDatabase.get(tableRealtors.getSelectionModel().getSelectedIndex());
-                System.out.println("Выбран объект, у которого id в базе = " + idSelectedRealtor);
-                System.out.println(idRealtorsFromDatabase);
 
                 //устанавливаем значения выделенного объекта в текстовые поля
                 tfLastName.setText(tableRealtors.getSelectionModel().getSelectedItem().getLastName());
@@ -127,44 +128,55 @@ public class RealtorsScreenController {
                 tfMiddleName.setText(tableRealtors.getSelectionModel().getSelectedItem().getMiddleName());
                 tfCommissionPart.setText(String.valueOf(tableRealtors.getSelectionModel().getSelectedItem().getCommissionPart()));
 
-                updateBtn.setDisable(true);
-                createBtn.setDisable(true);
-                deleteBtn.setDisable(false);
-
-                //Слушатели для текстовых полей для проверки на изменение какого либо значения
-                // и предоставление пользователю возможности для обновления клиента
-
                 tfLastName.textProperty().addListener((observable1, oldValue1, newValueLastNameTextField) -> {
-                    if (!selectedRealtor.getLastName().equals(newValueLastNameTextField)) {
-                        updateBtn.setDisable(false);
-                    } else if (selectedRealtor.getLastName().equals(newValueLastNameTextField)) {
-                        updateBtn.setDisable(true);
+                    try {
+                        if (!tableRealtors.getSelectionModel().getSelectedItem().getLastName().equals(newValueLastNameTextField)) {
+                            updateBtn.setDisable(false);
+                        } else if (tableRealtors.getSelectionModel().getSelectedItem().getLastName().equals(newValueLastNameTextField)) {
+                            updateBtn.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
                     }
                 });
 
                 tfFirstName.textProperty().addListener((observable1, oldValue1, newValueFirstNameTextField) -> {
-                    if (!selectedRealtor.getFirstName().equals(newValueFirstNameTextField)) {
-                        updateBtn.setDisable(false);
-                    } else if (selectedRealtor.getFirstName().equals(newValueFirstNameTextField)) {
-                        updateBtn.setDisable(true);
+                    try {
+                        if (!tableRealtors.getSelectionModel().getSelectedItem().getFirstName().equals(newValueFirstNameTextField)) {
+                            updateBtn.setDisable(false);
+                        } else if (tableRealtors.getSelectionModel().getSelectedItem().getFirstName().equals(newValueFirstNameTextField)) {
+                            updateBtn.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
                     }
                 });
 
                 tfMiddleName.textProperty().addListener((observable1, oldValue1, newValueMiddleNameTextField) -> {
-                    if (!selectedRealtor.getMiddleName().equals(newValueMiddleNameTextField)) {
-                        updateBtn.setDisable(false);
-                    } else if (selectedRealtor.getMiddleName().equals(newValueMiddleNameTextField)) {
-                        updateBtn.setDisable(true);
+                    try {
+                        if (!tableRealtors.getSelectionModel().getSelectedItem().getMiddleName().equals(newValueMiddleNameTextField)) {
+                            updateBtn.setDisable(false);
+                        } else if (tableRealtors.getSelectionModel().getSelectedItem().getMiddleName().equals(newValueMiddleNameTextField)) {
+                            updateBtn.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
                     }
                 });
 
                 tfCommissionPart.textProperty().addListener((observable1, oldValue1, newValuePhoneNumberTextField) -> {
-                    if (selectedRealtor.getCommissionPart() != Integer.parseInt(newValuePhoneNumberTextField)) {
-                        updateBtn.setDisable(false);
-                    } else if (selectedRealtor.getCommissionPart() == Integer.parseInt((newValuePhoneNumberTextField))) {
-                        updateBtn.setDisable(true);
+                    if (!newValuePhoneNumberTextField.isEmpty()) {
+                        try {
+                            if (tableRealtors.getSelectionModel().getSelectedItem().getCommissionPart() != Integer.parseInt(newValuePhoneNumberTextField)) {
+                                updateBtn.setDisable(false);
+                            } else if (tableRealtors.getSelectionModel().getSelectedItem().getCommissionPart() == Integer.parseInt((newValuePhoneNumberTextField))) {
+                                updateBtn.setDisable(true);
+                            }
+                        } catch (Exception ignored) {
+                        }
                     }
                 });
+
+                createBtn.setDisable(true);
+                updateBtn.setDisable(true);
+                deleteBtn.setDisable(false);
 
             } else {
                 createBtn.setDisable(false);
@@ -172,6 +184,7 @@ public class RealtorsScreenController {
                 deleteBtn.setDisable(true);
             }
         });
+
 
         //Поиск риэтора по ФИО
         findByFullName();
@@ -237,8 +250,8 @@ public class RealtorsScreenController {
 
                 listRealtors.add(realtor);
 
-                //обновление таблицы после выполнения запроса
-                tableRealtors.setItems(createListRealtors(getRealtorsTableContent()));
+//                //обновление таблицы после выполнения запроса
+//                tableRealtors.setItems(createListRealtors(getRealtorsTableContent()));
 
                 //открываем диалоговое окно для уведомления об успешном добавлении
                 showModalWindow(

@@ -132,8 +132,6 @@ public class ClientsScreenController {
             if (selectedClient != null) {
 
                 idSelectedClient = idClientsFromDatabase.get(tableClients.getSelectionModel().getSelectedIndex());
-                System.out.println("Выбран объект, у которого id в базе = " + idSelectedClient);
-                System.out.println(idClientsFromDatabase);
 
                 //устанавливаем значения выделенного объекта в текстовые поля
                 tfLastName.setText(tableClients.getSelectionModel().getSelectedItem().getLastName());
@@ -142,50 +140,65 @@ public class ClientsScreenController {
                 tfPhoneNumber.setText(String.valueOf(tableClients.getSelectionModel().getSelectedItem().getPhoneNumber()));
                 tfEmail.setText(String.valueOf(tableClients.getSelectionModel().getSelectedItem().getEmail()));
 
-                updateBtn.setDisable(true);
                 createBtn.setDisable(true);
+                updateBtn.setDisable(true);
                 deleteBtn.setDisable(false);
 
                 //Слушатели для текстовых полей для проверки на изменение какого либо значения
                 // и предоставление пользователю возможности для обновления клиента
 
                 tfLastName.textProperty().addListener((observable1, oldValue1, newValueLastNameTextField) -> {
-                    if (!selectedClient.getLastName().equals(newValueLastNameTextField)){
-                        updateBtn.setDisable(false);
-                    } else if (selectedClient.getLastName().equals(newValueLastNameTextField)){
-                        updateBtn.setDisable(true);
+                    try {
+                        if (!tableClients.getSelectionModel().getSelectedItem().getLastName().equals(newValueLastNameTextField)) {
+                            updateBtn.setDisable(false);
+                        } else if (tableClients.getSelectionModel().getSelectedItem().getLastName().equals(newValueLastNameTextField)) {
+                            updateBtn.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
                     }
                 });
 
                 tfFirstName.textProperty().addListener((observable1, oldValue1, newValueFirstNameTextField) -> {
-                    if (!selectedClient.getFirstName().equals(newValueFirstNameTextField)){
-                        updateBtn.setDisable(false);
-                    } else if (selectedClient.getFirstName().equals(newValueFirstNameTextField)){
-                        updateBtn.setDisable(true);
+                    try {
+                        if (!tableClients.getSelectionModel().getSelectedItem().getFirstName().equals(newValueFirstNameTextField)) {
+                            updateBtn.setDisable(false);
+                        } else if (tableClients.getSelectionModel().getSelectedItem().getFirstName().equals(newValueFirstNameTextField)) {
+                            updateBtn.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
                     }
                 });
 
                 tfMiddleName.textProperty().addListener((observable1, oldValue1, newValueMiddleNameTextField) -> {
-                    if (!selectedClient.getMiddleName().equals(newValueMiddleNameTextField)){
-                        updateBtn.setDisable(false);
-                    } else if (selectedClient.getMiddleName().equals(newValueMiddleNameTextField)){
-                        updateBtn.setDisable(true);
+                    try {
+                        if (!tableClients.getSelectionModel().getSelectedItem().getMiddleName().equals(newValueMiddleNameTextField)) {
+                            updateBtn.setDisable(false);
+                        } else if (tableClients.getSelectionModel().getSelectedItem().getMiddleName().equals(newValueMiddleNameTextField)) {
+                            updateBtn.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
                     }
                 });
 
                 tfPhoneNumber.textProperty().addListener((observable1, oldValue1, newValuePhoneNumberTextField) -> {
-                    if (!selectedClient.getPhoneNumber().equals(newValuePhoneNumberTextField)){
-                        updateBtn.setDisable(false);
-                    } else if (selectedClient.getPhoneNumber().equals(newValuePhoneNumberTextField)){
-                        updateBtn.setDisable(true);
+                    try {
+                        if (!tableClients.getSelectionModel().getSelectedItem().getPhoneNumber().equals(newValuePhoneNumberTextField)) {
+                            updateBtn.setDisable(false);
+                        } else if (tableClients.getSelectionModel().getSelectedItem().getPhoneNumber().equals(newValuePhoneNumberTextField)) {
+                            updateBtn.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
                     }
                 });
 
                 tfEmail.textProperty().addListener((observable1, oldValue1, newValueEmailTextField) -> {
-                    if (!selectedClient.getEmail().equals(newValueEmailTextField)){
-                        updateBtn.setDisable(false);
-                    } else if (selectedClient.getEmail().equals(newValueEmailTextField)){
-                        updateBtn.setDisable(true);
+                    try {
+                        if (!tableClients.getSelectionModel().getSelectedItem().getEmail().equals(newValueEmailTextField)) {
+                            updateBtn.setDisable(false);
+                        } else if (tableClients.getSelectionModel().getSelectedItem().getEmail().equals(newValueEmailTextField)) {
+                            updateBtn.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
                     }
                 });
 
@@ -225,7 +238,7 @@ public class ClientsScreenController {
         tableColumnMiddleName.setGraphic(middleNameLabel);
         tableColumnPhoneNumber.setGraphic(numberPhoneLabel);
         tableColumnEmail.setGraphic(emailLabel);
-}
+    }
 
     /**
      * Метод для заполнения таблицы данными из базы
@@ -241,26 +254,26 @@ public class ClientsScreenController {
         FilteredList<Client> filteredList = new FilteredList<>(createListClients(getClientsTableContent()));
         tfSearch.textProperty().addListener((observable, oldValue, newValue) ->
                 filteredList.setPredicate((Predicate<? super Client>) client -> {
-            if (newValue == null || newValue.isEmpty()) {
-                return true;
-            }
+                    if (newValue == null || newValue.isEmpty()) {
+                        return true;
+                    }
 
-            ObservableList<Client> list = createListClients(getClientsTableContent());
+                    ObservableList<Client> list = createListClients(getClientsTableContent());
 
-            for (int i = 0; i < list.size(); i++) {
-                if (Helper.levenstain(newValue.toLowerCase(), client.getLastName().toLowerCase()) <= 3) {
-                    return true;
-                }
-                if (Helper.levenstain(newValue.toLowerCase(), client.getFirstName().toLowerCase()) <= 3) {
-                    return true;
-                }
-                if (Helper.levenstain(newValue.toLowerCase(), client.getMiddleName().toLowerCase()) <= 3) {
-                    return true;
-                }
-            }
+                    for (int i = 0; i < list.size(); i++) {
+                        if (Helper.levenstain(newValue.toLowerCase(), client.getLastName().toLowerCase()) <= 3) {
+                            return true;
+                        }
+                        if (Helper.levenstain(newValue.toLowerCase(), client.getFirstName().toLowerCase()) <= 3) {
+                            return true;
+                        }
+                        if (Helper.levenstain(newValue.toLowerCase(), client.getMiddleName().toLowerCase()) <= 3) {
+                            return true;
+                        }
+                    }
 
-            return false;
-        }));
+                    return false;
+                }));
 
         SortedList<Client> sortedList = new SortedList<>(filteredList);
         sortedList.comparatorProperty().bind(tableClients.comparatorProperty());
@@ -269,7 +282,6 @@ public class ClientsScreenController {
 
     /**
      * Метод для обработки события при нажатии на кнопку "Создать"
-     *
      */
     public void createClient() {
         //Создание объекта "Клиент"
@@ -366,11 +378,8 @@ public class ClientsScreenController {
 
     /**
      * Метод для обработки события при нажатии на кнопку "Обновить"
-     *
      */
     public void updateClient() {
-
-
 
         //SQL запрос для обновления клиента
         String update = "UPDATE " + CLIENT_TABLE + " SET " + CLIENT_LAST_NAME + "=?,"
@@ -399,6 +408,7 @@ public class ClientsScreenController {
 
                 //заполняем таблицу данным из БД
                 tableClients.setItems(listClients);
+
                 //считаем и устанавливаем количество клиентов
                 numberOfClientsLabel.setText(String.valueOf(listClients.size()));
 
@@ -435,7 +445,6 @@ public class ClientsScreenController {
 
     /**
      * Метод для обработки события при нажатии на кнопку "Удалить"
-     *
      */
     public void deleteClient() {
         //SQL запрос на удаление клиента

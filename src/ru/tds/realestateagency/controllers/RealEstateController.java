@@ -2,6 +2,8 @@ package ru.tds.realestateagency.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -23,6 +25,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 
 public class RealEstateController {
@@ -68,8 +71,6 @@ public class RealEstateController {
     private AnchorPane mainPane;
     @FXML
     private Label headerTypeBuildingLabel;
-    @FXML
-    private Button goHomeScreenButton;
     @FXML
     private TextField searchTextField;
     @FXML
@@ -242,8 +243,28 @@ public class RealEstateController {
     private ObservableList<TextField> listOfFlatTextFields;
     private ObservableList<TextField> listOfLandTextFields;
 
+//    private ObservableList<Home> homesList;
+//    private ObservableList<Flat> flatsList;
+//    private ObservableList<Land> landsList;
+
     @FXML
     public void initialize() {
+
+        //Обнуление текстовых полей и выделенных строк в таблице при нажатии на любую часть экрана вне области этих объектов
+        mainPane.setOnMousePressed(event -> {
+            idSelectedHome = 0;
+            idSelectedFlat = 0;
+            idSelectedLand = 0;
+            clearTextFields(listOfHomeTextFields);
+            clearTextFields(listOfFlatTextFields);
+            clearTextFields(listOfLandTextFields);
+            tableHomes.getSelectionModel().clearSelection();
+            tableFlats.getSelectionModel().clearSelection();
+            tableLands.getSelectionModel().clearSelection();
+            updateHomeButton.setDisable(true);
+            updateFlatButton.setDisable(true);
+            updateLandButton.setDisable(true);
+        });
 
         //Кнопки
         updateHomeButton.setDisable(true);
@@ -261,15 +282,6 @@ public class RealEstateController {
         listOfFlatTextFields = createListOfFlatTextFields();
         listOfLandTextFields = createListOfLandTextFields();
 
-        //Обнуление текстовых полей и выделенных строк в таблице при нажатии на любую часть экрана вне области этих объектов
-        mainPane.setOnMousePressed(event -> {
-            clearTextFields(listOfHomeTextFields);
-            clearTextFields(listOfFlatTextFields);
-            clearTextFields(listOfLandTextFields);
-            tableHomes.getSelectionModel().clearSelection();
-            tableFlats.getSelectionModel().clearSelection();
-            tableLands.getSelectionModel().clearSelection();
-        });
 
         showHomesButton.setStyle("-fx-background-color: #0d47a1");
         headerTypeBuildingLabel.setText("Главная > Объекты недвижимости > Дом");
@@ -291,12 +303,13 @@ public class RealEstateController {
         tableHomes.setItems(createListOfHomes(getHomeTableContent()));
 
         //Заносим данные выделенного объекта "Дом" в текстовые поля при клике на объект в таблице
-        tableHomes.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
+        tableHomes.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, selectedHome) -> {
+            if (selectedHome != null) {
 
-                createHomeButton.setDisable(true);
-                updateHomeButton.setDisable(false);
-                deleteHomeButton.setDisable(false);
+//                System.out.println(homesList);
+                idSelectedHome = idHomesFromDatabaseArrayList.get(tableHomes.getSelectionModel().getSelectedIndex());
+//                System.out.println("Выбран объект, у которого id в базе = " + idSelectedHome);
+//                System.out.println(idHomesFromDatabaseArrayList);
 
                 //устанавливаем значения выделенного объекта в текстовые поля
                 homeTextFieldCity.setText(tableHomes.getSelectionModel().getSelectedItem().getCity());
@@ -309,9 +322,121 @@ public class RealEstateController {
                 homeTextFieldNumberOfRooms.setText(String.valueOf(tableHomes.getSelectionModel().getSelectedItem().getNumberOfRooms()));
                 homeTextFieldSquare.setText(String.valueOf(tableHomes.getSelectionModel().getSelectedItem().getSquare()));
 
-                idSelectedHome = idHomesFromDatabaseArrayList.get(tableHomes.getSelectionModel().getSelectedIndex());
-                System.out.println("Выбран объект, у которого id в базе = " + idSelectedHome);
-                System.out.println(idHomesFromDatabaseArrayList);
+                createHomeButton.setDisable(true);
+                updateHomeButton.setDisable(true);
+                deleteHomeButton.setDisable(false);
+
+                homeTextFieldCity.textProperty().addListener((observable1, oldValue1, newValueCity) -> {
+                    try {
+                        if (!tableHomes.getSelectionModel().getSelectedItem().getCity().equals(newValueCity)) {
+                            updateHomeButton.setDisable(false);
+                        } else if (tableHomes.getSelectionModel().getSelectedItem().getCity().equals(newValueCity)) {
+                            updateHomeButton.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
+                    }
+                });
+
+                homeTextFieldStreet.textProperty().addListener((observable1, oldValue1, newValueStreet) -> {
+                    try {
+                        if (!tableHomes.getSelectionModel().getSelectedItem().getStreet().equals(newValueStreet)) {
+                            updateHomeButton.setDisable(false);
+                        } else if (tableHomes.getSelectionModel().getSelectedItem().getStreet().equals(newValueStreet)) {
+                            updateHomeButton.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
+                    }
+                });
+
+                homeTextFieldHomeNumber.textProperty().addListener((observable1, oldValue1, newValueHomeNumber) -> {
+                    try {
+                        if (!tableHomes.getSelectionModel().getSelectedItem().getHomeNumber().equals(newValueHomeNumber)) {
+                            updateHomeButton.setDisable(false);
+                        } else if (tableHomes.getSelectionModel().getSelectedItem().getHomeNumber().equals(newValueHomeNumber)) {
+                            updateHomeButton.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
+                    }
+                });
+
+                homeTextFieldFlatNumber.textProperty().addListener((observable1, oldValue1, newValueFlatNumber) -> {
+                    try {
+                        if (!tableHomes.getSelectionModel().getSelectedItem().getFlatNumber().equals(newValueFlatNumber)) {
+                            updateHomeButton.setDisable(false);
+                        } else if (tableHomes.getSelectionModel().getSelectedItem().getFlatNumber().equals(newValueFlatNumber)) {
+                            updateHomeButton.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
+                    }
+                });
+
+                homeTextFieldLatitude.textProperty().addListener((observable1, oldValue1, newValueLatitude) -> {
+
+                    if (!newValueLatitude.isEmpty()) {
+                        try {
+                            if (tableHomes.getSelectionModel().getSelectedItem().getLatitude() != Double.parseDouble(newValueLatitude)) {
+                                updateHomeButton.setDisable(false);
+                            } else if (tableHomes.getSelectionModel().getSelectedItem().getLatitude() == Double.parseDouble(newValueLatitude)) {
+                                updateHomeButton.setDisable(true);
+                            }
+                        } catch (Exception ignored) {
+                        }
+                    }
+                });
+
+                homeTextFieldLongitude.textProperty().addListener((observable1, oldValue1, newValueLongitude) -> {
+
+                    if (!newValueLongitude.isEmpty()) {
+                        try {
+                            if (tableHomes.getSelectionModel().getSelectedItem().getLongitude() != Double.parseDouble(newValueLongitude)) {
+                                updateHomeButton.setDisable(false);
+                            } else if (tableHomes.getSelectionModel().getSelectedItem().getLongitude() == Double.parseDouble(newValueLongitude)) {
+                                updateHomeButton.setDisable(true);
+                            }
+                        } catch (Exception ignored) {
+                        }
+                    }
+                });
+
+                homeTextFieldNumberOfFloors.textProperty().addListener((observable1, oldValue1, newValueNumberOfFloors) -> {
+                    if (!newValueNumberOfFloors.isEmpty()) {
+                        try {
+                            if (tableHomes.getSelectionModel().getSelectedItem().getNumberOfFloors() != Integer.parseInt(newValueNumberOfFloors)) {
+                                updateHomeButton.setDisable(false);
+                            } else if (tableHomes.getSelectionModel().getSelectedItem().getNumberOfFloors() == Integer.parseInt(newValueNumberOfFloors)) {
+                                updateHomeButton.setDisable(true);
+                            }
+                        } catch (Exception ignored) {
+                        }
+                    }
+                });
+
+                homeTextFieldNumberOfRooms.textProperty().addListener((observable1, oldValue1, newValueNumberOfRooms) -> {
+                    if (!newValueNumberOfRooms.isEmpty()) {
+                        try {
+                            if (tableHomes.getSelectionModel().getSelectedItem().getNumberOfRooms() != Integer.parseInt(newValueNumberOfRooms)) {
+                                updateHomeButton.setDisable(false);
+                            } else if (tableHomes.getSelectionModel().getSelectedItem().getNumberOfRooms() == Integer.parseInt(newValueNumberOfRooms)) {
+                                updateHomeButton.setDisable(true);
+                            }
+                        } catch (Exception ignored) {
+                        }
+                    }
+                });
+
+                homeTextFieldSquare.textProperty().addListener((observable1, oldValue1, newValueSquare) -> {
+                    if (!newValueSquare.isEmpty()) {
+                        try {
+                            if (tableHomes.getSelectionModel().getSelectedItem().getSquare() != Double.parseDouble(newValueSquare)) {
+                                updateHomeButton.setDisable(false);
+                            } else if (tableHomes.getSelectionModel().getSelectedItem().getSquare() == Double.parseDouble(newValueSquare)) {
+                                updateHomeButton.setDisable(true);
+                            }
+                        } catch (Exception ignored) {
+                        }
+                    }
+                });
+
 
             } else {
                 createHomeButton.setDisable(false);
@@ -336,12 +461,12 @@ public class RealEstateController {
         tableFlats.setItems(createListOfFlats(getFlatTableContent()));
 
         //Заносим данные выделенного объекта "Квартира" в текстовые поля при клике на объект в таблице
-        tableFlats.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
+        tableFlats.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, selectedFlat) -> {
+            if (selectedFlat != null) {
 
-                createFlatButton.setDisable(true);
-                updateFlatButton.setDisable(false);
-                deleteFlatButton.setDisable(false);
+                idSelectedFlat = idFlatsFromDatabaseArrayList.get(tableFlats.getSelectionModel().getSelectedIndex());
+                System.out.println("Выбран объект, у которого id в базе = " + idSelectedFlat);
+                System.out.println(idFlatsFromDatabaseArrayList);
 
                 //устанавливаем значения выделенного объекта в текстовые поля
                 flatTextFieldCity.setText(tableFlats.getSelectionModel().getSelectedItem().getCity());
@@ -354,9 +479,115 @@ public class RealEstateController {
                 flatTextFieldNumberOfRooms.setText(String.valueOf(tableFlats.getSelectionModel().getSelectedItem().getNumberOfRooms()));
                 flatTextFieldSquare.setText(String.valueOf(tableFlats.getSelectionModel().getSelectedItem().getSquare()));
 
-                idSelectedFlat = idFlatsFromDatabaseArrayList.get(tableFlats.getSelectionModel().getSelectedIndex());
-                System.out.println("Выбран объект, у которого id в базе = " + idSelectedFlat);
-                System.out.println(idFlatsFromDatabaseArrayList);
+                createFlatButton.setDisable(true);
+                updateFlatButton.setDisable(true);
+                deleteFlatButton.setDisable(false);
+
+                flatTextFieldCity.textProperty().addListener((observable1, oldValue1, newValueCity) -> {
+                    try {
+                        if (!tableFlats.getSelectionModel().getSelectedItem().getCity().equals(newValueCity)) {
+                            updateFlatButton.setDisable(false);
+                        } else if (selectedFlat.getCity().equals(newValueCity)) {
+                            updateFlatButton.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
+                    }
+                });
+
+                flatTextFieldStreet.textProperty().addListener((observable1, oldValue1, newValueStreet) -> {
+                    try {
+                        if (!tableFlats.getSelectionModel().getSelectedItem().getStreet().equals(newValueStreet)) {
+                            updateFlatButton.setDisable(false);
+                        } else if (tableFlats.getSelectionModel().getSelectedItem().getStreet().equals(newValueStreet)) {
+                            updateFlatButton.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
+                    }
+                });
+
+                flatTextFieldHomeNumber.textProperty().addListener((observable1, oldValue1, newValueHomeNumber) -> {
+                    try {
+                        if (!tableFlats.getSelectionModel().getSelectedItem().getHomeNumber().equals(newValueHomeNumber)) {
+                            updateFlatButton.setDisable(false);
+                        } else if (tableFlats.getSelectionModel().getSelectedItem().getHomeNumber().equals(newValueHomeNumber)) {
+                            updateFlatButton.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
+                    }
+                });
+
+                flatTextFieldFlatNumber.textProperty().addListener((observable1, oldValue1, newValueFlatNumber) -> {
+                    if (!tableFlats.getSelectionModel().getSelectedItem().getFlatNumber().equals(newValueFlatNumber)) {
+                        updateFlatButton.setDisable(false);
+                    } else if (tableFlats.getSelectionModel().getSelectedItem().getFlatNumber().equals(newValueFlatNumber)) {
+                        updateFlatButton.setDisable(true);
+                    }
+                });
+
+                flatTextFieldLatitude.textProperty().addListener((observable1, oldValue1, newValueLatitude) -> {
+                    if (!newValueLatitude.isEmpty()) {
+                        try {
+                            if (tableFlats.getSelectionModel().getSelectedItem().getLatitude() != Double.parseDouble(newValueLatitude)) {
+                                updateFlatButton.setDisable(false);
+                            } else if (tableFlats.getSelectionModel().getSelectedItem().getLatitude() == Double.parseDouble(newValueLatitude)) {
+                                updateFlatButton.setDisable(true);
+                            }
+                        } catch (Exception ignored) {
+                        }
+                    }
+                });
+
+                flatTextFieldLongitude.textProperty().addListener((observable1, oldValue1, newValueLongitude) -> {
+                    if (!newValueLongitude.isEmpty()) {
+                        try {
+                            if (tableFlats.getSelectionModel().getSelectedItem().getLongitude() != Double.parseDouble(newValueLongitude)) {
+                                updateFlatButton.setDisable(false);
+                            } else if (tableFlats.getSelectionModel().getSelectedItem().getLongitude() == Double.parseDouble(newValueLongitude)) {
+                                updateFlatButton.setDisable(true);
+                            }
+                        } catch (Exception ignored) {
+                        }
+                    }
+                });
+
+                flatTextFieldFloor.textProperty().addListener((observable1, oldValue1, newValueFloor) -> {
+                    if (!newValueFloor.isEmpty()) {
+                        try {
+                            if (tableFlats.getSelectionModel().getSelectedItem().getFloor() != Integer.parseInt(newValueFloor)) {
+                                updateFlatButton.setDisable(false);
+                            } else if (tableFlats.getSelectionModel().getSelectedItem().getFloor() == Integer.parseInt(newValueFloor)) {
+                                updateFlatButton.setDisable(true);
+                            }
+                        } catch (Exception ignored) {
+                        }
+                    }
+                });
+
+                flatTextFieldNumberOfRooms.textProperty().addListener((observable1, oldValue1, newValueNumberOfRooms) -> {
+                    if (!newValueNumberOfRooms.isEmpty()) {
+                        try {
+                            if (tableFlats.getSelectionModel().getSelectedItem().getNumberOfRooms() != Integer.parseInt(newValueNumberOfRooms)) {
+                                updateFlatButton.setDisable(false);
+                            } else if (tableFlats.getSelectionModel().getSelectedItem().getNumberOfRooms() == Integer.parseInt(newValueNumberOfRooms)) {
+                                updateFlatButton.setDisable(true);
+                            }
+                        } catch (Exception ignored) {
+                        }
+                    }
+                });
+
+                flatTextFieldSquare.textProperty().addListener((observable1, oldValue1, newValueSquare) -> {
+                    if (!newValueSquare.isEmpty()) {
+                        try {
+                            if (tableFlats.getSelectionModel().getSelectedItem().getSquare() != Double.parseDouble(newValueSquare)) {
+                                updateFlatButton.setDisable(false);
+                            } else if (tableFlats.getSelectionModel().getSelectedItem().getSquare() == Double.parseDouble(newValueSquare)) {
+                                updateFlatButton.setDisable(true);
+                            }
+                        } catch (Exception ignored) {
+                        }
+                    }
+                });
 
             } else {
                 createFlatButton.setDisable(false);
@@ -364,7 +595,6 @@ public class RealEstateController {
                 deleteFlatButton.setDisable(true);
             }
         });
-
 
 
         //определение колонок таблицы с соответствующими полями объекта "Квартира"
@@ -380,12 +610,12 @@ public class RealEstateController {
         tableLands.setItems(createListOfLands(getLandTableContent()));
 
         //Заносим данные выделенного объекта "Квартира" в текстовые поля при клике на объект в таблице
-        tableLands.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
+        tableLands.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, selectedLand) -> {
+            if (selectedLand != null) {
 
-                createLandButton.setDisable(true);
-                updateLandButton.setDisable(false);
-                deleteLandButton.setDisable(false);
+                idSelectedLand = idLandsFromDatabaseArrayList.get(tableLands.getSelectionModel().getSelectedIndex());
+                System.out.println("Выбран объект, у которого id в базе = " + idSelectedLand);
+                System.out.println(idLandsFromDatabaseArrayList);
 
                 //устанавливаем значения выделенного объекта в текстовые поля
                 landTextFieldCity.setText(tableLands.getSelectionModel().getSelectedItem().getCity());
@@ -396,9 +626,92 @@ public class RealEstateController {
                 landTextFieldLongitude.setText(String.valueOf(tableLands.getSelectionModel().getSelectedItem().getLongitude()));
                 landTextFieldSquare.setText(String.valueOf(tableLands.getSelectionModel().getSelectedItem().getSquare()));
 
-                idSelectedLand = idLandsFromDatabaseArrayList.get(tableLands.getSelectionModel().getSelectedIndex());
-                System.out.println("Выбран объект, у которого id в базе = " + idSelectedLand);
-                System.out.println(idLandsFromDatabaseArrayList);
+                createLandButton.setDisable(true);
+                updateLandButton.setDisable(true);
+                deleteLandButton.setDisable(false);
+
+                landTextFieldCity.textProperty().addListener((observable1, oldValue1, newValueCity) -> {
+                    try {
+                        if (!tableLands.getSelectionModel().getSelectedItem().getCity().equals(newValueCity)) {
+                            updateLandButton.setDisable(false);
+                        } else if (tableLands.getSelectionModel().getSelectedItem().getCity().equals(newValueCity)) {
+                            updateLandButton.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
+                    }
+                });
+
+                landTextFieldStreet.textProperty().addListener((observable1, oldValue1, newValueStreet) -> {
+                    try {
+                        if (!tableLands.getSelectionModel().getSelectedItem().getStreet().equals(newValueStreet)) {
+                            updateLandButton.setDisable(false);
+                        } else if (tableLands.getSelectionModel().getSelectedItem().getStreet().equals(newValueStreet)) {
+                            updateLandButton.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
+                    }
+                });
+
+                landTextFieldHomeNumber.textProperty().addListener((observable1, oldValue1, newValueHomeNumber) -> {
+                    try {
+                        if (!tableLands.getSelectionModel().getSelectedItem().getHomeNumber().equals(newValueHomeNumber)) {
+                            updateLandButton.setDisable(false);
+                        } else if (tableLands.getSelectionModel().getSelectedItem().getHomeNumber().equals(newValueHomeNumber)) {
+                            updateLandButton.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
+                    }
+                });
+
+                landTextFieldFlatNumber.textProperty().addListener((observable1, oldValue1, newValueFlatNumber) -> {
+                    try {
+                        if (!tableLands.getSelectionModel().getSelectedItem().getFlatNumber().equals(newValueFlatNumber)) {
+                            updateLandButton.setDisable(false);
+                        } else if (tableLands.getSelectionModel().getSelectedItem().getFlatNumber().equals(newValueFlatNumber)) {
+                            updateLandButton.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
+                    }
+                });
+
+                landTextFieldLatitude.textProperty().addListener((observable1, oldValue1, newValueLatitude) -> {
+                    if (!newValueLatitude.isEmpty()) {
+                        try {
+                            if (tableLands.getSelectionModel().getSelectedItem().getLatitude() != Double.parseDouble(newValueLatitude)) {
+                                updateLandButton.setDisable(false);
+                            } else if (tableLands.getSelectionModel().getSelectedItem().getLatitude() == Double.parseDouble(newValueLatitude)) {
+                                updateLandButton.setDisable(true);
+                            }
+                        } catch (Exception ignored) {
+                        }
+                    }
+                });
+
+                landTextFieldLongitude.textProperty().addListener((observable1, oldValue1, newValueLongitude) -> {
+                    if (!newValueLongitude.isEmpty()) {
+                        try {
+                            if (tableLands.getSelectionModel().getSelectedItem().getLongitude() != Double.parseDouble(newValueLongitude)) {
+                                updateLandButton.setDisable(false);
+                            } else if (tableLands.getSelectionModel().getSelectedItem().getLongitude() == Double.parseDouble(newValueLongitude)) {
+                                updateLandButton.setDisable(true);
+                            }
+                        } catch (Exception ignored) {
+                        }
+                    }
+                });
+
+                landTextFieldSquare.textProperty().addListener((observable1, oldValue1, newValueSquare) -> {
+                    if (!newValueSquare.isEmpty()) {
+                        try {
+                            if (tableLands.getSelectionModel().getSelectedItem().getSquare() != Double.parseDouble(newValueSquare)) {
+                                updateLandButton.setDisable(false);
+                            } else if (tableLands.getSelectionModel().getSelectedItem().getSquare() == Double.parseDouble(newValueSquare)) {
+                                updateLandButton.setDisable(true);
+                            }
+                        } catch (Exception ignored) {
+                        }
+                    }
+                });
 
             } else {
                 createLandButton.setDisable(false);
@@ -407,8 +720,126 @@ public class RealEstateController {
             }
         });
 
+        findHomeByAddress();
+        findFlatByAddress();
+        findLandByAddress();
     }
 
+    /**
+     * Метод для поиска объекта недвижимости "Квартира" по адресу
+     */
+    private void findFlatByAddress() {
+
+        ObservableList<Flat> flatsList = createListOfFlats(getFlatTableContent());
+
+        FilteredList<Flat> filteredFlatList = new FilteredList<>(flatsList);
+
+        searchTextField.textProperty().addListener((observable, oldValue, newValue) ->
+                filteredFlatList.setPredicate((Predicate<? super Flat>) flat -> {
+                    if (newValue == null || newValue.isEmpty()) {
+                        return true;
+                    }
+
+                    for (int i = 0; i < flatsList.size(); i++) {
+                        if (Helper.levenstain(newValue.toLowerCase(), flat.getCity().toLowerCase()) <= 3) {
+                            return true;
+                        }
+                        if (Helper.levenstain(newValue.toLowerCase(), flat.getStreet().toLowerCase()) <= 3) {
+                            return true;
+                        }
+                        if (Helper.levenstain(newValue.toLowerCase(), flat.getHomeNumber().toLowerCase()) <= 1) {
+                            return true;
+                        }
+                        if (Helper.levenstain(newValue.toLowerCase(), flat.getFlatNumber().toLowerCase()) <= 1) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }));
+
+        SortedList<Flat> sortedFlat = new SortedList<>(filteredFlatList);
+        sortedFlat.comparatorProperty().bind(tableFlats.comparatorProperty());
+        tableFlats.setItems(sortedFlat);
+
+    }
+
+    /**
+     * Метод для поиска объекта недвижимости "Земля" по адресу
+     */
+    private void findLandByAddress() {
+        ObservableList<Land> landsList = createListOfLands(getLandTableContent());
+
+        FilteredList<Land> filteredLandList = new FilteredList<>(landsList);
+
+        searchTextField.textProperty().addListener((observable, oldValue, newValue) ->
+                filteredLandList.setPredicate((Predicate<? super Land>) land -> {
+                    if (newValue == null || newValue.isEmpty()) {
+                        return true;
+                    }
+
+                    for (int i = 0; i < landsList.size(); i++) {
+                        if (Helper.levenstain(newValue.toLowerCase(), land.getCity().toLowerCase()) <= 3) {
+                            return true;
+                        }
+                        if (Helper.levenstain(newValue.toLowerCase(), land.getStreet().toLowerCase()) <= 3) {
+                            return true;
+                        }
+                        if (Helper.levenstain(newValue.toLowerCase(), land.getHomeNumber().toLowerCase()) <= 1) {
+                            return true;
+                        }
+                        if (Helper.levenstain(newValue.toLowerCase(), land.getFlatNumber().toLowerCase()) <= 1) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }));
+
+        SortedList<Land> sortedLand = new SortedList<>(filteredLandList);
+        sortedLand.comparatorProperty().bind(tableLands.comparatorProperty());
+        tableLands.setItems(sortedLand);
+
+    }
+
+    /**
+     * Метод для поиска объекта недвижимости "Дом" по адресу
+     */
+    private void findHomeByAddress() {
+        ObservableList<Home> homesList = createListOfHomes(getHomeTableContent());
+
+        FilteredList<Home> filteredHomeList = new FilteredList<>(homesList);
+
+        searchTextField.textProperty().addListener((observable, oldValue, newValue) ->
+                filteredHomeList.setPredicate((Predicate<? super Home>) home -> {
+                    if (newValue == null || newValue.isEmpty()) {
+                        return true;
+                    }
+
+
+                    for (int i = 0; i < homesList.size(); i++) {
+                        if (Helper.levenstain(newValue.toLowerCase(), home.getCity().toLowerCase()) <= 3) {
+                            return true;
+                        }
+                        if (Helper.levenstain(newValue.toLowerCase(), home.getStreet().toLowerCase()) <= 3) {
+                            return true;
+                        }
+                        if (Helper.levenstain(newValue.toLowerCase(), home.getHomeNumber().toLowerCase()) <= 1) {
+                            return true;
+                        }
+                        if (Helper.levenstain(newValue.toLowerCase(), home.getFlatNumber().toLowerCase()) <= 1) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }));
+
+
+        SortedList<Home> sortedHome = new SortedList<>(filteredHomeList);
+        sortedHome.comparatorProperty().bind(tableHomes.comparatorProperty());
+        tableHomes.setItems(sortedHome);
+    }
 
     /**
      * Метод для смены вкладок внутри экрана при нажатии на соответствующий тип объекта недвижимости
@@ -546,14 +977,15 @@ public class RealEstateController {
                         "Объект недвижимости 'Дом' успешно добавлен!",
                         Alert.AlertType.INFORMATION);
 
-                //обновление таблицы после создания нового объекта
+//                homesList.add(home);
+
                 tableHomes.setItems(createListOfHomes(getHomeTableContent()));
 
                 //обнуляем текстовые поля после добавления клиента в базу
-                clearTextFields(createListOfHomesTextFields());
+                clearTextFields(listOfHomeTextFields);
 
                 //Поиск объекта недвижимости типа "Дом" адресу
-//                findClientByFullName();
+                findHomeByAddress();
 
             } catch (SQLException e) {
                 //открываем диалоговое окно для уведомления об ошибке
@@ -626,7 +1058,9 @@ public class RealEstateController {
             //выполнение SQL запроса
             updateHomeStatement.executeUpdate();
 
-            //обновление таблицы после обновления
+            //Обнуляем текстовые поля после обновления клиента
+            clearTextFields(listOfHomeTextFields);
+
             tableHomes.setItems(createListOfHomes(getHomeTableContent()));
 
             //открываем диалоговое окно для уведомления об успешном обновлении
@@ -635,11 +1069,8 @@ public class RealEstateController {
                     "Обновление объекта недвижимости типа 'Дом' выполнено успешно!",
                     Alert.AlertType.INFORMATION);
 
-            //Обнуляем текстовые поля после обновления клиента
-            clearTextFields(listOfHomeTextFields);
-
             //Поиск объекта недвижимости типа "Дом" адресу
-//            findClientByFullName();
+            findHomeByAddress();
 
         } catch (SQLException e) {
             //открываем диалоговое окно для уведомления об ошибке
@@ -656,7 +1087,7 @@ public class RealEstateController {
     public void deleteHome() {
 
         //SQL запрос на удаление объекта недвижимости типа "Дом"
-        String deleteHomeRequest = "DELETE FROM " + HOME_TABLE + " WHERE " + HOME_ID + "=?";
+        String deleteHomeRequest = String.format("DELETE FROM %s WHERE %s=?", HOME_TABLE, HOME_ID);
 
         try {
             PreparedStatement deleteHomeStatement = new DatabaseHandler().createDbConnection().prepareStatement(deleteHomeRequest);
@@ -665,9 +1096,6 @@ public class RealEstateController {
             deleteHomeStatement.setInt(1, idSelectedHome);
             //выполнение запроса на удаление
             deleteHomeStatement.executeUpdate();
-
-            //обновление таблицы после удаления
-            tableHomes.setItems(createListOfHomes(getHomeTableContent()));
 
             //открываем диалоговое окно для уведомления об успешном удалении
             showModalWindow(
@@ -678,8 +1106,11 @@ public class RealEstateController {
             //обнуляем текстовые поля после удаления объекта "Дом"
             clearTextFields(listOfHomeTextFields);
 
+            tableHomes.setItems(createListOfHomes(getHomeTableContent()));
+//            homesList.remove(tableHomes.getSelectionModel().getSelectedIndex());
+
             //Поиск объекта недвижимости типа "Дом" адресу
-//            findClientByFullName();
+            findHomeByAddress();
 
         } catch (SQLException e) {
             //открываем диалоговое окно для уведомления об ошибке
@@ -703,10 +1134,10 @@ public class RealEstateController {
     }
 
 
-    /**
-     * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-     *  ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ ДЛЯ РАБОТЫ С ОБЪЕКТОМ НЕВДВИЖИМОСТИ "ДОМ"
-     * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*
+      ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+       ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ ДЛЯ РАБОТЫ С ОБЪЕКТОМ НЕВДВИЖИМОСТИ "ДОМ"
+      ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
      */
 
 
@@ -811,19 +1242,17 @@ public class RealEstateController {
         return list;
     }
 
-    /**
-     * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-     *  КОНЕЦ ВСПОМОГАТЕЛЬНЫХ МЕТОДОВ ДЛЯ РАБОТЫ С ОБЪЕКТОМ НЕВДВИЖИМОСТИ "ДОМ"
-     * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*
+      ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+       КОНЕЦ ВСПОМОГАТЕЛЬНЫХ МЕТОДОВ ДЛЯ РАБОТЫ С ОБЪЕКТОМ НЕВДВИЖИМОСТИ "ДОМ"
+      ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
      */
 
 
     /**
      * Метод для добавления нового объекта недвижимости типа "Квартира" в базу данных
-     *
-     * @param actionEvent нажатие на кнопку "Создать"
      */
-    public void createFlat(ActionEvent actionEvent) {
+    public void createFlat() {
 
         Flat flat = new Flat();
 
@@ -917,14 +1346,15 @@ public class RealEstateController {
                         "Объект недвижимости 'Квартира' успешно добавлен!",
                         Alert.AlertType.INFORMATION);
 
-                //обновление таблицы после создания нового объекта
+//                flatsList.add(flat);
+
                 tableFlats.setItems(createListOfFlats(getFlatTableContent()));
 
                 //обнуляем текстовые поля после добавления клиента в базу
-                clearTextFields(createListOfFlatTextFields());
+                clearTextFields(listOfFlatTextFields);
 
-                //Поиск объекта недвижимости типа "Дом" адресу
-//                findClientByFullName();
+                //Поиск объекта недвижимости типа "Квартира" адресу
+                findFlatByAddress();
 
             } catch (SQLException e) {
                 //открываем диалоговое окно для уведомления об ошибке
@@ -946,10 +1376,8 @@ public class RealEstateController {
 
     /**
      * Метод для обновления объекта недвижимости типа "Квартира" в базе данных
-     *
-     * @param actionEvent нажатие на кнопку "Обновить"
      */
-    public void updateFlat(ActionEvent actionEvent) {
+    public void updateFlat() {
 
         //SQL запрос для обновления объекта недвижимости типа 'Дом'
         String updateFlatRequest =
@@ -1002,8 +1430,6 @@ public class RealEstateController {
             //выполнение SQL запроса
             updateFlatStatement.executeUpdate();
 
-            //обновление таблицы после обновления
-            tableFlats.setItems(createListOfFlats(getFlatTableContent()));
 
             //открываем диалоговое окно для уведомления об успешном обновлении
             showModalWindow(
@@ -1014,8 +1440,10 @@ public class RealEstateController {
             //Обнуляем текстовые поля после обновления клиента
             clearTextFields(listOfFlatTextFields);
 
-            //Поиск объекта недвижимости типа "Дом" адресу
-//            findClientByFullName();
+            tableFlats.setItems(createListOfFlats(getFlatTableContent()));
+
+            //Поиск объекта недвижимости типа "Квартира" адресу
+            findFlatByAddress();
 
         } catch (SQLException e) {
             //открываем диалоговое окно для уведомления об ошибке
@@ -1029,13 +1457,11 @@ public class RealEstateController {
 
     /**
      * Метод для удаления объекта недвижимости типа "Квартира" из базы данных
-     *
-     * @param actionEvent нажатие на кнопку "Удалить"
      */
-    public void deleteFlat(ActionEvent actionEvent) {
+    public void deleteFlat() {
 
         //SQL запрос на удаление объекта недвижимости типа "Квартира"
-        String deleteFlatRequest = "DELETE FROM " + FLAT_TABLE + " WHERE " + FLAT_ID + "=?";
+        String deleteFlatRequest = String.format("DELETE FROM %s WHERE %s=?", FLAT_TABLE, FLAT_ID);
 
         try {
             PreparedStatement deleteFlatStatement = new DatabaseHandler().createDbConnection().prepareStatement(deleteFlatRequest);
@@ -1044,9 +1470,6 @@ public class RealEstateController {
             deleteFlatStatement.setInt(1, idSelectedFlat);
             //выполнение запроса на удаление
             deleteFlatStatement.executeUpdate();
-
-            //обновление таблицы после удаления
-            tableFlats.setItems(createListOfFlats(getFlatTableContent()));
 
             //открываем диалоговое окно для уведомления об успешном удалении
             showModalWindow(
@@ -1057,8 +1480,12 @@ public class RealEstateController {
             //обнуляем текстовые поля после удаления объекта "Дом"
             clearTextFields(listOfFlatTextFields);
 
-            //Поиск объекта недвижимости типа "Дом" адресу
-//            findClientByFullName();
+//            flatsList.remove(tableFlats.getSelectionModel().getSelectedIndex());
+
+            tableFlats.setItems(createListOfFlats(getFlatTableContent()));
+
+            //Поиск объекта недвижимости типа "Квартира" адресу
+            findFlatByAddress();
 
         } catch (SQLException e) {
             //открываем диалоговое окно для уведомления об ошибке
@@ -1071,10 +1498,10 @@ public class RealEstateController {
 
     }
 
-    /**
-     * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-     *  ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ ДЛЯ РАБОТЫ С ОБЪЕКТОМ НЕВДВИЖИМОСТИ "КВАРТИРА"
-     * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*
+      ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+       ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ ДЛЯ РАБОТЫ С ОБЪЕКТОМ НЕВДВИЖИМОСТИ "КВАРТИРА"
+      ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
      */
 
     /**
@@ -1159,19 +1586,17 @@ public class RealEstateController {
         return listOfTextField;
     }
 
-    /**
-     * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-     *  КОНЕЦ ВСПОМОГАТЕЛЬНЫХ МЕТОДОВ ДЛЯ РАБОТЫ С ОБЪЕКТОМ НЕВДВИЖИМОСТИ "КВАРТИРА"
-     * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*
+      ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+       КОНЕЦ ВСПОМОГАТЕЛЬНЫХ МЕТОДОВ ДЛЯ РАБОТЫ С ОБЪЕКТОМ НЕВДВИЖИМОСТИ "КВАРТИРА"
+      ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
      */
 
 
     /**
      * Метод для добавления нового объекта недвижимости типа "Земля" в базу данных
-     *
-     * @param actionEvent нажатие на кнопку "Создать"
      */
-    public void createLand(ActionEvent actionEvent) {
+    public void createLand() {
 
         Land land = new Land();
 
@@ -1201,7 +1626,6 @@ public class RealEstateController {
                 }
             }
 
-
             if (!landTextFieldLongitude.getText().isEmpty()) {
                 if (isCorrectLongitude(landTextFieldLongitude)) {
                     land.setLongitude(Double.valueOf(landTextFieldLongitude.getText()));
@@ -1213,6 +1637,8 @@ public class RealEstateController {
                     return;
                 }
             }
+
+            land.setSquare(Double.parseDouble(landTextFieldSquare.getText()));
 
             System.out.println(land);
 
@@ -1249,14 +1675,15 @@ public class RealEstateController {
                         "Объект недвижимости 'Земля' успешно добавлен!",
                         Alert.AlertType.INFORMATION);
 
-                //обновление таблицы после создания нового объекта
+//                landsList.add(land);
+
                 tableLands.setItems(createListOfLands(getLandTableContent()));
 
                 //обнуляем текстовые поля после добавления клиента в базу
-                clearTextFields(createListOfFlatTextFields());
+                clearTextFields(listOfLandTextFields);
 
-                //Поиск объекта недвижимости типа "Дом" адресу
-//                findClientByFullName();
+                //Поиск объекта недвижимости типа "Земля" адресу
+                findLandByAddress();
 
             } catch (SQLException e) {
                 //открываем диалоговое окно для уведомления об ошибке
@@ -1277,10 +1704,8 @@ public class RealEstateController {
 
     /**
      * Метод для обновления объекта недвижимости типа "Земля" в базе данных
-     *
-     * @param actionEvent нажатие на кнопку "Обновить"
      */
-    public void updateLand(ActionEvent actionEvent) {
+    public void updateLand() {
 
         //SQL запрос для обновления объекта недвижимости типа 'Дом'
         String updateFlatRequest =
@@ -1329,7 +1754,6 @@ public class RealEstateController {
             //выполнение SQL запроса
             updateFlatStatement.executeUpdate();
 
-            //обновление таблицы после обновления
             tableLands.setItems(createListOfLands(getLandTableContent()));
 
             //открываем диалоговое окно для уведомления об успешном обновлении
@@ -1341,8 +1765,8 @@ public class RealEstateController {
             //Обнуляем текстовые поля после обновления клиента
             clearTextFields(listOfLandTextFields);
 
-            //Поиск объекта недвижимости типа "Дом" адресу
-//            findClientByFullName();
+            //Поиск объекта недвижимости типа "Земля" адресу
+            findLandByAddress();
 
         } catch (SQLException e) {
             //открываем диалоговое окно для уведомления об ошибке
@@ -1356,10 +1780,8 @@ public class RealEstateController {
 
     /**
      * Метод для удаления объекта недвижимости типа "Земля" из базы данных
-     *
-     * @param actionEvent нажатие на кнопку "Удалить"
      */
-    public void deleteLand(ActionEvent actionEvent) {
+    public void deleteLand() {
 
         //SQL запрос на удаление объекта недвижимости типа "Квартира"
         String deleteLandRequest = "DELETE FROM " + LAND_TABLE + " WHERE " + LAND_ID_COLUMN + "=?";
@@ -1372,7 +1794,8 @@ public class RealEstateController {
             //выполнение запроса на удаление
             deleteLandStatement.executeUpdate();
 
-            //обновление таблицы после удаления
+//            landsList.remove(tableLands.getSelectionModel().getSelectedIndex());
+
             tableLands.setItems(createListOfLands(getLandTableContent()));
 
             //открываем диалоговое окно для уведомления об успешном удалении
@@ -1384,8 +1807,8 @@ public class RealEstateController {
             //обнуляем текстовые поля после удаления объекта "Дом"
             clearTextFields(listOfLandTextFields);
 
-            //Поиск объекта недвижимости типа "Дом" адресу
-//            findClientByFullName();
+            //Поиск объекта недвижимости типа "Земля" адресу
+            findLandByAddress();
 
         } catch (SQLException e) {
             //открываем диалоговое окно для уведомления об ошибке
@@ -1399,10 +1822,10 @@ public class RealEstateController {
     }
 
 
-    /**
-     * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-     *  ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ ДЛЯ РАБОТЫ С ОБЪЕКТОМ НЕВДВИЖИМОСТИ "ЗЕМЛЯ"
-     * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*
+      ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+       ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ ДЛЯ РАБОТЫ С ОБЪЕКТОМ НЕВДВИЖИМОСТИ "ЗЕМЛЯ"
+      ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
      */
 
 
@@ -1486,10 +1909,10 @@ public class RealEstateController {
     }
 
 
-    /**
-     * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-     *  КОНЕЦ ВСПОМОГАТЕЛЬНЫХ МЕТОДОВ ДЛЯ РАБОТЫ С ОБЪЕКТОМ НЕВДВИЖИМОСТИ "ЗЕМЛЯ"
-     * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*
+      ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+       КОНЕЦ ВСПОМОГАТЕЛЬНЫХ МЕТОДОВ ДЛЯ РАБОТЫ С ОБЪЕКТОМ НЕВДВИЖИМОСТИ "ЗЕМЛЯ"
+      ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
      */
 
 
