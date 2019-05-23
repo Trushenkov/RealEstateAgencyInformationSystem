@@ -24,7 +24,7 @@ public class IntegerTextField extends TextField {
         return this.maxLength;
     }
 
-    private final Integer getMaxLength() {
+    public final Integer getMaxLength() {
         return this.maxLength.getValue();
     }
 
