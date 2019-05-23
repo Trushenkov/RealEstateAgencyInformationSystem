@@ -11,11 +11,11 @@ import java.util.Objects;
  *
  * @author Трушенков Дмитрий
  */
-public class NumberTextField extends TextField {
+public class IntegerTextField extends TextField {
 
     private final IntegerProperty maxLength;
 
-    public NumberTextField() {
+    public IntegerTextField() {
         super();
         this.maxLength = new SimpleIntegerProperty(-1);
     }
@@ -24,7 +24,7 @@ public class NumberTextField extends TextField {
         return this.maxLength;
     }
 
-    public final Integer getMaxLength() {
+    private final Integer getMaxLength() {
         return this.maxLength.getValue();
     }
 

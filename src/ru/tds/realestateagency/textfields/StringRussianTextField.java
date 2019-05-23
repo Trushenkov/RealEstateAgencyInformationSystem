@@ -7,7 +7,7 @@ import javafx.scene.control.TextField;
  *
  * @author Трушенков Дмитрий
  */
-public class SimpleTextField extends TextField {
+public class StringRussianTextField extends TextField {
 
 
     @Override
