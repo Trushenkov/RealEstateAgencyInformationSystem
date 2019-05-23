@@ -15,6 +15,7 @@ public class Home {
     private  double longitude;
     private  int numberOfFloors;
     private  int numberOfRooms;
+    private  double square;
 
     public Home() {
     }
@@ -55,7 +56,7 @@ public class Home {
         this.square = square;
     }
 
-    private  double square;
+
 
     public Home(final String city,
                 final String street,
