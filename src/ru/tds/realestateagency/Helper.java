@@ -58,7 +58,7 @@ public class Helper {
      *
      * @param pathToFxml путь до файла разметки нового окна
      */
-    public static void changeScreen(String pathToFxml) {
+    public static void openNewScreen(String pathToFxml) {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Helper.class.getResource(pathToFxml));
         try {
@@ -75,28 +75,4 @@ public class Helper {
         stage.show();
     }
 
-    /**
-     * Метод для открытия модального окна для уведмоления пользователя об ошибке
-     *
-     * @param path путь до файла разметки модального окна
-     */
-    public static void showModalWindow(String path, ActionEvent actionEvent) {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Helper.class.getResource(path));
-        try {
-            loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Parent root = loader.getRoot();
-        Scene scene = new Scene(root);
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.setTitle("Уведомление об ошибке");
-        stage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow());
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.setResizable(false);
-        stage.show();
-    }
-    
 }

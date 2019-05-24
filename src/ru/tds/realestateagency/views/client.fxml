@@ -19,7 +19,7 @@
 <AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="600.0" prefWidth="950.0" stylesheets="@../css/fullpackstyling.css"
             xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="ru.tds.realestateagency.controllers.ClientsScreenController">
+            fx:controller="ru.tds.realestateagency.controllers.ClientsController">
     <AnchorPane id="topPane" prefHeight="140.0" prefWidth="1000.0" style="-fx-background-color: #2D75E8"
                 AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <FontAwesomeIconView fill="WHITE" glyphName="GROUP" layoutX="50.0" layoutY="105.0" size="80"/>
@@ -48,7 +48,7 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
         </columnResizePolicy>
     </TableView>
-    <Button alignment="CENTER" layoutX="14.0" layoutY="563.0" mnemonicParsing="false" onAction="#goBackBtnClicked"
+    <Button alignment="CENTER" layoutX="14.0" layoutY="563.0" mnemonicParsing="false" onAction="#goHomeScreen"
             prefHeight="30.0" prefWidth="105.0" text="Назад" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="14.0">
         <cursor>
             <Cursor fx:constant="HAND"/>

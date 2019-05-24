@@ -26,11 +26,11 @@ import java.util.ArrayList;
 import java.util.function.Predicate;
 
 /**
- * Класс-контроллер для обработки событий на экране "Работа с риэлторами"
+ * Класс-контроллер для обработки событий на экране "Риэлторы"
  *
  * @author Трушенков Дмитрий
  */
-public class RealtorsScreenController {
+public class RealtorsController {
 
     //Константы для работы с таблицей `realtors`
     private static final String REALTOR_TABLE = "realtors";
@@ -48,7 +48,7 @@ public class RealtorsScreenController {
     @FXML
     private Label realtorsWithNeedsLabel;
     @FXML
-    private Label realtorsWithOffersLabel;
+    private Label  realtorsWithOffersLabel;
     @FXML
     private Button createBtn;
     @FXML
@@ -75,16 +75,15 @@ public class RealtorsScreenController {
     private TextField tfSearch;
     @FXML
     private TextField tfFirstName;
-
-    private int idSelectedRealtor;// для хранения ID риэлтора из базы
-    private ArrayList<Integer> idRealtorsFromDatabase;
-    private ObservableList<Realtor> listRealtors;
+    private int idSelectedRealtor;// для хранения ID выбранного риэлтора
+    private ArrayList<Integer> idRealtorsFromDatabase;// список ID риэлторов
+    private ObservableList<Realtor> listRealtors;//список риэлторов
 
 
     @FXML
     void initialize() {
 
-        //Обработка нажатия на главную панель окна, обнуление текстовых полей при нажатии и отмена выбора строки в таблице
+        //Обнуление текстовых полей и отмена выбора строки в таблице при нажатии на область окна приложения
         mainPane.setOnMousePressed(event -> {
             clearTextFields();
             tableRealtors.getSelectionModel().clearSelection();
@@ -116,8 +115,6 @@ public class RealtorsScreenController {
         //Заносим данные выделенного объекта в текстовые поля при клике на объект в таблице
         tableRealtors.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, selectedRealtor) -> {
 
-            System.out.println("selected realtor: " + selectedRealtor);
-
             if (selectedRealtor != null) {
 
                 idSelectedRealtor = idRealtorsFromDatabase.get(tableRealtors.getSelectionModel().getSelectedIndex());
@@ -128,6 +125,7 @@ public class RealtorsScreenController {
                 tfMiddleName.setText(tableRealtors.getSelectionModel().getSelectedItem().getMiddleName());
                 tfCommissionPart.setText(String.valueOf(tableRealtors.getSelectionModel().getSelectedItem().getCommissionPart()));
 
+                //Слушатели для текстовых полей для проверки на изменение какого либо значения и предоставления возможности обновления риэлтора
                 tfLastName.textProperty().addListener((observable1, oldValue1, newValueLastNameTextField) -> {
                     try {
                         if (!tableRealtors.getSelectionModel().getSelectedItem().getLastName().equals(newValueLastNameTextField)) {
@@ -192,7 +190,7 @@ public class RealtorsScreenController {
 
 
     /**
-     * Метод для обработки события при нажатии на кнопку "Создать"
+     * Метод для добавления нового риэлтора при нажатии на кнопку "Создать"
      */
     public void createRealtor() {
         //Создание объекта "Риэлтор"
@@ -213,7 +211,7 @@ public class RealtorsScreenController {
                     realtor.setCommissionPart(Integer.parseInt(tfCommissionPart.getText()));
                 } else {
                     //открываем диалоговое окно для уведомления об ошибке
-                    showModalWindow(
+                    showAlert(
                             "Ошибка добавление нового риэлтора",
                             "Доля от комиссии - числовое поле, может принимать значение от 0 до 100",
                             AlertType.ERROR);
@@ -221,7 +219,7 @@ public class RealtorsScreenController {
                 }
             } else {
                 //открываем диалоговое окно для уведомления об ошибке
-                showModalWindow(
+                showAlert(
                         "Ошибка добавление нового риэлтора",
                         "Доля от комиссии - числовое поле, может принимать значение от 0 до 100",
                         AlertType.ERROR);
@@ -229,14 +227,12 @@ public class RealtorsScreenController {
             }
 
             //SQL запрос для добавления нового риэлтора в базу данных
-            String insertRealtor = "INSERT INTO " +
-                    REALTOR_TABLE + "(" +
-                    REALTOR_LAST_NAME + ", " +
-                    REALTOR_FIRST_NAME + ", " +
-                    REALTOR_MIDDLE_NAME + ", " +
-                    REALTOR_COMMISSION_PART + ")" +
-                    " VALUES (?,?,?,?);";
-
+            String insertRealtor = String.format("INSERT INTO %s(%s, %s, %s, %s) VALUES (?,?,?,?);",
+                    REALTOR_TABLE,
+                    REALTOR_LAST_NAME,
+                    REALTOR_FIRST_NAME,
+                    REALTOR_MIDDLE_NAME,
+                    REALTOR_COMMISSION_PART);
 
             try {
                 PreparedStatement addRealtorStatement = new DatabaseHandler().createDbConnection().prepareStatement(insertRealtor);
@@ -250,11 +246,8 @@ public class RealtorsScreenController {
 
                 listRealtors.add(realtor);
 
-//                //обновление таблицы после выполнения запроса
-//                tableRealtors.setItems(createListRealtors(getRealtorsTableContent()));
-
                 //открываем диалоговое окно для уведомления об успешном добавлении
-                showModalWindow(
+                showAlert(
                         "Операция успешно выполнена",
                         "Новый риэлтор успешно добавлен!",
                         AlertType.INFORMATION);
@@ -266,15 +259,14 @@ public class RealtorsScreenController {
 
             } catch (SQLException e) {
                 //открываем диалоговое окно для уведомления об ошибке
-                showModalWindow(
+                showAlert(
                         "Ошибка добавления нового риэлтора",
                         "Риэлтор не был добавлен в базу. Повторите еще раз",
                         AlertType.ERROR);
             }
         } else {
-
             //открываем диалоговое окно для уведомления об ошибке
-            showModalWindow(
+            showAlert(
                     "Ошибка добавления нового риэлтора",
                     "Поля: фамилия, имя, отчество обязательны к заполнению.",
                     AlertType.ERROR);
@@ -282,22 +274,24 @@ public class RealtorsScreenController {
     }
 
     /**
-     * Метод для обработки события при нажатии на кнопку "Обновить"
+     * Метод для обновления информации о риэлторе при нажатии на кнопку "Обновить"
      */
     public void updateRealtor() {
 
         //SQL запрос для обновления риэлтора
-        String updateRealtor = "UPDATE " + REALTOR_TABLE + " SET "
-                + REALTOR_LAST_NAME + "=?,"
-                + REALTOR_FIRST_NAME + "=?,"
-                + REALTOR_MIDDLE_NAME + "=?,"
-                + REALTOR_COMMISSION_PART + "=?" + " WHERE " + REALTOR_ID + "=?";
+        String updateRealtor = String.format("UPDATE %s SET %s=?,%s=?,%s=?,%s=? WHERE %s=?",
+                REALTOR_TABLE,
+                REALTOR_LAST_NAME,
+                REALTOR_FIRST_NAME,
+                REALTOR_MIDDLE_NAME,
+                REALTOR_COMMISSION_PART,
+                REALTOR_ID);
 
         if (!tfLastName.getText().isEmpty() && !tfFirstName.getText().isEmpty() && !tfMiddleName.getText().isEmpty()) {
 
             if (tfCommissionPart.getText().isEmpty()) {
                 //открываем диалоговое окно для уведомления об ошибке
-                showModalWindow(
+                showAlert(
                         "Ошибка обновления риэлтора",
                         "Доля от комиссии - обязательно числовое поле, которое может принимать значение от 0 до 100",
                         AlertType.ERROR);
@@ -311,17 +305,17 @@ public class RealtorsScreenController {
                 preparedStatement.setString(2, tfFirstName.getText());
                 preparedStatement.setString(3, tfMiddleName.getText());
 
-
                 if (Integer.parseInt(tfCommissionPart.getText()) >= 0 && Integer.parseInt(tfCommissionPart.getText()) <= 100) {
                     preparedStatement.setInt(4, Integer.parseInt(tfCommissionPart.getText()));
                 } else {
                     //открываем диалоговое окно для уведомления об ошибке
-                    showModalWindow(
+                    showAlert(
                             "Ошибка обновления риэлтора",
                             "Доля от комиссии - обязательно числовое поле, которое может принимать значение от 0 до 100",
                             AlertType.ERROR);
                     return;
                 }
+
                 preparedStatement.setInt(5, idSelectedRealtor);
                 //выполнение SQL запроса
                 preparedStatement.executeUpdate();
@@ -330,14 +324,14 @@ public class RealtorsScreenController {
                 tableRealtors.setItems(createListRealtors(getRealtorsTableContent()));
 
                 //открываем диалоговое окно для уведомления об успешном обновлении
-                showModalWindow(
+                showAlert(
                         "Операция успешно выполнена",
                         "Обновление риэлтора выполнено успешно!",
                         AlertType.INFORMATION);
 
             } catch (SQLException e) {
                 //открываем диалоговое окно для уведомления об ошибке
-                showModalWindow(
+                showAlert(
                         "Ошибка обновления риэлтора",
                         "Обновление риэлтора не выполнено! Повторите еще раз",
                         AlertType.ERROR);
@@ -349,7 +343,7 @@ public class RealtorsScreenController {
             clearTextFields();
         } else {
             //открываем диалоговое окно для уведомления об ошибке
-            showModalWindow(
+            showAlert(
                     "Ошибка обновления риэлтора",
                     "Поля: фамилия, имя, отчество обязательны к заполнению.",
                     AlertType.ERROR);
@@ -367,11 +361,11 @@ public class RealtorsScreenController {
     }
 
     /**
-     * Метод для обработки события при нажатии на кнопку "Удалить"
+     * Метод для удаления риэлтора при нажатии на кнопку "Удалить"
      */
     public void deleteRealtor() {
         //SQL запрос на удаление риэлтора
-        String deleteRealtor = "DELETE FROM " + REALTOR_TABLE + " WHERE " + REALTOR_ID + "=?";
+        String deleteRealtor = String.format("DELETE FROM %s WHERE %s=?", REALTOR_TABLE, REALTOR_ID);
 
         try {
             PreparedStatement preparedStatement = new DatabaseHandler().createDbConnection().prepareStatement(deleteRealtor);
@@ -382,7 +376,7 @@ public class RealtorsScreenController {
 
 
             //открываем диалоговое окно для уведомления об успешном удалении
-            showModalWindow(
+            showAlert(
                     "Операция успешно выполнена",
                     "Удаление риэлтора выполнено успешно!",
                     AlertType.INFORMATION);
@@ -397,7 +391,7 @@ public class RealtorsScreenController {
 
         } catch (SQLException e) {
             //открываем диалоговое окно для уведомления об ошибке
-            showModalWindow(
+            showAlert(
                     "Ошибка удаления риэлтора",
                     "Возникла ошибка при удалении риэлтора с ID = " + idSelectedRealtor,
                     AlertType.ERROR
@@ -406,18 +400,18 @@ public class RealtorsScreenController {
     }
 
     /**
-     * Метод для обработки события при нажатии на кнопку "Назад"
+     * Метод для перехода на главный экран приложения при нажатии на кнопку "Назад"
      *
      * @param actionEvent нажатие на кнопку
      */
     public void goHomeScreen(ActionEvent actionEvent) {
         ((Node) actionEvent.getSource()).getScene().getWindow().hide();
         //переход на главный экран
-        Helper.changeScreen("/ru/tds/realestateagency/views/main.fxml");
+        Helper.openNewScreen("/ru/tds/realestateagency/views/main.fxml");
     }
 
     /**
-     * Метод для получения содержимого таблицы клиентов из базы данных
+     * Метод для получения содержимого таблицы риэлторов из базы данных
      *
      * @return ResultSet - набор данных из таблицы
      */
@@ -433,7 +427,7 @@ public class RealtorsScreenController {
             resultSet = ps.executeQuery();
         } catch (Exception e) {
             //открываем диалоговое окно для уведомления об ошибке
-            showModalWindow(
+            showAlert(
                     "Ошибка получения данных из таблицы риэлторов",
                     "Данные не получены из базы. Проверьте подключение к базе!",
                     AlertType.ERROR);
@@ -446,7 +440,7 @@ public class RealtorsScreenController {
      * Метод для формирования ObservableList из набора данных
      *
      * @param resultSet Набор данных из таблицы риэлторов
-     * @return ObservableList с объектами типа Realtor
+     * @return ObservableList с объектами класса Realtor
      */
     private ObservableList<Realtor> createListRealtors(ResultSet resultSet) {
         ObservableList<Realtor> list = FXCollections.observableArrayList();
@@ -462,11 +456,12 @@ public class RealtorsScreenController {
                         ));
                 //добавляем риэлтора в список
                 list.add(realtor);
+                //добавляем ID риэлтора в список
                 idRealtorsFromDatabase.add(resultSet.getInt("id"));
             }
         } catch (SQLException e) {
             //открываем диалоговое окно для уведомления об ошибке
-            showModalWindow(
+            showAlert(
                     "Ошибка формирования коллекции риэлторов",
                     "Возникла ошибка при формировании списка риэлторов из набора данных, полученных из базы",
                     AlertType.ERROR);
@@ -519,7 +514,7 @@ public class RealtorsScreenController {
      * @param headerText  текст заголовка
      * @param contentText текст основого содержимого окна
      */
-    private void showModalWindow(String headerText, String contentText, Alert.AlertType alertType) {
+    private void showAlert(String headerText, String contentText, Alert.AlertType alertType) {
         //создание уведомления
         Alert alert = new Alert(alertType);
 
