@@ -114,16 +114,38 @@ public class Flat {
 
     @Override
     public String toString() {
-        return "Flat{" +
-                "city='" + city + '\'' +
-                ", street='" + street + '\'' +
-                ", homeNumber='" + homeNumber + '\'' +
-                ", flatNumber='" + flatNumber + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", floor=" + floor +
-                ", numberOfRooms=" + numberOfRooms +
-                ", square=" + square +
-                '}';
+
+        StringBuilder flatStringBuilder = new StringBuilder();
+
+        if (city != null) {
+            flatStringBuilder.append("Город=").append(city).append(", ");
+        }
+        if (street != null) {
+            flatStringBuilder.append("Улица=").append(street).append(", ");
+        }
+        if (homeNumber != null) {
+            flatStringBuilder.append("Номер дома=").append(homeNumber).append(", ");
+        }
+        if (flatNumber != null) {
+            flatStringBuilder.append("Номер квартиры=").append(flatNumber).append(", ");
+        }
+        if (latitude != 0) {
+            flatStringBuilder.append("Широта=").append(latitude).append(", ");
+        }
+        if (longitude != 0) {
+            flatStringBuilder.append("Долгота=").append(longitude).append(", ");
+        }
+        if (floor != 0) {
+            flatStringBuilder.append("Этаж=").append(floor).append(", ");
+        }
+        if (numberOfRooms != 0) {
+            flatStringBuilder.append("Кол-во комнат=").append(numberOfRooms).append(", ");
+        }
+        if (square != 0) {
+            flatStringBuilder.append("Площадь=").append(square);
+        }
+
+        return flatStringBuilder.toString();
+
     }
 }

@@ -66,12 +66,19 @@ public class Client {
 
     @Override
     public String toString() {
-        return "Клиент [" +
-                " Фамилия ='" + lastName + '\'' +
-                ", Имя ='" + firstName + '\'' +
-                ", Отчество ='" + middleName + '\'' +
-                ", Номер телефона ='" + phoneNumber + '\'' +
-                ", Электронная почта ='" + email + '\'' +
-                ']';
+
+        StringBuilder clientStringBuilder = new StringBuilder();
+
+        if (lastName != null) {
+            clientStringBuilder.append(lastName).append(" ");
+        }
+        if (firstName != null) {
+            clientStringBuilder.append(firstName).append(" ");
+        }
+        if (middleName != null) {
+            clientStringBuilder.append(middleName);
+        }
+
+        return clientStringBuilder.toString();
     }
 }

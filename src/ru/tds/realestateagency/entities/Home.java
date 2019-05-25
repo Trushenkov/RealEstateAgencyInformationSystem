@@ -7,56 +7,18 @@ package ru.tds.realestateagency.entities;
  */
 public class Home {
 
-    private  String city;
-    private  String street;
-    private  String homeNumber;
-    private  String flatNumber;
-    private  double latitude;
-    private  double longitude;
-    private  int numberOfFloors;
-    private  int numberOfRooms;
-    private  double square;
+    private String city;
+    private String street;
+    private String homeNumber;
+    private String flatNumber;
+    private double latitude;
+    private double longitude;
+    private int numberOfFloors;
+    private int numberOfRooms;
+    private double square;
 
     public Home() {
     }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public void setHomeNumber(String homeNumber) {
-        this.homeNumber = homeNumber;
-    }
-
-    public void setFlatNumber(String flatNumber) {
-        this.flatNumber = flatNumber;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public void setNumberOfFloors(int numberOfFloors) {
-        this.numberOfFloors = numberOfFloors;
-    }
-
-    public void setNumberOfRooms(int numberOfRooms) {
-        this.numberOfRooms = numberOfRooms;
-    }
-
-    public void setSquare(Double square) {
-        this.square = square;
-    }
-
-
 
     public Home(final String city,
                 final String street,
@@ -78,56 +40,111 @@ public class Home {
         this.square = square;
     }
 
-
-
     public String getCity() {
         return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getStreet() {
         return street;
     }
 
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
     public String getHomeNumber() {
         return homeNumber;
+    }
+
+    public void setHomeNumber(String homeNumber) {
+        this.homeNumber = homeNumber;
     }
 
     public String getFlatNumber() {
         return flatNumber;
     }
 
+    public void setFlatNumber(String flatNumber) {
+        this.flatNumber = flatNumber;
+    }
+
     public double getLatitude() {
         return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
     public double getLongitude() {
         return longitude;
     }
 
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
     public int getNumberOfFloors() {
         return numberOfFloors;
+    }
+
+    public void setNumberOfFloors(int numberOfFloors) {
+        this.numberOfFloors = numberOfFloors;
     }
 
     public int getNumberOfRooms() {
         return numberOfRooms;
     }
 
+    public void setNumberOfRooms(int numberOfRooms) {
+        this.numberOfRooms = numberOfRooms;
+    }
+
     public double getSquare() {
         return square;
     }
 
+    public void setSquare(Double square) {
+        this.square = square;
+    }
+
     @Override
     public String toString() {
-        return "Home{" +
-                "city='" + city + '\'' +
-                ", street='" + street + '\'' +
-                ", homeNumber='" + homeNumber + '\'' +
-                ", flatNumber='" + flatNumber + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", numberOfFloors=" + numberOfFloors +
-                ", numberOfRooms=" + numberOfRooms +
-                ", square=" + square +
-                '}';
+        StringBuilder homeStringBuilder = new StringBuilder();
+
+        if (city != null) {
+            homeStringBuilder.append("Город=").append(city).append(", ");
+        }
+        if (street != null) {
+            homeStringBuilder.append("Улица=").append(street).append(", ");
+        }
+        if (homeNumber != null) {
+            homeStringBuilder.append("Номер дома=").append(homeNumber).append(", ");
+        }
+        if (flatNumber != null) {
+            homeStringBuilder.append("Номер квартиры=").append(flatNumber).append(", ");
+        }
+        if (latitude != 0) {
+            homeStringBuilder.append("Широта=").append(latitude).append(", ");
+        }
+        if (longitude != 0) {
+            homeStringBuilder.append("Долгота=").append(longitude).append(", ");
+        }
+        if (numberOfFloors != 0) {
+            homeStringBuilder.append("Этажность дома=").append(numberOfFloors).append(", ");
+        }
+        if (numberOfRooms != 0) {
+            homeStringBuilder.append("Кол-во комнат=").append(numberOfRooms).append(", ");
+        }
+        if (square != 0) {
+            homeStringBuilder.append("Площадь=").append(square);
+        }
+
+        return homeStringBuilder.toString();
     }
+
 }

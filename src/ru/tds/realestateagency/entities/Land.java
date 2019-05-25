@@ -92,14 +92,31 @@ public class Land {
 
     @Override
     public String toString() {
-        return "Land{" +
-                "city='" + city + '\'' +
-                ", street='" + street + '\'' +
-                ", homeNumber='" + homeNumber + '\'' +
-                ", flatNumber='" + flatNumber + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", square=" + square +
-                '}';
+
+        StringBuilder landStringBuilder = new StringBuilder();
+
+        if (city != null) {
+            landStringBuilder.append("Город=").append(city).append(", ");
+        }
+        if (street != null) {
+            landStringBuilder.append("Улица=").append(street).append(", ");
+        }
+        if (homeNumber != null) {
+            landStringBuilder.append("Номер дома=").append(homeNumber).append(", ");
+        }
+        if (flatNumber != null) {
+            landStringBuilder.append("Номер квартиры=").append(flatNumber).append(", ");
+        }
+        if (latitude != 0) {
+            landStringBuilder.append("Широта=").append(latitude).append(", ");
+        }
+        if (longitude != 0) {
+            landStringBuilder.append("Долгота=").append(longitude).append(", ");
+        }
+        if (square != 0) {
+            landStringBuilder.append("Площадь=").append(square);
+        }
+
+        return landStringBuilder.toString();
     }
 }

@@ -56,11 +56,19 @@ public class Realtor {
 
     @Override
     public String toString() {
-        return "Риэлтор [" +
-                " Фамилия ='" + lastName + '\'' +
-                ", Имя ='" + firstName + '\'' +
-                ", Отчество ='" + middleName + '\'' +
-                ", Доля от комиссии =" + commissionPart +
-                ']';
+
+        StringBuilder realtorStringBuilder = new StringBuilder();
+
+        if (lastName != null) {
+            realtorStringBuilder.append(lastName).append(" ");
+        }
+        if (firstName != null) {
+            realtorStringBuilder.append(firstName).append(" ");
+        }
+        if (middleName != null) {
+            realtorStringBuilder.append(middleName);
+        }
+
+        return realtorStringBuilder.toString();
     }
 }
