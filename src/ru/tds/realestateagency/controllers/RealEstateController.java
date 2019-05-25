@@ -1216,7 +1216,6 @@ public class RealEstateController {
      * @return ObservableList с объектами класса Home
      */
     private ObservableList<Home> createListOfHomes(ResultSet resultSet) {
-        //создаем список клиентов
         ObservableList<Home> list = FXCollections.observableArrayList();
         idHomesFromDatabaseArrayList = new ArrayList<>();
         try {
@@ -1233,7 +1232,7 @@ public class RealEstateController {
                         resultSet.getInt(9),
                         resultSet.getDouble(10)
                 );
-                //добавляем клиента в список
+                //добавляем объект в список
                 list.add(home);
                 idHomesFromDatabaseArrayList.add(resultSet.getInt(1));
             }
@@ -1519,7 +1518,6 @@ public class RealEstateController {
      * @return ObservableList с объектами класса Flat
      */
     private ObservableList<Flat> createListOfFlats(ResultSet resultSet) {
-        //создаем список клиентов
         ObservableList<Flat> list = FXCollections.observableArrayList();
         idFlatsFromDatabaseArrayList = new ArrayList<>();
         try {
@@ -1536,7 +1534,7 @@ public class RealEstateController {
                         resultSet.getInt(9),
                         resultSet.getDouble(10)
                 );
-                //добавляем клиента в список
+                //добавляем объект в список
                 list.add(flat);
                 idFlatsFromDatabaseArrayList.add(resultSet.getInt(1));
             }
@@ -1843,7 +1841,6 @@ public class RealEstateController {
      * @return ObservableList с объектами класса Land
      */
     private ObservableList<Land> createListOfLands(ResultSet resultSet) {
-        //создаем список клиентов
         ObservableList<Land> list = FXCollections.observableArrayList();
         idLandsFromDatabaseArrayList = new ArrayList<>();
         try {

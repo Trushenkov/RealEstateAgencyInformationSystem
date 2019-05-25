@@ -38,8 +38,10 @@ public class MainController {
             Helper.openNewScreen("/ru/tds/realestateagency/views/client.fxml");
         } else if (event.getSource().equals(btnRealtors)) {
             Helper.openNewScreen("/ru/tds/realestateagency/views/realtor.fxml");
-        }  else if (event.getSource().equals(btnHouses)) {
+        } else if (event.getSource().equals(btnHouses)) {
             Helper.openNewScreen("/ru/tds/realestateagency/views/realEstate.fxml");
+        } else if (event.getSource().equals(btnOffers)) {
+            Helper.openNewScreen("/ru/tds/realestateagency/views/offers.fxml");
         }
     }
 
