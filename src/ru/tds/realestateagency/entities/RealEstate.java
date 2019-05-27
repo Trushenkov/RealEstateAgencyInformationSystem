@@ -1,11 +1,9 @@
 package ru.tds.realestateagency.entities;
 
 /**
- * Project name: RealEstateAgencyInformationSystem
- * Date: 24.05.2019 (пятница)
- * Package name: ru.tds.realestateagency.entities
+ * Класс для создания сущности "Объект недвижимости"
  *
- * @author Trushenkov Dmitry
+ * @author Трушенков Дмитрий
  */
 public class RealEstate {
 
@@ -42,15 +40,18 @@ public class RealEstate {
 
     @Override
     public String toString() {
+
+        StringBuilder realEstateStringBuilder = new StringBuilder();
+
         if (home != null) {
-            return String.format("Дом [%s]", home);
+            realEstateStringBuilder.append("Дом [").append(home).append("]");
         }
         if (flat != null) {
-            return String.format("Квартира [%s]", flat);
+            realEstateStringBuilder.append("Квартира [").append(flat).append("]");
         }
         if (land != null) {
-            return String.format("Земля [%s]", land);
+            realEstateStringBuilder.append("Земля [").append(land).append("]");
         }
-        return null;
+        return realEstateStringBuilder.toString();
     }
 }

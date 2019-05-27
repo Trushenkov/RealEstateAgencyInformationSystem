@@ -41,6 +41,7 @@ public class OffersController {
     private static final String TABLE_FLATS = "flat";
     private static final String TABLE_LANDS = "land";
     private static final String TABLE_OFFERS = "offers";
+    private static final String TABLE_OFFERS_ID = "id";
 
     //Элементы интерфейса
     @FXML
@@ -56,15 +57,22 @@ public class OffersController {
     @FXML
     private TableColumn<Offer, Integer> priceTableColumn;
     @FXML
-    private ComboBox<Client> clientsComboBox;
+    private ComboBox<Client> clientComboBox;
     @FXML
-    private ComboBox<Realtor> realtorsComboBox;
+    private ComboBox<Realtor> realtorComboBox;
     @FXML
     private ComboBox<String> typeRealEstateComboBox;
     @FXML
     private ComboBox<RealEstate> realEstateComboBox;
     @FXML
     private TextField priceTextField;
+    @FXML
+    private Button updateOfferButton;
+    @FXML
+    private Button deleteOfferButton;
+    @FXML
+    private Button createOfferButton;
+
 
     //Списки для храненеия информации из базы данных
     private ObservableList<Client> listOfClients;//список клиентов
@@ -82,25 +90,6 @@ public class OffersController {
     private int idSelectedOffer;//ID выбранного предложени из таблицы
 
 
-    /**
-     * Метод для обнуления текстовых полей и списков
-     */
-    private void clearTextFieldsAndComboBox() {
-        clientsComboBox.setValue(null);
-        realtorsComboBox.setValue(null);
-        typeRealEstateComboBox.setValue(null);
-        realEstateComboBox.setValue(null);
-        priceTextField.setText("");
-    }
-
-    @FXML
-    private void goHomeScreen(ActionEvent event) {
-        ((Node) event.getSource()).getScene().getWindow().hide();
-        //переход на главный экран
-        Helper.openNewScreen(PATH_TO_HOME_SCREEN);
-    }
-
-
     @FXML
     void initialize() {
 
@@ -108,7 +97,11 @@ public class OffersController {
         mainPane.setOnMousePressed(event -> {
             clearTextFieldsAndComboBox();
             tableOffers.getSelectionModel().clearSelection();
+            updateOfferButton.setDisable(true);
         });
+
+        updateOfferButton.setDisable(true);
+        deleteOfferButton.setDisable(true);
 
         //определение полей таблицы с соотвествующими полями объекта
         clientTableColumn.setCellValueFactory(new PropertyValueFactory<>("client"));
@@ -122,27 +115,24 @@ public class OffersController {
         realEstateTableColumn.setSortable(false);
         priceTableColumn.setSortable(false);
 
-        //формируем коллекции объектов
-        listRealEstates = FXCollections.observableArrayList();
+        //объявляем коллекции объектов
         listOfClients = createListOfClients(getDataFromDB(TABLE_CLIENTS));
         listOfRealtors = createListOfRealtors(getDataFromDB(TABLE_REALTORS));
+        listRealEstates = FXCollections.observableArrayList();
         listOfHomes = createListOfHomes(getDataFromDB(TABLE_HOMES));
         listOfFlats = createListOfFlats(getDataFromDB(TABLE_FLATS));
         listOfLands = createListOfLands(getDataFromDB(TABLE_LANDS));
         listOfOffers = createListOfOffers(getDataFromDB(TABLE_OFFERS));
-        System.out.println(listOfOffers);
 
         ObservableList<String> listOfTypesRealEstate = FXCollections.observableArrayList(HOME, FLAT, LAND);
 
-        clientsComboBox.setItems(listOfClients);
-        realtorsComboBox.setItems(listOfRealtors);
 
-        typeRealEstateComboBox.setItems(listOfTypesRealEstate);
-
+        //добавляем слушателя для формирования и заполнения списка объектов недвижимости при смене значение типа объекта недвижимости
         typeRealEstateComboBox.valueProperty().addListener((objectProperty, oldValue, newValue) -> {
             if (newValue != null) {
                 switch (newValue) {
                     case HOME:
+                        //добавляем в ComboBox объектов недвижимости только объекты недвижимости типа "Дом"
                         realEstateComboBox.getItems().clear();
                         for (Home home : listOfHomes) {
                             RealEstate realEstate = new RealEstate();
@@ -152,6 +142,7 @@ public class OffersController {
                         realEstateComboBox.setItems(listRealEstates);
                         break;
                     case FLAT:
+                        //добавляем в ComboBox объектов недвижимости только объекты недвижимости типа "Квартира"
                         realEstateComboBox.getItems().clear();
                         for (Flat flat : listOfFlats) {
                             RealEstate realEstate = new RealEstate();
@@ -161,6 +152,7 @@ public class OffersController {
                         realEstateComboBox.setItems(listRealEstates);
                         break;
                     case LAND:
+                        //добавляем в ComboBox объектов недвижимости только объекты недвижимости типа "Земля"
                         realEstateComboBox.getItems().clear();
                         for (Land land : listOfLands) {
                             RealEstate realEstate = new RealEstate();
@@ -175,37 +167,139 @@ public class OffersController {
             }
         });
 
+
+        //размещаем соответствующие списки объектов в элементы ComboBox
+        clientComboBox.setItems(listOfClients);
+        realtorComboBox.setItems(listOfRealtors);
+        typeRealEstateComboBox.setItems(listOfTypesRealEstate);
         realEstateComboBox.setItems(listRealEstates);
 
+        //заполнение таблицы данными из базы
         tableOffers.setItems(listOfOffers);
 
+        //слушатель для обработки событий при объекта в таблице
         tableOffers.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
 
                 idSelectedOffer = idOffersFromDatabase.get(tableOffers.getSelectionModel().getSelectedIndex());
+                System.out.println("ID выбранного предложения в базе = " + idSelectedOffer);
 
-                System.out.println(tableOffers.getSelectionModel().getSelectedItem().getClient());
-                Client client = getClientFromDB(tableOffers.getSelectionModel().getSelectedItem().getClient());
-                Realtor realtor = getRealtorFromDB(tableOffers.getSelectionModel().getSelectedItem().getRealtor());
+                //Слушатели для текстовых полей для проверки на изменение какого либо значения и предоставления возможности обновления клиента
+                priceTextField.textProperty().addListener((observable1, oldValue1, newValuePriceTextField) -> {
+                    try {
+                        if (tableOffers.getSelectionModel().getSelectedItem().getPrice() != Integer.parseInt(newValuePriceTextField)) {
+                            updateOfferButton.setDisable(false);
+                        } else if (tableOffers.getSelectionModel().getSelectedItem().getPrice() == Integer.parseInt(newValuePriceTextField)) {
+                            updateOfferButton.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
+                    }
+                });
 
-//                clientsComboBox.setValue(client);
-//                realtorsComboBox.setValue(realtor);
-                clientsComboBox.getSelectionModel().select(client);
-                realtorsComboBox.getSelectionModel().select(realtor);
+                clientComboBox.valueProperty().addListener((observable1, oldValue1, newValueClient) -> {
+                    try {
+                        if (!tableOffers.getSelectionModel().getSelectedItem().getClient().equals(newValueClient.getLastName())) {
+                            updateOfferButton.setDisable(false);
+                        } else if (tableOffers.getSelectionModel().getSelectedItem().getClient().equals(newValueClient.getLastName())) {
+                            updateOfferButton.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
+                    }
+                });
 
-                System.out.println(tableOffers.getSelectionModel().getSelectedItem().getRealEstate());
+                realtorComboBox.valueProperty().addListener((observable1, oldValue1, newValueRealtor) -> {
+                    try {
+                        if (!tableOffers.getSelectionModel().getSelectedItem().getRealtor().equals(newValueRealtor.getLastName())) {
+                            updateOfferButton.setDisable(false);
+                        } else if (tableOffers.getSelectionModel().getSelectedItem().getClient().equals(newValueRealtor.getLastName())) {
+                            updateOfferButton.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
+                    }
+                });
 
-                if (tableOffers.getSelectionModel().getSelectedItem().getRealEstate().contains("Дом")) {
-                    typeRealEstateComboBox.setValue("Дом");
-                } else if (tableOffers.getSelectionModel().getSelectedItem().getRealEstate().contains("Квартира")) {
-                    typeRealEstateComboBox.setValue("Квартира");
-                } else if (tableOffers.getSelectionModel().getSelectedItem().getRealEstate().contains("Земля")) {
-                    typeRealEstateComboBox.setValue("Земля");
+                typeRealEstateComboBox.valueProperty().addListener((observable1, oldValue1, newValueTypeRealEstate) -> {
+                    try {
+                        if (!tableOffers.getSelectionModel().getSelectedItem().getRealEstate().contains(newValueTypeRealEstate)) {
+                            updateOfferButton.setDisable(false);
+                        } else if (tableOffers.getSelectionModel().getSelectedItem().getRealEstate().contains(newValueTypeRealEstate)) {
+                            updateOfferButton.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
+                    }
+                });
+
+                realEstateComboBox.valueProperty().addListener((observable1, oldValue1, newValueRealEstate) -> {
+                    try {
+                        if (!tableOffers.getSelectionModel().getSelectedItem().getRealEstate().equals(newValueRealEstate.toString())) {
+                            updateOfferButton.setDisable(false);
+                        } else if (tableOffers.getSelectionModel().getSelectedItem().getRealEstate().equals(newValueRealEstate.toString())) {
+                            updateOfferButton.setDisable(true);
+                        }
+                    } catch (Exception ignored) {
+                    }
+                });
+
+                //установка значения клиента выбранного объекта в соответствующий выпадающий список
+                if (tableOffers.getSelectionModel().getSelectedItem().getClient() != null) {
+                    //получаем айди клиента из списка всех клиентов
+                    for (int i = 0; i < listOfClients.size(); i++) {
+                        if (tableOffers.getSelectionModel().getSelectedItem().getClient().equals(listOfClients.get(i).getLastName())) {
+                            //устанавливаем в выпадающий список клиента
+                            clientComboBox.getSelectionModel().select(i);
+                        }
+                    }
                 }
 
+                //установка значения риэлтора выбранного объекта в соответствующий выпадающий список
+                if (tableOffers.getSelectionModel().getSelectedItem().getRealtor() != null) {
+                    //получаем айди клиента из списка всех клиентов
+                    for (int i = 0; i < listOfRealtors.size(); i++) {
+                        if (tableOffers.getSelectionModel().getSelectedItem().getRealtor().equals(listOfRealtors.get(i).getLastName())) {
+                            //устанавливаем в выпадающий список клиента
+                            realtorComboBox.getSelectionModel().select(i);
+                        }
+                    }
+                }
+
+                //проверка на то какой объект недвижимости указан в предложении и установка этого типа недвижимоти в выпадающий список
+                if (tableOffers.getSelectionModel().getSelectedItem().getRealEstate().contains(HOME)) {
+                    typeRealEstateComboBox.setValue(HOME);
+                    for (int i = 0; i < listRealEstates.size(); i++) {
+                        if (tableOffers.getSelectionModel().getSelectedItem().getRealEstate().contains(listRealEstates.get(i).getHome())) {
+                            System.out.println(listRealEstates.get(i).getHome());
+                            realEstateComboBox.getSelectionModel().select(i);
+                        }
+                    }
+
+                } else if (tableOffers.getSelectionModel().getSelectedItem().getRealEstate().contains(FLAT)) {
+                    typeRealEstateComboBox.setValue(FLAT);
+                    for (int i = 0; i < listRealEstates.size(); i++) {
+                        if (tableOffers.getSelectionModel().getSelectedItem().getRealEstate().contains(listRealEstates.get(i).getFlat())) {
+                            realEstateComboBox.getSelectionModel().select(i);
+                        }
+                    }
+
+                } else if (tableOffers.getSelectionModel().getSelectedItem().getRealEstate().contains(LAND)) {
+                    typeRealEstateComboBox.setValue(LAND);
+                    for (int i = 0; i < listRealEstates.size(); i++) {
+                        if (tableOffers.getSelectionModel().getSelectedItem().getRealEstate().contains(listRealEstates.get(i).getLand())) {
+                            realEstateComboBox.getSelectionModel().select(i );
+                        }
+                    }
+                }
+
+                //установка цены выбранного объекта в текстовое поле
                 priceTextField.setText(String.valueOf(tableOffers.getSelectionModel().getSelectedItem().getPrice()));
 
-                System.out.println(tableOffers.getSelectionModel().getSelectedItem());
+                createOfferButton.setDisable(true);
+                updateOfferButton.setDisable(true);
+                deleteOfferButton.setDisable(false);
+
+            } else {
+                createOfferButton.setDisable(false);
+                updateOfferButton.setDisable(true);
+                deleteOfferButton.setDisable(true);
             }
         });
     }
@@ -216,36 +310,12 @@ public class OffersController {
     @FXML
     private void createOffer() {
 
-        if (
-                clientsComboBox.getValue() != null &&
-                        realtorsComboBox.getValue() != null &&
-                        realEstateComboBox.getValue() != null &&
-                        !priceTextField.getText().isEmpty()
-        ) {
-            //тип объекта недвижимости
-            String typeRealEstate = typeRealEstateComboBox.getSelectionModel().getSelectedItem();
-
-            RealEstate realEstate;
-
-            switch (typeRealEstate) {
-                case HOME:
-                    realEstate = new RealEstate();
-                    System.out.println(realEstateComboBox.getSelectionModel().getSelectedItem());
-                    realEstate.setHome(realEstateComboBox.getSelectionModel().getSelectedItem().getHome());
-                    break;
-                case FLAT:
-                    realEstate = new RealEstate();
-                    System.out.println(realEstateComboBox.getSelectionModel().getSelectedItem());
-                    realEstate.setFlat(realEstateComboBox.getSelectionModel().getSelectedItem().getFlat());
-                    break;
-                case LAND:
-                    realEstate = new RealEstate();
-                    System.out.println(realEstateComboBox.getSelectionModel().getSelectedItem());
-                    realEstate.setLand(realEstateComboBox.getSelectionModel().getSelectedItem().getLand());
-                    break;
-                default:
-                    break;
-            }
+        //проверка на то что все поля заполнены
+        if (clientComboBox.getValue() != null &&
+                realtorComboBox.getValue() != null &&
+                typeRealEstateComboBox.getValue() != null &&
+                realEstateComboBox.getValue() != null &&
+                !priceTextField.getText().isEmpty()) {
 
             //SQL запрос для добавления нового предложения в базу данных
             String insertOffer = String.format("INSERT INTO %s(%s, %s, %s, %s) VALUES (?,?,?,?);",
@@ -255,11 +325,10 @@ public class OffersController {
                     "realEstate",
                     "price");
 
-
             try {
                 PreparedStatement addOfferStatement = new DatabaseHandler().createDbConnection().prepareStatement(insertOffer);
-                addOfferStatement.setString(1, clientsComboBox.getValue().getLastName());
-                addOfferStatement.setString(2, realtorsComboBox.getValue().getLastName());
+                addOfferStatement.setString(1, clientComboBox.getValue().getLastName());
+                addOfferStatement.setString(2, realtorComboBox.getValue().getLastName());
                 addOfferStatement.setString(3, realEstateComboBox.getValue().toString());
                 addOfferStatement.setInt(4, Integer.parseInt(priceTextField.getText()));
 
@@ -278,7 +347,6 @@ public class OffersController {
                 tableOffers.setItems(createListOfOffers(getDataFromDB(TABLE_OFFERS)));
 
             } catch (SQLException e) {
-                e.printStackTrace();
                 //открываем диалоговое окно для уведомления об ошибке
                 showAlert(
                         "Ошибка добавления нового предложения",
@@ -286,6 +354,7 @@ public class OffersController {
                         Alert.AlertType.ERROR);
             }
         } else {
+            //открываем диалоговое окно для уведомления об ошибке
             showAlert(
                     "Ошибка добавления нового предложения",
                     "Все поля являются обязательными к заполнению.",
@@ -294,95 +363,187 @@ public class OffersController {
 
     }
 
+
+    /**
+     * Метод для редактирования предложения
+     */
     @FXML
     private void updateOffer() {
 
     }
 
+    /**
+     * Метод для удаления предложения из таблицы
+     */
     @FXML
     private void deleteOffer() {
+        //SQL запрос на удаление предложения
+        String deleteOffer = String.format("DELETE FROM %s WHERE %s=?", TABLE_OFFERS, TABLE_OFFERS_ID);
 
+        try {
+            PreparedStatement deleteOfferStatement = new DatabaseHandler().createDbConnection().prepareStatement(deleteOffer);
+            //установка значений для вставки в запрос
+            deleteOfferStatement.setInt(1, idSelectedOffer);
+            //выполнение запроса на удаление
+            deleteOfferStatement.executeUpdate();
+
+            //открываем диалоговое окно для уведомления об успешном удалении
+            showAlert(
+                    "Операция успешно выполнена",
+                    "Удаление предложения выполнено успешно!",
+                    Alert.AlertType.INFORMATION);
+
+            //обнуляем текстовые поля и выпадающие списки после удаления
+            clearTextFieldsAndComboBox();
+
+            tableOffers.setItems(createListOfOffers(getDataFromDB(TABLE_OFFERS)));
+
+        } catch (SQLException e) {
+            //открываем диалоговое окно для уведомления об ошибке
+            showAlert(
+                    "Ошибка удаления предложения",
+                    String.format("Возникла ошибка при удалении предложения с ID = %d", idSelectedOffer),
+                    Alert.AlertType.ERROR
+            );
+        }
+
+    }
+
+    /**
+     * Метод для перехода на главный экран при нажатии на кнопку "Назад"
+     *
+     * @param event нажатие на кнопку "Назад"
+     */
+    @FXML
+    private void goHomeScreen(ActionEvent event) {
+        ((Node) event.getSource()).getScene().getWindow().hide();
+        //переход на главный экран
+        Helper.openNewScreen(PATH_TO_HOME_SCREEN);
+    }
+
+    /**
+     * Метод для обнуления текстовых полей и выпадающих списков
+     */
+    private void clearTextFieldsAndComboBox() {
+        clientComboBox.setValue(null);
+        realtorComboBox.setValue(null);
+        typeRealEstateComboBox.setValue(null);
+        realEstateComboBox.setValue(null);
+        priceTextField.setText("");
     }
 
     /**
      * Метод для получения информации из базы данных о клиенте с указанной фамилией
      *
      * @param lastName фамилия клиента
-     * @return найденная информация о клиенте в базе
+     * @return Объект Client с данными, найденными в базе
      */
-    private Client getClientFromDB(String lastName) {
-        //SQL запрос на выбор всех данных из таблицы `clients`
-        String selectClient = String.format("SELECT * FROM %s WHERE lastName=?", "clients");
-        Client client = new Client();
-        ResultSet resultSet;
-        try {
-            PreparedStatement ps = new DatabaseHandler().createDbConnection().prepareStatement(selectClient);
-            ps.setString(1, lastName);
-            //выполняем запрос и сохраняем полученные значения в resultSet
-            resultSet = ps.executeQuery();
-
-            while (resultSet.next()) {
-                client.setLastName(resultSet.getString(2));
-                client.setFirstName(resultSet.getString(3));
-                client.setMiddleName(resultSet.getString(4));
-                client.setPhoneNumber(resultSet.getString(5));
-                client.setEmail(resultSet.getString(6));
-            }
-        } catch (SQLException e) {
-            //открываем диалоговое окно для уведомления об ошибке
-            showAlert(
-                    "Ошибка получения данных из таблицы клиентов",
-                    "Данные не получены из базы. Проверьте подключение к базе!",
-                    Alert.AlertType.ERROR);
-        }
-
-
-        return client;
-    }
-
+//    private Client getClientFromDB(String lastName) {
+//        //SQL запрос на выбор данных объекта с указанной фамилией из таблицы 'clients'
+//        String selectClient = String.format("SELECT * FROM %s WHERE lastName=?", "clients");
+//        Client client = new Client();
+//        ResultSet resultSet;
+//        try {
+//            PreparedStatement ps = new DatabaseHandler().createDbConnection().prepareStatement(selectClient);
+//            ps.setString(1, lastName);
+//            //выполняем запрос и сохраняем полученные значения в resultSet
+//            resultSet = ps.executeQuery();
+//
+//            while (resultSet.next()) {
+//                client.setLastName(resultSet.getString(2));
+//                client.setFirstName(resultSet.getString(3));
+//                client.setMiddleName(resultSet.getString(4));
+//                client.setPhoneNumber(resultSet.getString(5));
+//                client.setEmail(resultSet.getString(6));
+//            }
+//        } catch (SQLException e) {
+//            //открываем диалоговое окно для уведомления об ошибке
+//            showAlert(
+//                    "Ошибка получения данных из таблицы клиентов",
+//                    "Данные не получены из базы. Проверьте подключение к базе!",
+//                    Alert.AlertType.ERROR);
+//        }
+//
+//        return client;
+//    }
 
     /**
      * Метод для получения информации из базы данных о риэлторе с указанной фамилией
      *
      * @param lastName фамилия риэлтора
-     * @return найденная информация о риэлторе в базе
+     * @return Объект Realtor с данными, найденными в базе
      */
-    private Realtor getRealtorFromDB(String lastName) {
-        //SQL запрос на выбор всех данных из таблицы `clients`
-        String selectRealtor = String.format("SELECT * FROM %s WHERE lastName=?", "realtors");
-        Realtor realtor = new Realtor();
-        ResultSet resultSet;
-        try {
-            PreparedStatement ps = new DatabaseHandler().createDbConnection().prepareStatement(selectRealtor);
-            ps.setString(1, lastName);
-            //выполняем запрос и сохраняем полученные значения в resultSet
-            resultSet = ps.executeQuery();
-
-            while (resultSet.next()) {
-                realtor.setLastName(resultSet.getString(2));
-                realtor.setFirstName(resultSet.getString(3));
-                realtor.setMiddleName(resultSet.getString(4));
-                realtor.setCommissionPart(resultSet.getInt(5));
-            }
-        } catch (SQLException e) {
-            //открываем диалоговое окно для уведомления об ошибке
-            showAlert(
-                    "Ошибка получения данных из таблицы риэлторов",
-                    "Данные не получены из базы. Проверьте подключение к базе!",
-                    Alert.AlertType.ERROR);
-        }
-
-        return realtor;
-    }
+//    private Realtor getRealtorFromDB(String lastName) {
+//        //SQL запрос на выбор данных объекта с указанной фамилией из таблицы 'realtors'
+//        String selectRealtor = String.format("SELECT * FROM %s WHERE lastName=?", "realtors");
+//        Realtor realtor = new Realtor();
+//        ResultSet resultSet;
+//        try {
+//            PreparedStatement ps = new DatabaseHandler().createDbConnection().prepareStatement(selectRealtor);
+//            ps.setString(1, lastName);
+//            //выполняем запрос и сохраняем полученные значения в resultSet
+//            resultSet = ps.executeQuery();
+//
+//            while (resultSet.next()) {
+//                realtor.setLastName(resultSet.getString(2));
+//                realtor.setFirstName(resultSet.getString(3));
+//                realtor.setMiddleName(resultSet.getString(4));
+//                realtor.setCommissionPart(resultSet.getInt(5));
+//            }
+//        } catch (SQLException e) {
+//            //открываем диалоговое окно для уведомления об ошибке
+//            showAlert(
+//                    "Ошибка получения данных из таблицы риэлторов",
+//                    "Данные не получены из базы. Проверьте подключение к базе!",
+//                    Alert.AlertType.ERROR);
+//        }
+//
+//        return realtor;
+//    }
 
     /**
-     * Метод для формирования ObservableList из набора данных
+     * Метод для получения информации из базы данных о доме
+     *
+     * @param home информация о доме
+     * @return Объект Home с данными, найденными в базе
+     */
+//    private Home getHomeFromDB(String home) {
+//        //SQL запрос на выбор данных объекта с указанной фамилией из таблицы 'clients'
+//        String selectClient = String.format("SELECT * FROM %s WHERE lastName=?", "clients");
+//        Client client = new Client();
+//        ResultSet resultSet;
+//        try {
+//            PreparedStatement ps = new DatabaseHandler().createDbConnection().prepareStatement(selectClient);
+//            ps.setString(1, lastName);
+//            //выполняем запрос и сохраняем полученные значения в resultSet
+//            resultSet = ps.executeQuery();
+//
+//            while (resultSet.next()) {
+//                client.setLastName(resultSet.getString(2));
+//                client.setFirstName(resultSet.getString(3));
+//                client.setMiddleName(resultSet.getString(4));
+//                client.setPhoneNumber(resultSet.getString(5));
+//                client.setEmail(resultSet.getString(6));
+//            }
+//        } catch (SQLException e) {
+//            //открываем диалоговое окно для уведомления об ошибке
+//            showAlert(
+//                    "Ошибка получения данных из таблицы клиентов",
+//                    "Данные не получены из базы. Проверьте подключение к базе!",
+//                    Alert.AlertType.ERROR);
+//        }
+//
+//        return client;
+//    }
+
+
+    /**
+     * Метод для формирования ObservableList с объектами класса Client из набора данных
      *
      * @param resultSet набор данных из таблицы клиентов
      * @return ObservableList с объектами класса Client
      */
     private ObservableList<Client> createListOfClients(ResultSet resultSet) {
-        //создаем список клиентов
         ObservableList<Client> list = FXCollections.observableArrayList();
         try {
             while (resultSet.next()) {
@@ -405,7 +566,7 @@ public class OffersController {
     }
 
     /**
-     * Метод для формирования ObservableList из набора данных
+     * Метод для формирования ObservableList с объектами класса Realtor из набора данных
      *
      * @param resultSet Набор данных из таблицы риэлторов
      * @return ObservableList с объектами класса Realtor
@@ -435,13 +596,12 @@ public class OffersController {
     }
 
     /**
-     * Метод для формирования ObservableList из набора данных
+     * Метод для формирования ObservableList с объектами класса Home из набора данных
      *
      * @param resultSet набор данных из таблицы 'home'
      * @return ObservableList с объектами класса Home
      */
     private ObservableList<Home> createListOfHomes(ResultSet resultSet) {
-        //создаем список клиентов
         ObservableList<Home> list = FXCollections.observableArrayList();
         try {
             while (resultSet.next()) {
@@ -457,7 +617,7 @@ public class OffersController {
                         resultSet.getInt(9),
                         resultSet.getDouble(10)
                 );
-                //добавляем клиента в список
+                //добавляем объект в список
                 list.add(home);
             }
         } catch (SQLException e) {
@@ -471,13 +631,12 @@ public class OffersController {
     }
 
     /**
-     * Метод для формирования ObservableList из набора данных
+     * Метод для формирования ObservableList с объектами класса Flat из набора данных
      *
      * @param resultSet набор данных из таблицы 'flat'
      * @return ObservableList с объектами класса Flat
      */
     private ObservableList<Flat> createListOfFlats(ResultSet resultSet) {
-        //создаем список клиентов
         ObservableList<Flat> list = FXCollections.observableArrayList();
         try {
             while (resultSet.next()) {
@@ -493,7 +652,7 @@ public class OffersController {
                         resultSet.getInt(9),
                         resultSet.getDouble(10)
                 );
-                //добавляем клиента в список
+                //добавляем объект в список
                 list.add(flat);
             }
         } catch (SQLException e) {
@@ -507,7 +666,7 @@ public class OffersController {
     }
 
     /**
-     * Метод для формирования ObservableList из набора данных
+     * Метод для формирования ObservableList с объектами класса Land из набора данных
      *
      * @param resultSet набор данных из таблицы 'land'
      * @return ObservableList с объектами класса Land
@@ -540,13 +699,12 @@ public class OffersController {
     }
 
     /**
-     * Метод для формирования ObservableList из набора данных
+     * Метод для формирования ObservableList с объектами Offer из набора данных
      *
      * @param resultSet набор данных из таблицы 'offers'
      * @return ObservableList с объектами класса Offer
      */
     private ObservableList<Offer> createListOfOffers(ResultSet resultSet) {
-        //создаем список предложений
         ObservableList<Offer> list = FXCollections.observableArrayList();
         idOffersFromDatabase = new ArrayList<>();
         try {
@@ -575,8 +733,9 @@ public class OffersController {
     }
 
     /**
-     * Метод для получения содержимого указанной таблицы из базы данных
+     * Метод для получения содержимого таблицы из базы данных
      *
+     * @param tableName название таблицы в базе данных
      * @return ResultSet - набор данных из таблицы
      */
     private ResultSet getDataFromDB(String tableName) {

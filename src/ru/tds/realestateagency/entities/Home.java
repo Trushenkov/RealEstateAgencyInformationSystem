@@ -115,7 +115,6 @@ public class Home {
     @Override
     public String toString() {
         StringBuilder homeStringBuilder = new StringBuilder();
-        homeStringBuilder.append("Дом [");
         if (city != null) {
             homeStringBuilder.append("Город=").append(city).append(", ");
         }
@@ -143,7 +142,6 @@ public class Home {
         if (square != 0) {
             homeStringBuilder.append("Площадь=").append(square);
         }
-        homeStringBuilder.append(" ]");
 
         return homeStringBuilder.toString();
     }

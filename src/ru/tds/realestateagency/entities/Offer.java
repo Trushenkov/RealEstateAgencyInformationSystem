@@ -1,11 +1,9 @@
 package ru.tds.realestateagency.entities;
 
 /**
- * Project name: RealEstateAgencyInformationSystem
- * Date: 24.05.2019 (пятница)
- * Package name: ru.tds.realestateagency.entities
+ * Класс для создания сущности "Предложение"
  *
- * @author Trushenkov Dmitry
+ * @author Трушенков Дмитрий
  */
 public class Offer {
 
