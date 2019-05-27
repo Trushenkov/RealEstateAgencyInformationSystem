@@ -317,6 +317,17 @@ public class RealEstateController {
         homeTableColumnNumberOfRooms.setCellValueFactory(new PropertyValueFactory<>("numberOfRooms"));
         homeTableColumnSquare.setCellValueFactory(new PropertyValueFactory<>("square"));
 
+        //отключение возможности сортировки полей таблицы объектов "Дом"
+        homeTableColumnCity.setSortable(false);
+        homeTableColumnStreet.setSortable(false);
+        homeTableColumnHomeNumber.setSortable(false);
+        homeTableColumnFlatNumber.setSortable(false);
+        homeTableColumnLatitude.setSortable(false);
+        homeTableColumnLongitude.setSortable(false);
+        homeTableColumnNumberOfFloors.setSortable(false);
+        homeTableColumnNumberOfRooms.setSortable(false);
+        homeTableColumnSquare.setSortable(false);
+
         //заполняем таблицу данным из БД
         tableHomes.setItems(createListOfHomes(getHomeTableContent()));
 
@@ -474,6 +485,17 @@ public class RealEstateController {
         flatTableColumnNumberOfRooms.setCellValueFactory(new PropertyValueFactory<>("numberOfRooms"));
         flatTableColumnSquare.setCellValueFactory(new PropertyValueFactory<>("square"));
 
+        //отключение возможности сортировки полей таблицы объектов "Квартира"
+        flatTableColumnCity.setSortable(false);
+        flatTableColumnStreet.setSortable(false);
+        flatTableColumnHomeNumber.setSortable(false);
+        flatTableColumnFlatNumber.setSortable(false);
+        flatTableColumnLatitude.setSortable(false);
+        flatTableColumnLongitude.setSortable(false);
+        flatTableColumnFloor.setSortable(false);
+        flatTableColumnNumberOfRooms.setSortable(false);
+        flatTableColumnSquare.setSortable(false);
+
         //заполняем таблицу данным из БД
         tableFlats.setItems(createListOfFlats(getFlatTableContent()));
 
@@ -621,6 +643,15 @@ public class RealEstateController {
         landTableColumnLatitude.setCellValueFactory(new PropertyValueFactory<>("latitude"));
         landTableColumnLongitude.setCellValueFactory(new PropertyValueFactory<>("longitude"));
         landTableColumnSquare.setCellValueFactory(new PropertyValueFactory<>("square"));
+
+        //отключение возможности сортировки полей таблицы объектов "Квартира"
+        landTableColumnCity.setSortable(false);
+        landTableColumnStreet.setSortable(false);
+        landTableColumnHomeNumber.setSortable(false);
+        landTableColumnFlatNumber.setSortable(false);
+        landTableColumnLatitude.setSortable(false);
+        landTableColumnLongitude.setSortable(false);
+        landTableColumnSquare.setSortable(false);
 
         //заполняем таблицу данным из БД
         tableLands.setItems(createListOfLands(getLandTableContent()));

@@ -107,6 +107,13 @@ public class ClientsController {
         tableColumnPhoneNumber.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
         tableColumnEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
 
+        //отключение возможности сортировки полей таблицы
+        tableColumnLastName.setSortable(false);
+        tableColumnFirstName.setSortable(false);
+        tableColumnMiddleName.setSortable(false);
+        tableColumnPhoneNumber.setSortable(false);
+        tableColumnEmail.setSortable(false);
+
         listClients = createListClients(getClientsTableContent());
 
         listClients.addListener((ListChangeListener<Client>) c -> {

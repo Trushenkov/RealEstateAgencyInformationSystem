@@ -48,7 +48,7 @@ public class RealtorsController {
     @FXML
     private Label realtorsWithNeedsLabel;
     @FXML
-    private Label  realtorsWithOffersLabel;
+    private Label realtorsWithOffersLabel;
     @FXML
     private Button createBtn;
     @FXML
@@ -99,6 +99,12 @@ public class RealtorsController {
         tableColumnFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         tableColumnMiddleName.setCellValueFactory(new PropertyValueFactory<>("middleName"));
         tableColumnCommisionPart.setCellValueFactory(new PropertyValueFactory<>("commissionPart"));
+
+        //отключение возможности сортировки полей таблицы
+        tableColumnLastName.setSortable(false);
+        tableColumnFirstName.setSortable(false);
+        tableColumnMiddleName.setSortable(false);
+        tableColumnCommisionPart.setSortable(false);
 
         listRealtors = createListRealtors(getRealtorsTableContent());
 
