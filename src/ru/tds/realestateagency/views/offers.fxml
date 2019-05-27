@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="600.0" prefWidth="1100.0" stylesheets="@../css/fullpackstyling.css"
+            xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ru.tds.realestateagency.controllers.OffersController">
+    <AnchorPane id="topPane" prefHeight="140.0" prefWidth="1000.0" style="-fx-background-color: #2D75E8"
+                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <FontAwesomeIconView fill="WHITE" glyphName="BRIEFCASE" layoutX="50.0" layoutY="105.0" size="80"/>
+        <Label layoutX="145.0" layoutY="95.0" text="Главная &gt; Предложение" textFill="WHITE">
+            <font>
+                <Font size="13.0"/>
+            </font>
+        </Label>
+        <Label layoutX="142.0" layoutY="25.0" text="Предложение" textFill="WHITE">
+            <font>
+                <Font size="48.0"/>
+            </font>
+        </Label>
+    </AnchorPane>
+    <TableView fx:id="tableOffers" fixedCellSize="0.0" layoutX="14.0" layoutY="152.0" prefHeight="390.0"
+               prefWidth="730.0" AnchorPane.bottomAnchor="58.0" AnchorPane.leftAnchor="15.0"
+               AnchorPane.rightAnchor="356.0" AnchorPane.topAnchor="152.0">
+        <columns>
+            <TableColumn fx:id="clientTableColumn" prefWidth="173.0" text="Клиент"/>
+            <TableColumn fx:id="realtorTableColumn" prefWidth="122.0" text="Риэлтор"/>
+            <TableColumn fx:id="realEstateTableColumn" prefWidth="271.0" text="Объект недвижимости"/>
+            <TableColumn fx:id="priceTableColumn" prefWidth="106.0" text="Цена"/>
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+    </TableView>
+    <Button alignment="CENTER" layoutX="14.0" layoutY="563.0" mnemonicParsing="false" onAction="#goHomeScreen"
+            prefHeight="30.0" prefWidth="105.0" text="Назад" AnchorPane.bottomAnchor="10.0"
+            AnchorPane.leftAnchor="15.0">
+        <cursor>
+            <Cursor fx:constant="HAND"/>
+        </cursor>
+        <graphic>
+            <FontAwesomeIconView fill="#2d75e8" glyphName="CHEVRON_LEFT" size="1.3em"/>
+        </graphic>
+    </Button>
+    <VBox layoutX="781.0" layoutY="152.0" prefHeight="310.0" prefWidth="322.0" spacing="20.0"
+          AnchorPane.bottomAnchor="138.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="152.0">
+        <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+            <FontAwesomeIconView fill="#2d75e8" glyphName="USER" size="18" text="">
+                <HBox.margin>
+                    <Insets right="5.0"/>
+                </HBox.margin>
+            </FontAwesomeIconView>
+            <ComboBox fx:id="clientComboBox" prefHeight="30.0" prefWidth="290.0" promptText="Выберите клиента"/>
+        </HBox>
+        <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+            <FontAwesomeIconView fill="#2d75e8" glyphName="USER" size="18" text="">
+                <HBox.margin>
+                    <Insets right="5.0"/>
+                </HBox.margin>
+            </FontAwesomeIconView>
+            <ComboBox fx:id="realtorComboBox" prefHeight="30.0" prefWidth="290.0" promptText="Выберите риэлтора"/>
+        </HBox>
+        <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+            <FontAwesomeIconView fill="#2d75e8" glyphName="HOME" size="18">
+                <HBox.margin>
+                    <Insets right="5.0"/>
+                </HBox.margin>
+            </FontAwesomeIconView>
+            <ComboBox fx:id="typeRealEstateComboBox" prefHeight="31.0" prefWidth="290.0"
+                      promptText="Выберите тип объекта недвижимости"/>
+        </HBox>
+        <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+            <FontAwesomeIconView fill="#2d75e8" glyphName="HOME" size="18">
+                <HBox.margin>
+                    <Insets right="5.0"/>
+                </HBox.margin>
+            </FontAwesomeIconView>
+            <ComboBox fx:id="realEstateComboBox" prefHeight="31.0" prefWidth="290.0"
+                      promptText="Выберите объект недвижимости"/>
+        </HBox>
+        <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+            <FontAwesomeIconView fill="#2d75e8" glyphName="ROUBLE" size="18">
+                <HBox.margin>
+                    <Insets right="5.0"/>
+                </HBox.margin>
+            </FontAwesomeIconView>
+            <TextField fx:id="priceTextField" prefHeight="30.0" prefWidth="290.0" promptText="Цена">
+                <font>
+                    <Font name="Segoe UI" size="13.0"/>
+                </font>
+            </TextField>
+        </HBox>
+        <HBox alignment="CENTER" prefHeight="30.0" prefWidth="275.0" spacing="20.0">
+            <Button id="createBtn" fx:id="createOfferButton" mnemonicParsing="false" onAction="#createOffer"
+                    prefHeight="31.0" prefWidth="170.0" text="Создать">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+                <graphic>
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="PLUS" size="1.3em"/>
+                </graphic>
+            </Button>
+            <Button id="updateBtn" fx:id="updateOfferButton" mnemonicParsing="false" onAction="#updateOffer"
+                    prefHeight="31.0" prefWidth="170.0" text="Обновить">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+                <graphic>
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="REFRESH" size="1.3em"/>
+                </graphic>
+            </Button>
+            <VBox.margin>
+                <Insets/>
+            </VBox.margin>
+        </HBox>
+        <Button id="deleteBtn" fx:id="deleteOfferButton" mnemonicParsing="false" onAction="#deleteOffer"
+                prefHeight="31.0" prefWidth="743.0" text="Удалить">
+            <cursor>
+                <Cursor fx:constant="HAND"/>
+            </cursor>
+            <graphic>
+                <FontAwesomeIconView fill="#2d75e8" glyphName="REMOVE" size="1.5em"/>
+            </graphic>
+        </Button>
+    </VBox>
+
+</AnchorPane>
