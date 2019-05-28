@@ -85,6 +85,7 @@ public class ClientsController {
     private ArrayList<Integer> idClientsFromDatabase;//список ID клиентов
     private int idSelectedClient;//ID выбранного клиента
     private ObservableList<Client> listClients;//список клиентов
+    private int countClientsOnTableOffer; //количество клиентов, связанных с предложением
 
     @FXML
     void initialize() {
@@ -114,7 +115,9 @@ public class ClientsController {
         tableColumnPhoneNumber.setSortable(false);
         tableColumnEmail.setSortable(false);
 
-        listClients = createListClients(getClientsTableContent());
+        clientsWithOffersLabel.setText(String.valueOf(getCountClientWithOffer()));
+
+        listClients = createListClients(getDataFromDb(CLIENT_TABLE));
 
         listClients.addListener((ListChangeListener<Client>) c -> {
             updateTableContent();
@@ -216,6 +219,34 @@ public class ClientsController {
 
     }
 
+    private int getCountClientWithOffer() {
+        //SQL запрос на выбор всех данных из таблицы `clients`
+        String selectClients = "SELECT COUNT(*) FROM offers";
+
+        ResultSet resultSet = null;
+        try {
+            PreparedStatement ps = new DatabaseHandler().createDbConnection().prepareStatement(selectClients);
+            //выполняем запрос и сохраняем полученные значения в resultSet
+            resultSet = ps.executeQuery();
+        } catch (SQLException e) {
+            //открываем диалоговое окно для уведомления об ошибке
+            showAlert(
+                    "Ошибка получения данных из таблицы клиентов",
+                    "Данные не получены из базы. Проверьте подключение к базе!",
+                    AlertType.ERROR);
+        }
+
+        try {
+            while (resultSet.next()) {
+                countClientsOnTableOffer = resultSet.getInt(1);
+            }
+        } catch (NullPointerException | SQLException exception) {
+            exception.printStackTrace();
+            System.out.println("ResultSet is null");
+        }
+        return countClientsOnTableOffer;
+    }
+
     /**
      * Метод для создания всплывающих подсказок при наведении на соответствующие поля таблицы
      */
@@ -246,21 +277,21 @@ public class ClientsController {
      * Метод для заполнения таблицы данными из базы
      */
     private void updateTableContent() {
-        tableClients.setItems(createListClients(getClientsTableContent()));
+        tableClients.setItems(createListClients(getDataFromDb(CLIENT_TABLE)));
     }
 
     /**
      * Метод для предоставления возможности поиска клиента по ФИО
      */
     private void findClientByFullName() {
-        FilteredList<Client> filteredList = new FilteredList<>(createListClients(getClientsTableContent()));
+        FilteredList<Client> filteredList = new FilteredList<>(createListClients(getDataFromDb(CLIENT_TABLE)));
         tfSearch.textProperty().addListener((observable, oldValue, newValue) ->
                 filteredList.setPredicate((Predicate<? super Client>) client -> {
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
                     }
 
-                    ObservableList<Client> list = createListClients(getClientsTableContent());
+                    ObservableList<Client> list = createListClients(getDataFromDb(CLIENT_TABLE));
 
                     for (int i = 0; i < list.size(); i++) {
                         if (Helper.levenstain(newValue.toLowerCase(), client.getLastName().toLowerCase()) <= 3) {
@@ -379,7 +410,7 @@ public class ClientsController {
 
     /**
      * Метод для обновления информации о клиенте при нажатии на кнопку "Обновить"
-            */
+     */
     public void updateClient() {
 
         //SQL запрос для обновления клиента
@@ -496,13 +527,13 @@ public class ClientsController {
     }
 
     /**
-     * Метод для получения содержимого таблицы клиентов из базы данных
+     * Метод для получения содержимого таблицы из базы данных
      *
      * @return ResultSet - набор данных из таблицы
      */
-    private ResultSet getClientsTableContent() {
+    private ResultSet getDataFromDb(String tableName) {
         //SQL запрос на выбор всех данных из таблицы `clients`
-        String selectClients = String.format("SELECT * FROM %s", CLIENT_TABLE);
+        String selectClients = String.format("SELECT * FROM %s", tableName);
 
         ResultSet resultSet = null;
         try {
