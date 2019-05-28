@@ -42,6 +42,10 @@ public class OffersController {
     private static final String TABLE_LANDS = "land";
     private static final String TABLE_OFFERS = "offers";
     private static final String TABLE_OFFERS_ID = "id";
+    private static final String TABLE_OFFERS_PRICE = "price";
+    private static final String TABLE_OFFERS_REALESTATE = "realEstate";
+    private static final String TABLE_OFFERS_REALTOR = "realtor";
+    private static final String TABLE_OFFERS_CLIENT = "client";
 
     //Элементы интерфейса
     @FXML
@@ -284,7 +288,7 @@ public class OffersController {
                     typeRealEstateComboBox.setValue(LAND);
                     for (int i = 0; i < listRealEstates.size(); i++) {
                         if (tableOffers.getSelectionModel().getSelectedItem().getRealEstate().contains(listRealEstates.get(i).getLand())) {
-                            realEstateComboBox.getSelectionModel().select(i );
+                            realEstateComboBox.getSelectionModel().select(i);
                         }
                     }
                 }
@@ -370,6 +374,62 @@ public class OffersController {
     @FXML
     private void updateOffer() {
 
+        //SQL запрос для обновления предложения
+        String update = String.format("UPDATE %s SET %s=?,%s=?,%s=?,%s=? WHERE %s=?",
+                TABLE_OFFERS,
+                TABLE_OFFERS_CLIENT,
+                TABLE_OFFERS_REALTOR,
+                TABLE_OFFERS_REALESTATE,
+                TABLE_OFFERS_PRICE,
+                TABLE_OFFERS_ID);
+
+        if (clientComboBox.getValue() != null &&
+                realtorComboBox.getValue() != null &&
+                typeRealEstateComboBox.getValue() != null &&
+                realEstateComboBox.getValue() != null &&
+                !priceTextField.getText().isEmpty()) {
+
+            try {
+                PreparedStatement updateOffer = new DatabaseHandler().createDbConnection().prepareStatement(update);
+
+                //установка значений для вставки в запрос
+                updateOffer.setString(1, clientComboBox.getValue().getLastName());
+                updateOffer.setString(2, realtorComboBox.getValue().getLastName());
+                updateOffer.setString(3, realEstateComboBox.getValue().toString());
+                updateOffer.setInt(4, Integer.parseInt(priceTextField.getText()));
+                updateOffer.setInt(5, idSelectedOffer);
+
+                //выполнение SQL запроса
+                updateOffer.executeUpdate();
+
+                //заполняем таблицу данным из БД
+                tableOffers.setItems(createListOfOffers(getDataFromDB(TABLE_OFFERS)));
+
+                //открываем диалоговое окно для уведомления об успешном обновлении
+                showAlert(
+                        "Операция успешно выполнена",
+                        "Обновление предложения выполнено успешно!",
+                        Alert.AlertType.INFORMATION);
+
+                //Обнуляем текстовые поля после обновления клиента
+                clearTextFieldsAndComboBox();
+
+            } catch (SQLException e) {
+                //открываем диалоговое окно для уведомления об ошибке
+                showAlert(
+                        "Ошибка обновления предложения",
+                        "Обновление предложения не выполнено! Повторите еще раз",
+                        Alert.AlertType.ERROR);
+            }
+
+        } else {
+            //открываем диалоговое окно для уведомления об ошибке
+            showAlert(
+                    "Ошибка обновления предложения",
+                    "Все поля являются обязательными для заполнения.",
+                    Alert.AlertType.ERROR
+            );
+        }
     }
 
     /**
