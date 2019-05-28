@@ -117,7 +117,7 @@ public class ClientsController {
 
         clientsWithOffersLabel.setText(String.valueOf(getCountClientWithOffer()));
 
-        listClients = createListClients(getDataFromDb(CLIENT_TABLE));
+        listClients = createListClients(getDataFromDb());
 
         listClients.addListener((ListChangeListener<Client>) c -> {
             updateTableContent();
@@ -219,8 +219,13 @@ public class ClientsController {
 
     }
 
+    /**
+     * Метод для получения количества строк в таблице 'offers'.
+     *
+     * @return количество строк в таблице 'offers'. Соответственно, оно равно количеству клиентов, связанных с предложением.
+     */
     private int getCountClientWithOffer() {
-        //SQL запрос на выбор всех данных из таблицы `clients`
+        //SQL запрос на выбор количества строк в таблице 'offers'
         String selectClients = "SELECT COUNT(*) FROM offers";
 
         ResultSet resultSet = null;
@@ -237,6 +242,7 @@ public class ClientsController {
         }
 
         try {
+            assert resultSet != null;
             while (resultSet.next()) {
                 countClientsOnTableOffer = resultSet.getInt(1);
             }
@@ -277,21 +283,21 @@ public class ClientsController {
      * Метод для заполнения таблицы данными из базы
      */
     private void updateTableContent() {
-        tableClients.setItems(createListClients(getDataFromDb(CLIENT_TABLE)));
+        tableClients.setItems(createListClients(getDataFromDb()));
     }
 
     /**
      * Метод для предоставления возможности поиска клиента по ФИО
      */
     private void findClientByFullName() {
-        FilteredList<Client> filteredList = new FilteredList<>(createListClients(getDataFromDb(CLIENT_TABLE)));
+        FilteredList<Client> filteredList = new FilteredList<>(createListClients(getDataFromDb()));
         tfSearch.textProperty().addListener((observable, oldValue, newValue) ->
                 filteredList.setPredicate((Predicate<? super Client>) client -> {
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
                     }
 
-                    ObservableList<Client> list = createListClients(getDataFromDb(CLIENT_TABLE));
+                    ObservableList<Client> list = createListClients(getDataFromDb());
 
                     for (int i = 0; i < list.size(); i++) {
                         if (Helper.levenstain(newValue.toLowerCase(), client.getLastName().toLowerCase()) <= 3) {
@@ -531,9 +537,9 @@ public class ClientsController {
      *
      * @return ResultSet - набор данных из таблицы
      */
-    private ResultSet getDataFromDb(String tableName) {
+    private ResultSet getDataFromDb() {
         //SQL запрос на выбор всех данных из таблицы `clients`
-        String selectClients = String.format("SELECT * FROM %s", tableName);
+        String selectClients = String.format("SELECT * FROM %s", ClientsController.CLIENT_TABLE);
 
         ResultSet resultSet = null;
         try {
