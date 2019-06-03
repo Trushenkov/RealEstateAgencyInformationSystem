@@ -115,7 +115,7 @@ public class Flat {
     @Override
     public String toString() {
 
-        StringBuilder flatStringBuilder = new StringBuilder();
+        final StringBuilder flatStringBuilder = new StringBuilder();
 
         if (city != null) {
             flatStringBuilder.append("Город=").append(city).append(", ");
