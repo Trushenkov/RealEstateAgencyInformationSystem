@@ -14,34 +14,39 @@ import ru.tds.realestateagency.Helper;
 public class MainController {
 
     @FXML
-    private Button btnDeals;
+    private Button dealsButton;
 
     @FXML
-    private Button btnNeeds;
+    private Button demandsButton;
 
     @FXML
-    private Button btnHouses;
+    private Button realEstatesButton;
 
     @FXML
-    private Button btnOffers;
+    private Button offersButton;
 
     @FXML
-    private Button btnClients;
+    private Button clientsButton;
 
     @FXML
-    private Button btnRealtors;
+    private Button realtorsButton;
 
     @FXML
     void handleButtonClicks(ActionEvent event) {
         ((Node) event.getSource()).getScene().getWindow().hide();
-        if (event.getSource().equals(btnClients)) {
+
+        if (event.getSource().equals(clientsButton)) {
             Helper.openNewScreen("/ru/tds/realestateagency/views/client.fxml");
-        } else if (event.getSource().equals(btnRealtors)) {
+        } if (event.getSource().equals(realtorsButton)) {
             Helper.openNewScreen("/ru/tds/realestateagency/views/realtor.fxml");
-        } else if (event.getSource().equals(btnHouses)) {
+        } else if (event.getSource().equals(realEstatesButton)) {
             Helper.openNewScreen("/ru/tds/realestateagency/views/realEstate.fxml");
-        } else if (event.getSource().equals(btnOffers)) {
+        } else if (event.getSource().equals(offersButton)) {
             Helper.openNewScreen("/ru/tds/realestateagency/views/offers.fxml");
+        } else if (event.getSource().equals(demandsButton)) {
+            Helper.openNewScreen("/ru/tds/realestateagency/views/demands.fxml");
+        } else if (event.getSource().equals(dealsButton)) {
+            Helper.openNewScreen("/ru/tds/realestateagency/views/deals.fxml");
         }
     }
 
