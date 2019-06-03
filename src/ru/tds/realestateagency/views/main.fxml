@@ -4,8 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
-            prefWidth="950.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/8.0.171"
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0"
+            prefWidth="1200.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/8.0.171"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.tds.realestateagency.controllers.MainController">
     <Pane prefHeight="140.0" prefWidth="943.0" style="-fx-background-color: #2D75E8;" AnchorPane.leftAnchor="0.0"
           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -36,7 +36,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
             </rowConstraints>
             <AnchorPane>
-                <Button fx:id="btnClients" contentDisplay="TOP" mnemonicParsing="false"
+                <Button id="mainScreenButton" fx:id="clientsButton" contentDisplay="TOP" mnemonicParsing="false"
                         onAction="#handleButtonClicks" prefHeight="181.0" prefWidth="242.0"
                         stylesheets="@../css/fullpackstyling.css" text="Клиенты"
                         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
@@ -47,7 +47,7 @@
                 </Button>
             </AnchorPane>
             <AnchorPane GridPane.columnIndex="1">
-                <Button fx:id="btnRealtors" contentDisplay="TOP" mnemonicParsing="false"
+                <Button id="mainScreenButton" fx:id="realtorsButton" contentDisplay="TOP" mnemonicParsing="false"
                         onAction="#handleButtonClicks" prefHeight="181.0" prefWidth="242.0"
                         stylesheets="@../css/fullpackstyling.css" text="Риэлторы"
                         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
@@ -58,7 +58,7 @@
                 </Button>
             </AnchorPane>
             <AnchorPane GridPane.columnIndex="2">
-                <Button fx:id="btnHouses" contentDisplay="TOP" mnemonicParsing="false"
+                <Button id="mainScreenButton" fx:id="realEstatesButton" contentDisplay="TOP" mnemonicParsing="false"
                         onAction="#handleButtonClicks" prefHeight="181.0" prefWidth="242.0"
                         stylesheets="@../css/fullpackstyling.css" text="Объекты недвижимости"
                         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
@@ -69,7 +69,7 @@
                 </Button>
             </AnchorPane>
             <AnchorPane GridPane.rowIndex="1">
-                <Button fx:id="btnOffers" contentDisplay="TOP" mnemonicParsing="false" prefHeight="181.0"
+                <Button id="mainScreenButton" fx:id="offersButton" contentDisplay="TOP" mnemonicParsing="false" prefHeight="181.0"
                         onAction="#handleButtonClicks" prefWidth="242.0" stylesheets="@../css/fullpackstyling.css"
                         text="Предложения"
                         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
@@ -80,8 +80,9 @@
                 </Button>
             </AnchorPane>
             <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="1">
-                <Button fx:id="btnNeeds" contentDisplay="TOP" mnemonicParsing="false" prefHeight="181.0"
-                        prefWidth="242.0" stylesheets="@../css/fullpackstyling.css" text="Потребности"
+                <Button id="mainScreenButton" fx:id="demandsButton" contentDisplay="TOP" mnemonicParsing="false" prefHeight="181.0"
+                        onAction="#handleButtonClicks" prefWidth="242.0" stylesheets="@../css/fullpackstyling.css"
+                        text="Потребности"
                         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                         AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <graphic>
@@ -90,8 +91,9 @@
                 </Button>
             </AnchorPane>
             <AnchorPane GridPane.columnIndex="2" GridPane.rowIndex="1">
-                <Button fx:id="btnDeals" contentDisplay="TOP" mnemonicParsing="false" prefHeight="181.0"
-                        prefWidth="242.0" stylesheets="@../css/fullpackstyling.css" text="Сделки"
+                <Button id="mainScreenButton" fx:id="dealsButton" contentDisplay="TOP" mnemonicParsing="false" prefHeight="181.0"
+                        onAction="#handleButtonClicks" prefWidth="242.0" stylesheets="@../css/fullpackstyling.css"
+                        text="Сделки"
                         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                         AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <graphic>
