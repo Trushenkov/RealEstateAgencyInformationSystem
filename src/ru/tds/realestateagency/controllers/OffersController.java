@@ -44,8 +44,13 @@ public class OffersController {
     private static final String TABLE_OFFERS_ID = "id";
     private static final String TABLE_OFFERS_PRICE = "price";
     private static final String TABLE_OFFERS_REALESTATE = "realEstate";
+    private static final String OFFERS_REALTOR_COLUMN = "realtor";
     private static final String TABLE_OFFERS_REALTOR = "realtor";
     private static final String TABLE_OFFERS_CLIENT = "client";
+    private static final String OFFERS_TABLE = "offers";
+    private static final String OFFERS_CLIENT_COLUMN = "client";
+    private static final String OFFERS_REAL_ESTATE_COLUMN = "realEstate";
+    private static final String OFFERS_PRICE_COLUMN = "price";
 
     //Элементы интерфейса
     @FXML
@@ -80,19 +85,14 @@ public class OffersController {
 
     //Списки для храненеия информации из базы данных
     private ObservableList<Client> listOfClients;//список клиентов
-
     private ObservableList<Realtor> listOfRealtors;//список риэлторов
-
     private ObservableList<Home> listOfHomes;//список домов
     private ObservableList<Flat> listOfFlats;//список квартир
     private ObservableList<Land> listOfLands;//список земель
-
     private ObservableList<RealEstate> listRealEstates;//список объектов недвижимости
-
-    private ObservableList<Offer> listOfOffers;//список предложений
     private ArrayList<Integer> idOffersFromDatabase;
-    private int idSelectedOffer;//ID выбранного предложени из таблицы
 
+    private int idSelectedOffer;//ID выбранного предложения из таблицы
 
     @FXML
     void initialize() {
@@ -101,7 +101,6 @@ public class OffersController {
         mainPane.setOnMousePressed(event -> {
             clearTextFieldsAndComboBox();
             tableOffers.getSelectionModel().clearSelection();
-            updateOfferButton.setDisable(true);
         });
 
         updateOfferButton.setDisable(true);
@@ -126,10 +125,11 @@ public class OffersController {
         listOfHomes = createListOfHomes(getDataFromDB(TABLE_HOMES));
         listOfFlats = createListOfFlats(getDataFromDB(TABLE_FLATS));
         listOfLands = createListOfLands(getDataFromDB(TABLE_LANDS));
-        listOfOffers = createListOfOffers(getDataFromDB(TABLE_OFFERS));
 
+        //список предложений
+        ObservableList<Offer> listOfOffers = createListOfOffers(getDataFromDB(TABLE_OFFERS));
+        //список типов объектов недвижимости
         ObservableList<String> listOfTypesRealEstate = FXCollections.observableArrayList(HOME, FLAT, LAND);
-
 
         //добавляем слушателя для формирования и заполнения списка объектов недвижимости при смене значение типа объекта недвижимости
         typeRealEstateComboBox.valueProperty().addListener((objectProperty, oldValue, newValue) -> {
@@ -323,11 +323,11 @@ public class OffersController {
 
             //SQL запрос для добавления нового предложения в базу данных
             String insertOffer = String.format("INSERT INTO %s(%s, %s, %s, %s) VALUES (?,?,?,?);",
-                    "offers",
-                    "client",
-                    "realtor",
-                    "realEstate",
-                    "price");
+                    OFFERS_TABLE,
+                    OFFERS_CLIENT_COLUMN,
+                    OFFERS_REALTOR_COLUMN,
+                    OFFERS_REAL_ESTATE_COLUMN,
+                    OFFERS_PRICE_COLUMN);
 
             try {
                 PreparedStatement addOfferStatement = new DatabaseHandler().createDbConnection().prepareStatement(insertOffer);
@@ -466,7 +466,6 @@ public class OffersController {
                     Alert.AlertType.ERROR
             );
         }
-
     }
 
     /**
@@ -738,7 +737,7 @@ public class OffersController {
         //размер окна не изменяемый
         alert.setResizable(false);
         //определене родительского окна
-//        alert.initOwner(this.tableOffers.getScene().getWindow());
+        alert.initOwner(this.tableOffers.getScene().getWindow());
         //установка типа модального окна
         alert.initModality(Modality.WINDOW_MODAL);
 
