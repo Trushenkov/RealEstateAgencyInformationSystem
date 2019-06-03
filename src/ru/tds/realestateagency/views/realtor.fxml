@@ -9,8 +9,8 @@
 <?import ru.tds.realestateagency.textfields.StringRussianTextField?>
 <?import ru.tds.realestateagency.textfields.IntegerTextField?>
 <AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="600.0"
-            prefWidth="950.0" stylesheets="@../css/fullpackstyling.css" xmlns="http://javafx.com/javafx/8"
+            prefHeight="700.0"
+            prefWidth="1200.0" stylesheets="@../css/fullpackstyling.css" xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ru.tds.realestateagency.controllers.RealtorsController">
     <AnchorPane id="topPane" prefHeight="140.0" prefWidth="1000.0" style="-fx-background-color: #2D75E8"
