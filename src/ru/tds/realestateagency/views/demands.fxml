@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="700.0" prefWidth="1200.0" stylesheets="@../css/fullpackstyling.css"
+            xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ru.tds.realestateagency.controllers.DemandsController">
+    <AnchorPane id="topPane" prefHeight="140.0" prefWidth="1000.0" style="-fx-background-color: #2D75E8"
+                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Label fx:id="headerTypeBuildingLabel" layoutX="144.0" layoutY="95.0" text="Главная &gt; Потребности"
+               textFill="WHITE">
+            <font>
+                <Font size="13.0"/>
+            </font>
+        </Label>
+        <Label layoutX="142.0" layoutY="25.0" text="Потребности" textFill="WHITE">
+            <font>
+                <Font size="44.0"/>
+            </font>
+        </Label>
+        <FontAwesomeIconView fill="WHITE" glyphName="LIST" layoutX="60.0" layoutY="106.0" size="80"/>
+    </AnchorPane>
+    <AnchorPane layoutY="140.0" prefHeight="460.0" prefWidth="150.0" style="-fx-background-color: #2D75E8;"
+                AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="140.0">
+        <VBox alignment="CENTER">
+            <Button id="side-button" fx:id="homeDemandsButton" alignment="BASELINE_LEFT" graphicTextGap="10.0"
+                    mnemonicParsing="false" onAction="#switchContent" prefHeight="45.0" prefWidth="150.0" text="Дом"
+                    textFill="WHITE">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+                <padding>
+                    <Insets left="15.0"/>
+                </padding>
+                <VBox.margin>
+                    <Insets/>
+                </VBox.margin>
+                <graphic>
+                    <FontAwesomeIconView fill="WHITE" glyphName="HOME" size="2em"/>
+                </graphic>
+            </Button>
+            <Button id="side-button" fx:id="flatDemandsButton" alignment="BASELINE_LEFT" graphicTextGap="10.0"
+                    mnemonicParsing="false" onAction="#switchContent" prefHeight="45.0" prefWidth="150.0"
+                    text="Квартира" textFill="WHITE">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+                <padding>
+                    <Insets left="15.0"/>
+                </padding>
+                <VBox.margin>
+                    <Insets/>
+                </VBox.margin>
+                <graphic>
+                    <FontAwesomeIconView fill="WHITE" glyphName="BUILDING_ALT" size="2em"/>
+                </graphic>
+            </Button>
+            <Button id="side-button" fx:id="landDemandsButton" alignment="BASELINE_LEFT" graphicTextGap="10.0"
+                    layoutY="60.0" mnemonicParsing="false" onAction="#switchContent" prefHeight="45.0" prefWidth="150.0"
+                    text="Земля" textFill="WHITE">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+                <padding>
+                    <Insets left="15.0"/>
+                </padding>
+                <graphic>
+                    <FontAwesomeIconView fill="WHITE" glyphName="TREE" size="2em"/>
+                </graphic>
+            </Button>
+        </VBox>
+        <Button alignment="CENTER" layoutX="24.0" layoutY="415.0" mnemonicParsing="false" onAction="#goHomeScreen"
+                prefHeight="28.0" prefWidth="105.0" text="Назад" AnchorPane.bottomAnchor="14.0"
+                AnchorPane.leftAnchor="24.0">
+            <cursor>
+                <Cursor fx:constant="HAND"/>
+            </cursor>
+            <graphic>
+                <FontAwesomeIconView fill="#2d75e8" glyphName="CHEVRON_LEFT" size="1.3em"/>
+            </graphic>
+        </Button>
+    </AnchorPane>
+    <StackPane fx:id="stackPane" layoutX="152.0" layoutY="139.0" prefHeight="460.0" prefWidth="1048.0"
+               AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0"
+               AnchorPane.topAnchor="140.0">
+        <AnchorPane fx:id="homesAnchorPane" prefHeight="440.0" prefWidth="1050.0" style="-fx-background-color: #fff;">
+            <TableView fx:id="tableHomes" layoutX="6.0" layoutY="10.0" prefHeight="365.0" prefWidth="635.0"
+                       AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="255.0"
+                       AnchorPane.topAnchor="10.0">
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+                <columns>
+                    <TableColumn fx:id="homeClientColumn" prefWidth="67.31539916992188" text="Клиент"/>
+                    <TableColumn fx:id="homeRealtorColumn" prefWidth="60.3914794921875" text="Риэлтор"/>
+                    <TableColumn fx:id="homeAddressColumn" prefWidth="79.125732421875" text="Адрес"/>
+                    <TableColumn fx:id="homeMinPriceColumn" prefWidth="108.4285888671875" text="Мин. цена"/>
+                    <TableColumn fx:id="homeMaxPriceColumn" prefWidth="51.20245361328125" text="Макс. цена"/>
+                    <TableColumn fx:id="homeMinSquareColumn" prefWidth="55.023193359375" text="Мин. площадь"/>
+                    <TableColumn fx:id="homeMaxSquareColumn" prefWidth="42.04132080078125" text="Макс. площадь"/>
+                    <TableColumn fx:id="homeMinNumberOfRoomsColumn" prefWidth="102.18316650390625"
+                                 text="Мин. кол-во комнат"/>
+                    <TableColumn fx:id="homeMaxNumberOfRoomsColumn" prefWidth="71.35296630859375"
+                                 text="Макс. кол-во комнат"/>
+                    <TableColumn fx:id="homeMinNumberOfFloorsColumn" prefWidth="71.35296630859375"
+                                 text="Мин. этажность"/>
+                    <TableColumn fx:id="homeMaxNumberOfFloorsColumn" prefWidth="71.35296630859375"
+                                 text="Макс. этажность"/>
+                </columns>
+            </TableView>
+            <VBox layoutX="620.0" prefHeight="340.0" prefWidth="220.0" spacing="13.0" AnchorPane.bottomAnchor="10.0"
+                  AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="10.0">
+                <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="USER" size="18">
+                        <HBox.margin>
+                            <Insets right="5.0"/>
+                        </HBox.margin>
+                    </FontAwesomeIconView>
+                    <ComboBox fx:id="homeClientComboBox" prefHeight="30.0" prefWidth="290.0"
+                              promptText="Выберите клиента"/>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="USER" size="18">
+                        <HBox.margin>
+                            <Insets right="5.0"/>
+                        </HBox.margin>
+                    </FontAwesomeIconView>
+                    <ComboBox fx:id="homeRealtorComboBox" prefHeight="30.0" prefWidth="290.0"
+                              promptText="Выберите риэлтора"/>
+                </HBox>
+                <HBox alignment="CENTER" layoutX="646.0" layoutY="220.0" prefHeight="25.0" prefWidth="188.0"
+                      spacing="5.0" AnchorPane.rightAnchor="50.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="homeTextFieldAddress" prefHeight="30.0" prefWidth="235.0" promptText="Адрес">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" layoutX="646.0" layoutY="275.0" prefHeight="25.0" prefWidth="188.0"
+                      spacing="5.0" AnchorPane.rightAnchor="50.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="homeTextFieldMinPrice" prefHeight="30.0" prefWidth="235.0" promptText="Мин. цена">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" layoutX="646.0" layoutY="330.0" prefHeight="25.0" prefWidth="188.0"
+                      spacing="5.0" AnchorPane.rightAnchor="50.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="homeTextFieldMaxPrice" prefHeight="30.0" prefWidth="235.0"
+                               promptText="Макс. цена">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" layoutX="646.0" layoutY="385.0" prefHeight="25.0" prefWidth="188.0"
+                      spacing="5.0" AnchorPane.rightAnchor="50.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="homeTextFieldMinSquare" prefHeight="30.0" prefWidth="235.0"
+                               promptText="Мин. площадь">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="homeTextFieldMaxSquare" prefHeight="30.0" prefWidth="235.0"
+                               promptText="Макс. площадь">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="homeTextFieldMinNumberOfRooms" prefHeight="30.0" prefWidth="235.0"
+                               promptText="Мин. кол-во комнат">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="homeTextFieldMaxNumberOfRooms" prefHeight="30.0" prefWidth="235.0"
+                               promptText="Макс. кол-во комнат">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="homeTextFieldMinNumberOfFloors" prefHeight="30.0" prefWidth="235.0"
+                               promptText="Мин. этажность дома">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="homeTextFieldMaxNumberOfFloors" prefHeight="30.0" prefWidth="235.0"
+                               promptText="Макс. этажность дома">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="28.0" prefWidth="260.0" spacing="20.0">
+                    <Button id="createBtn" fx:id="createHomeDemandButton" mnemonicParsing="false"
+                            onAction="#createHomeDemand" prefHeight="30.0" prefWidth="120.0" text="Создать">
+                        <cursor>
+                            <Cursor fx:constant="HAND"/>
+                        </cursor>
+                        <graphic>
+                            <FontAwesomeIconView fill="#2d75e8" glyphName="PLUS" size="1.5em"/>
+                        </graphic>
+                    </Button>
+                    <Button id="updateBtn" fx:id="updateHomeDemandButton" mnemonicParsing="false"
+                            onAction="#updateHomeDemand" prefHeight="30.0" prefWidth="120.0" text="Обновить">
+                        <cursor>
+                            <Cursor fx:constant="HAND"/>
+                        </cursor>
+                        <graphic>
+                            <FontAwesomeIconView fill="#2d75e8" glyphName="REFRESH" size="1.5em"/>
+                        </graphic>
+                    </Button>
+                </HBox>
+                <Button id="deleteBtn" fx:id="deleteHomeDemandButton" mnemonicParsing="false"
+                        onAction="#deleteHomeDemand" prefHeight="28.0" prefWidth="260.0" text="Удалить">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                    <graphic>
+                        <FontAwesomeIconView fill="#2d75e8" glyphName="REMOVE" size="1.5em"/>
+                    </graphic>
+                </Button>
+            </VBox>
+        </AnchorPane>
+        <AnchorPane fx:id="landsAnchorPane" prefHeight="440.0" prefWidth="896.0" style="-fx-background-color: #fff;">
+            <TableView fx:id="tableLands" layoutX="6.0" prefHeight="540.0" prefWidth="750.0"
+                       AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="290.0"
+                       AnchorPane.topAnchor="10.0">
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+                <columns>
+                    <TableColumn fx:id="landClientColumn" prefWidth="63.0" text="Клиент"/>
+                    <TableColumn fx:id="landRealtorColumn" prefWidth="74.0" text="Риэлтор"/>
+                    <TableColumn fx:id="landAddressColumn" prefWidth="92.0" text="Адрес"/>
+                    <TableColumn fx:id="landMinPriceColumn" prefWidth="107.0" text="Мин. цена"/>
+                    <TableColumn fx:id="landMaxPriceColumn" prefWidth="59.0" text="Макс. цена"/>
+                    <TableColumn fx:id="landMinSquareColumn" prefWidth="58.0" text="Мин. площадь"/>
+                    <TableColumn fx:id="landMaxSquareColumn" prefWidth="66.0" text="Макс. площадь"/>
+                </columns>
+            </TableView>
+            <VBox layoutX="620.0" prefHeight="365.0" prefWidth="260.0" spacing="15.0" AnchorPane.bottomAnchor="79.0"
+                  AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="10.0">
+                <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="USER" size="18">
+                        <HBox.margin>
+                            <Insets right="5.0"/>
+                        </HBox.margin>
+                    </FontAwesomeIconView>
+                    <ComboBox fx:id="landClientComboBox" prefHeight="30.0" prefWidth="290.0"
+                              promptText="Выберите клиента"/>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="USER" size="18">
+                        <HBox.margin>
+                            <Insets right="5.0"/>
+                        </HBox.margin>
+                    </FontAwesomeIconView>
+                    <ComboBox fx:id="landRealtorComboBox" prefHeight="30.0" prefWidth="290.0"
+                              promptText="Выберите риэлтора"/>
+                </HBox>
+                <HBox alignment="CENTER" layoutX="646.0" layoutY="220.0" prefHeight="25.0" prefWidth="188.0"
+                      spacing="5.0" AnchorPane.rightAnchor="50.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="landTextFieldAddress" prefHeight="30.0" prefWidth="235.0" promptText="Адрес">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" layoutX="646.0" layoutY="275.0" prefHeight="25.0" prefWidth="188.0"
+                      spacing="5.0" AnchorPane.rightAnchor="50.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="landTextFieldMinPrice" prefHeight="30.0" prefWidth="235.0" promptText="Мин. цена">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" layoutX="646.0" layoutY="330.0" prefHeight="25.0" prefWidth="188.0"
+                      spacing="5.0" AnchorPane.rightAnchor="50.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="landTextFieldMaxPrice" prefHeight="30.0" prefWidth="235.0"
+                               promptText="Макс. цена">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" layoutX="646.0" layoutY="385.0" prefHeight="25.0" prefWidth="188.0"
+                      spacing="5.0" AnchorPane.rightAnchor="50.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="landTextFieldMinSquare" prefHeight="30.0" prefWidth="235.0"
+                               promptText="Мин. площадь">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="landTextFieldMaxSquare" prefHeight="30.0" prefWidth="235.0"
+                               promptText="Макс. площадь">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="28.0" prefWidth="260.0" spacing="20.0">
+                    <Button id="createBtn" fx:id="createLandDemandButton" mnemonicParsing="false"
+                            onAction="#createLandDemand" prefHeight="30.0" prefWidth="120.0" text="Создать">
+                        <cursor>
+                            <Cursor fx:constant="HAND"/>
+                        </cursor>
+                        <graphic>
+                            <FontAwesomeIconView fill="#2d75e8" glyphName="PLUS" size="1.5em"/>
+                        </graphic>
+                    </Button>
+                    <Button id="updateBtn" fx:id="updateLandDemandButton" mnemonicParsing="false"
+                            onAction="#updateLandDemand" prefHeight="30.0" prefWidth="120.0" text="Обновить">
+                        <cursor>
+                            <Cursor fx:constant="HAND"/>
+                        </cursor>
+                        <graphic>
+                            <FontAwesomeIconView fill="#2d75e8" glyphName="REFRESH" size="1.5em"/>
+                        </graphic>
+                    </Button>
+                </HBox>
+                <Button id="deleteBtn" fx:id="deleteLandDemandButton" mnemonicParsing="false"
+                        onAction="#deleteLandDemand" prefHeight="28.0" prefWidth="260.0" text="Удалить">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                    <graphic>
+                        <FontAwesomeIconView fill="#2d75e8" glyphName="REMOVE" size="1.5em"/>
+                    </graphic>
+                </Button>
+            </VBox>
+        </AnchorPane>
+        <AnchorPane fx:id="flatsAnchorPane" prefHeight="440.0" prefWidth="852.0" style="-fx-background-color: #fff;">
+            <TableView fx:id="tableFlats" layoutX="6.0" prefHeight="365.0" prefWidth="635.0"
+                       AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="255.0"
+                       AnchorPane.topAnchor="10.0">
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+                <columns>
+                    <TableColumn fx:id="flatClientColumn" prefWidth="67.31539916992188" text="Клиент"/>
+                    <TableColumn fx:id="flatRealtorColumn" prefWidth="60.3914794921875" text="Риэлтор"/>
+                    <TableColumn fx:id="flatAddressColumn" prefWidth="79.125732421875" text="Адрес"/>
+                    <TableColumn fx:id="flatMinPriceColumn" prefWidth="108.4285888671875" text="Мин. цена"/>
+                    <TableColumn fx:id="flatMaxPriceColumn" prefWidth="51.20245361328125" text="Макс. цена"/>
+                    <TableColumn fx:id="flatMinSquareColumn" prefWidth="55.023193359375" text="Мин. площадь"/>
+                    <TableColumn fx:id="flatMaxSquareColumn" prefWidth="42.04132080078125" text="Макс. площадь"/>
+                    <TableColumn fx:id="flatMinNumberOfRoomsColumn" prefWidth="102.18316650390625"
+                                 text="Мин. кол-во комнат"/>
+                    <TableColumn fx:id="flatMaxNumberOfRoomsColumn" prefWidth="71.35296630859375"
+                                 text="Макс. кол-во комнат"/>
+                    <TableColumn fx:id="flatMinFloorColumn" prefWidth="71.35296630859375" text="Мин. этаж"/>
+                    <TableColumn fx:id="flatMaxFloorColumn" prefWidth="71.35296630859375" text="Макс. этаж"/>
+                </columns>
+            </TableView>
+            <VBox layoutX="620.0" prefHeight="365.0" prefWidth="220.0" spacing="13.0" AnchorPane.bottomAnchor="10.0"
+                  AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="10.0">
+                <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="USER" size="18">
+                        <HBox.margin>
+                            <Insets right="5.0"/>
+                        </HBox.margin>
+                    </FontAwesomeIconView>
+                    <ComboBox fx:id="flatClientComboBox" prefHeight="30.0" prefWidth="290.0"
+                              promptText="Выберите клиента"/>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="USER" size="18">
+                        <HBox.margin>
+                            <Insets right="5.0"/>
+                        </HBox.margin>
+                    </FontAwesomeIconView>
+                    <ComboBox fx:id="flatRealtorComboBox" prefHeight="30.0" prefWidth="290.0"
+                              promptText="Выберите риэлтора"/>
+                </HBox>
+                <HBox alignment="CENTER" layoutX="646.0" layoutY="220.0" prefHeight="25.0" prefWidth="188.0"
+                      spacing="5.0" AnchorPane.rightAnchor="50.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="flatTextFieldAddress" prefHeight="30.0" prefWidth="235.0" promptText="Адрес">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" layoutX="646.0" layoutY="275.0" prefHeight="25.0" prefWidth="188.0"
+                      spacing="5.0" AnchorPane.rightAnchor="50.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="flatTextFieldMinPrice" prefHeight="30.0" prefWidth="235.0" promptText="Мин. цена">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" layoutX="646.0" layoutY="330.0" prefHeight="25.0" prefWidth="188.0"
+                      spacing="5.0" AnchorPane.rightAnchor="50.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="flatTextFieldMaxPrice" prefHeight="30.0" prefWidth="235.0"
+                               promptText="Макс. цена">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="flatTextFieldMinSquare" prefHeight="30.0" prefWidth="235.0"
+                               promptText="Мин. площадь">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="flatTextFieldMaxSquare" prefHeight="30.0" prefWidth="235.0"
+                               promptText="Макс. площадь">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="flatTextFieldMinNumberOfRooms" prefHeight="30.0" prefWidth="235.0"
+                               promptText="Мин. кол-во комнат">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="flatTextFieldMaxNumberOfRooms" prefHeight="30.0" prefWidth="235.0"
+                               promptText="Макс. кол-во комнат">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="flatTextFieldMinFloor" prefHeight="30.0" prefWidth="235.0" promptText="Мин. этаж">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
+                    <TextField fx:id="flatTextFieldMaxFloor" prefHeight="30.0" prefWidth="235.0"
+                               promptText="Макс. этаж">
+                        <font>
+                            <Font name="Segoe UI" size="13.0"/>
+                        </font>
+                    </TextField>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="28.0" prefWidth="260.0" spacing="20.0">
+                    <Button id="createBtn" fx:id="createFlatDemandButton" mnemonicParsing="false"
+                            onAction="#createFlatDemand" prefHeight="30.0" prefWidth="120.0" text="Создать">
+                        <cursor>
+                            <Cursor fx:constant="HAND"/>
+                        </cursor>
+                        <graphic>
+                            <FontAwesomeIconView fill="#2d75e8" glyphName="PLUS" size="1.5em"/>
+                        </graphic>
+                    </Button>
+                    <Button id="updateBtn" fx:id="updateFlatDemandButton" mnemonicParsing="false"
+                            onAction="#updateFlatDemand" prefHeight="30.0" prefWidth="120.0" text="Обновить">
+                        <cursor>
+                            <Cursor fx:constant="HAND"/>
+                        </cursor>
+                        <graphic>
+                            <FontAwesomeIconView fill="#2d75e8" glyphName="REFRESH" size="1.5em"/>
+                        </graphic>
+                    </Button>
+                </HBox>
+                <Button id="deleteBtn" fx:id="deleteFlatDemandButton" mnemonicParsing="false"
+                        onAction="#deleteFlatDemand" prefHeight="28.0" prefWidth="260.0" text="Удалить">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                    <graphic>
+                        <FontAwesomeIconView fill="#2d75e8" glyphName="REMOVE" size="1.5em"/>
+                    </graphic>
+                </Button>
+            </VBox>
+        </AnchorPane>
+    </StackPane>
+</AnchorPane>
