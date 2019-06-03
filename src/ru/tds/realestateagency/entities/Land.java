@@ -93,7 +93,7 @@ public class Land {
     @Override
     public String toString() {
 
-        StringBuilder landStringBuilder = new StringBuilder();
+        final StringBuilder landStringBuilder = new StringBuilder();
 
         if (city != null) {
             landStringBuilder.append("Город=").append(city).append(", ");
