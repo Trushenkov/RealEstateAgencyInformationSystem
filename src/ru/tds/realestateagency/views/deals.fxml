@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="700.0" prefWidth="1200.0" stylesheets="@../css/fullpackstyling.css"
+            xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ru.tds.realestateagency.controllers.DealsController">
+    <AnchorPane id="topPane" prefHeight="140.0" prefWidth="1000.0" style="-fx-background-color: #2D75E8"
+                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <FontAwesomeIconView fill="WHITE" glyphName="EXCHANGE" layoutX="50.0" layoutY="105.0" size="80"/>
+        <Label layoutX="145.0" layoutY="95.0" text="Главная &gt; Сделки" textFill="WHITE">
+            <font>
+                <Font size="13.0"/>
+            </font>
+        </Label>
+        <Label layoutX="142.0" layoutY="25.0" text="Сделки" textFill="WHITE">
+            <font>
+                <Font size="48.0"/>
+            </font>
+        </Label>
+    </AnchorPane>
+    <TableView fx:id="tableDeals" fixedCellSize="0.0" layoutX="14.0" layoutY="152.0" prefHeight="300.0"
+               prefWidth="829.0" AnchorPane.bottomAnchor="259.0" AnchorPane.leftAnchor="15.0"
+               AnchorPane.rightAnchor="356.0" AnchorPane.topAnchor="152.0">
+        <columns>
+            <TableColumn fx:id="demandTableColumn" prefWidth="173.0" text="Потребность"/>
+            <TableColumn fx:id="offerTableColumn" prefWidth="122.0" text="Предложение"/>
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+    </TableView>
+    <Button alignment="CENTER" layoutX="14.0" layoutY="563.0" mnemonicParsing="false" onAction="#goHomeScreen"
+            prefHeight="30.0" prefWidth="105.0" text="Назад" AnchorPane.bottomAnchor="10.0"
+            AnchorPane.leftAnchor="15.0">
+        <cursor>
+            <Cursor fx:constant="HAND"/>
+        </cursor>
+        <graphic>
+            <FontAwesomeIconView fill="#2d75e8" glyphName="CHEVRON_LEFT" size="1.3em"/>
+        </graphic>
+    </Button>
+    <VBox layoutX="781.0" layoutY="152.0" prefHeight="200.0" prefWidth="322.0" spacing="20.0"
+          AnchorPane.bottomAnchor="357.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="152.0">
+        <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+            <FontAwesomeIconView fill="#2d75e8" glyphName="LIST" size="18">
+                <HBox.margin>
+                    <Insets right="5.0"/>
+                </HBox.margin>
+            </FontAwesomeIconView>
+            <ComboBox fx:id="demandComboBox" prefHeight="30.0" prefWidth="290.0" promptText="Выберите потребность"/>
+        </HBox>
+        <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
+            <FontAwesomeIconView fill="#2d75e8" glyphName="SHARE_SQUARE_ALT" size="18">
+                <HBox.margin>
+                    <Insets right="5.0"/>
+                </HBox.margin>
+            </FontAwesomeIconView>
+            <ComboBox fx:id="offerComboBox" prefHeight="30.0" prefWidth="290.0" promptText="Выберите предложение"/>
+        </HBox>
+        <HBox alignment="CENTER" prefHeight="30.0" prefWidth="275.0" spacing="20.0">
+            <Button id="createBtn" fx:id="createDealButton" mnemonicParsing="false" onAction="#createDeal"
+                    prefHeight="31.0" prefWidth="170.0" text="Создать">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+                <graphic>
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="PLUS" size="1.3em"/>
+                </graphic>
+            </Button>
+            <Button id="updateBtn" fx:id="updateDealButton" mnemonicParsing="false" onAction="#updateDeal"
+                    prefHeight="31.0" prefWidth="170.0" text="Обновить">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+                <graphic>
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="REFRESH" size="1.3em"/>
+                </graphic>
+            </Button>
+            <VBox.margin>
+                <Insets/>
+            </VBox.margin>
+        </HBox>
+        <Button id="deleteBtn" fx:id="deleteDealButton" mnemonicParsing="false" onAction="#deleteDeal" prefHeight="31.0"
+                prefWidth="743.0" text="Удалить">
+            <cursor>
+                <Cursor fx:constant="HAND"/>
+            </cursor>
+            <graphic>
+                <FontAwesomeIconView fill="#2d75e8" glyphName="REMOVE" size="1.5em"/>
+            </graphic>
+        </Button>
+    </VBox>
+    <VBox layoutX="14.0" layoutY="447.0" prefHeight="200.0" prefWidth="829.0" AnchorPane.bottomAnchor="53.0"
+          AnchorPane.leftAnchor="14.0">
+        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+            <Label fx:id="costOfServiceForClientSellerLabel" text="Стоимость услуг для клиента-продавца: ">
+                <font>
+                    <Font name="System Bold" size="18.0"/>
+                </font>
+            </Label>
+            <Label fx:id="costOfServiceForClientSeller">
+                <font>
+                    <Font size="18.0"/>
+                </font>
+            </Label>
+        </HBox>
+        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+            <Label fx:id="costOfServiceForClientBuyerLabel" contentDisplay="CENTER"
+                   text="Стоимость услуг для клиента-покупателя: ">
+                <font>
+                    <Font name="System Bold" size="18.0"/>
+                </font>
+            </Label>
+            <Label fx:id="costOfServiceForClientBuyer">
+                <font>
+                    <Font size="18.0"/>
+                </font>
+            </Label>
+        </HBox>
+        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+            <Label fx:id="amountOfDeductionRealtorClientSellerLabel" contentDisplay="CENTER"
+                   text="Размер отчислений риэлтору клиента-продавца:">
+                <font>
+                    <Font name="System Bold" size="18.0"/>
+                </font>
+            </Label>
+            <Label fx:id="amountOfDeductionRealtorClientSeller">
+                <font>
+                    <Font size="18.0"/>
+                </font>
+            </Label>
+        </HBox>
+        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+            <Label fx:id="amountOfDeductionRealtorClientBuyerLabel" contentDisplay="CENTER"
+                   text="Размер отчислений риэлтору клиента-покупателя:">
+                <font>
+                    <Font name="System Bold" size="18.0"/>
+                </font>
+            </Label>
+            <Label fx:id="amountOfDeductionRealtorClientBuyer">
+                <font>
+                    <Font size="18.0"/>
+                </font>
+            </Label>
+        </HBox>
+        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+            <Label fx:id="amountOfDeductionCompanyLabel" contentDisplay="CENTER" text="Размер отчислений компании:">
+                <font>
+                    <Font name="System Bold" size="18.0"/>
+                </font>
+            </Label>
+            <Label fx:id="amountOfDeductionCompany">
+                <font>
+                    <Font size="18.0"/>
+                </font>
+            </Label>
+        </HBox>
+    </VBox>
+
+</AnchorPane>
