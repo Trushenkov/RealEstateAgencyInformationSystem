@@ -2,7 +2,10 @@
 /*.button {*/
 /*    -fx-background-color: #F3F3F3;*/
 /*}*/
-
+#mainScreenButton {
+    -fx-font-size: 20px;
+    -fx-text-fill: #6c6d6d;
+}
 .button:hover, #createBtn:hover, #updateBtn:hover, #deleteBtn:hover, #goBackBtn:hover {
     -fx-background-color: #A1C1F4;
 }
