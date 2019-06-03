@@ -57,7 +57,7 @@ public class Realtor {
     @Override
     public String toString() {
 
-        StringBuilder realtorStringBuilder = new StringBuilder();
+        final StringBuilder realtorStringBuilder = new StringBuilder();
 
         if (lastName != null) {
             realtorStringBuilder.append(lastName).append(" ");
