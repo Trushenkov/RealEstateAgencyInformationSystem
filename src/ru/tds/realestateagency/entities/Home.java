@@ -114,7 +114,7 @@ public class Home {
 
     @Override
     public String toString() {
-        StringBuilder homeStringBuilder = new StringBuilder();
+        final StringBuilder homeStringBuilder = new StringBuilder();
         if (city != null) {
             homeStringBuilder.append("Город=").append(city).append(", ");
         }
