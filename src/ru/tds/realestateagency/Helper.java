@@ -5,10 +5,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Класс, содержащий вспомогательные методы
@@ -56,22 +63,26 @@ public class Helper {
     /**
      * Метод для перехода на новый экран
      *
-     * @param pathToFxml путь до файла разметки нового окна
+     * @param path путь до файла разметки нового окна
      */
-    public static void openNewScreen(String pathToFxml) {
+    public static void openNewScreen(String path) {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Helper.class.getResource(pathToFxml));
+        loader.setLocation(Helper.class.getResource(path));
         try {
             loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
         Parent root = loader.getRoot();
-        Scene scene = new Scene(root, 1100, 600);
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add("ru/tds/realestateagency/css/fullpackstyling.css");
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.setTitle("Информационная система для агентства недвижимости");
-        stage.getScene().getStylesheets().add("ru/tds/realestateagency/css/fullpackstyling.css");
+        stage.setFullScreen(true);
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(KeyCombination.keyCombination("ALT + F4"));
+
         stage.show();
     }
 
