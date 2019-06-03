@@ -23,6 +23,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.function.Predicate;
 
 /**
@@ -40,6 +41,9 @@ public class ClientsController {
     private static final String CLIENT_PHONE_NUMBER = "phoneNumber";
     private static final String CLIENT_EMAIL = "email";
     private static final String CLIENT_ID = "id";
+    private static final String PATH_TO_HOME_SCREEN = "/ru/tds/realestateagency/views/main.fxml";
+    private static final String OFFERS_TABLE = "offers";
+    private static final String DEMANDS_TABLE = "demands";
 
 
     //Элементы разметки интерфейса
@@ -48,7 +52,7 @@ public class ClientsController {
     @FXML
     private Label numberOfClientsLabel;
     @FXML
-    private Label clientsWithNeedsLabel;
+    private Label clientsWithDemandsLabel;
     @FXML
     private Label clientsWithOffersLabel;
     @FXML
@@ -85,7 +89,6 @@ public class ClientsController {
     private ArrayList<Integer> idClientsFromDatabase;//список ID клиентов
     private int idSelectedClient;//ID выбранного клиента
     private ObservableList<Client> listClients;//список клиентов
-    private int countClientsOnTableOffer; //количество клиентов, связанных с предложением
 
     @FXML
     void initialize() {
@@ -115,17 +118,25 @@ public class ClientsController {
         tableColumnPhoneNumber.setSortable(false);
         tableColumnEmail.setSortable(false);
 
-        clientsWithOffersLabel.setText(String.valueOf(getCountClientWithOffer()));
-
-        listClients = createListClients(getDataFromDb());
-
+        listClients = createListClients(getDataFromDb(CLIENT_TABLE));
         listClients.addListener((ListChangeListener<Client>) c -> {
             updateTableContent();
             numberOfClientsLabel.setText(String.valueOf(listClients.size()));
         });
 
-        //подсказки при наведении на поля в таблице
-        createTableTooltip();
+        //список фамилий клиентов из таблицы "Предложения"
+        ArrayList<String> listOfClientWithOffers = createListOfClients(getDataFromDb(OFFERS_TABLE));
+        //массив, содержащий уникальные значения фамилий клиентов из таблицы предложений
+        HashSet<String> clientsWithOffersArray = new HashSet<>(listOfClientWithOffers);
+        //установка значения для метки "Количество клиентов, связанных с предложением"
+        clientsWithOffersLabel.setText(String.valueOf(clientsWithOffersArray.size()));
+
+        //список фамилий клиентов из таблицы "Потребности"
+        ArrayList<String> listOfClientWithDemands = createListOfClients(getDataFromDb(DEMANDS_TABLE));
+        //массив, содержащий уникальные значения фамилий клиентов из таблицы потребностей
+        HashSet<String> clientsWithDemandsArray = new HashSet<>(listOfClientWithDemands);
+        //установка значения для метки "Количество клиентов, связанных с потребностью"
+        clientsWithDemandsLabel.setText(String.valueOf(clientsWithDemandsArray.size()));
 
         //заполняем таблицу данным из БД
         tableClients.setItems(listClients);
@@ -220,84 +231,47 @@ public class ClientsController {
     }
 
     /**
-     * Метод для получения количества строк в таблице 'offers'.
+     * Метод для формирования ArrayList с фамилиями клиентов из набора данных
      *
-     * @return количество строк в таблице 'offers'. Соответственно, оно равно количеству клиентов, связанных с предложением.
+     * @param resultSet набор данных из таблицы
+     * @return ArrayList с фамилиями клиентов
      */
-    private int getCountClientWithOffer() {
-        //SQL запрос на выбор количества строк в таблице 'offers'
-        String selectClients = "SELECT COUNT(*) FROM offers";
-
-        ResultSet resultSet = null;
+    private ArrayList<String> createListOfClients(ResultSet resultSet) {
+        ArrayList<String> list = new ArrayList<>();
         try {
-            PreparedStatement ps = new DatabaseHandler().createDbConnection().prepareStatement(selectClients);
-            //выполняем запрос и сохраняем полученные значения в resultSet
-            resultSet = ps.executeQuery();
+            while (resultSet.next()) {
+                //добавляем предложение в список
+                list.add(resultSet.getString("client"));
+            }
         } catch (SQLException e) {
             //открываем диалоговое окно для уведомления об ошибке
             showAlert(
-                    "Ошибка получения данных из таблицы клиентов",
-                    "Данные не получены из базы. Проверьте подключение к базе!",
-                    AlertType.ERROR);
+                    "Ошибка формирования коллекции с фамилиями клиентов",
+                    "Возникла ошибка при формировании списка фамилий клиентов из набора данных, полученных из базы",
+                    Alert.AlertType.ERROR);
         }
-
-        try {
-            assert resultSet != null;
-            while (resultSet.next()) {
-                countClientsOnTableOffer = resultSet.getInt(1);
-            }
-        } catch (NullPointerException | SQLException exception) {
-            exception.printStackTrace();
-            System.out.println("ResultSet is null");
-        }
-        return countClientsOnTableOffer;
-    }
-
-    /**
-     * Метод для создания всплывающих подсказок при наведении на соответствующие поля таблицы
-     */
-    private void createTableTooltip() {
-        //Названия полей в таблице
-        Label lastNameLabel = new Label("Фамилия");
-        Label firstNameLabel = new Label("Имя");
-        Label middleNameLabel = new Label("Отчество");
-        Label numberPhoneLabel = new Label("Номер телефона");
-        Label emailLabel = new Label("Электронная почта");
-
-        //Подсказки при наведении
-        lastNameLabel.setTooltip(new Tooltip(lastNameLabel.getText()));
-        firstNameLabel.setTooltip(new Tooltip(firstNameLabel.getText()));
-        middleNameLabel.setTooltip(new Tooltip(middleNameLabel.getText()));
-        numberPhoneLabel.setTooltip(new Tooltip(numberPhoneLabel.getText()));
-        emailLabel.setTooltip(new Tooltip(emailLabel.getText()));
-
-        //установка подсказок на соответствующие поля таблицы
-        tableColumnLastName.setGraphic(lastNameLabel);
-        tableColumnFirstName.setGraphic(firstNameLabel);
-        tableColumnMiddleName.setGraphic(middleNameLabel);
-        tableColumnPhoneNumber.setGraphic(numberPhoneLabel);
-        tableColumnEmail.setGraphic(emailLabel);
+        return list;
     }
 
     /**
      * Метод для заполнения таблицы данными из базы
      */
     private void updateTableContent() {
-        tableClients.setItems(createListClients(getDataFromDb()));
+        tableClients.setItems(createListClients(getDataFromDb(CLIENT_TABLE)));
     }
 
     /**
      * Метод для предоставления возможности поиска клиента по ФИО
      */
     private void findClientByFullName() {
-        FilteredList<Client> filteredList = new FilteredList<>(createListClients(getDataFromDb()));
+        FilteredList<Client> filteredList = new FilteredList<>(createListClients(getDataFromDb(CLIENT_TABLE)));
         tfSearch.textProperty().addListener((observable, oldValue, newValue) ->
                 filteredList.setPredicate((Predicate<? super Client>) client -> {
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
                     }
 
-                    ObservableList<Client> list = createListClients(getDataFromDb());
+                    ObservableList<Client> list = createListClients(getDataFromDb(CLIENT_TABLE));
 
                     for (int i = 0; i < list.size(); i++) {
                         if (Helper.levenstain(newValue.toLowerCase(), client.getLastName().toLowerCase()) <= 3) {
@@ -529,7 +503,7 @@ public class ClientsController {
     public void goHomeScreen(ActionEvent actionEvent) {
         ((Node) actionEvent.getSource()).getScene().getWindow().hide();
         //переход на главный экран
-        Helper.openNewScreen("/ru/tds/realestateagency/views/main.fxml");
+        Helper.openNewScreen(PATH_TO_HOME_SCREEN);
     }
 
     /**
@@ -537,9 +511,9 @@ public class ClientsController {
      *
      * @return ResultSet - набор данных из таблицы
      */
-    private ResultSet getDataFromDb() {
+    private ResultSet getDataFromDb(String tableName) {
         //SQL запрос на выбор всех данных из таблицы `clients`
-        String selectClients = String.format("SELECT * FROM %s", ClientsController.CLIENT_TABLE);
+        String selectClients = String.format("SELECT * FROM %s", tableName);
 
         ResultSet resultSet = null;
         try {
@@ -549,7 +523,7 @@ public class ClientsController {
         } catch (SQLException e) {
             //открываем диалоговое окно для уведомления об ошибке
             showAlert(
-                    "Ошибка получения данных из таблицы клиентов",
+                    "Ошибка получения данных из таблицы " + tableName,
                     "Данные не получены из базы. Проверьте подключение к базе!",
                     AlertType.ERROR);
         }
