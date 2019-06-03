@@ -15,8 +15,8 @@ public class Demand {
     private int maxPrice;
     private int minSquare;
     private int maxSquare;
-    private int minCountRooms;
-    private int maxCountRooms;
+    private int minNumberOfRooms;
+    private int maxNumberOfRooms;
     private int minFloor;
     private int maxFloor;
     private int minNumberOfFloors;
@@ -89,20 +89,20 @@ public class Demand {
         this.maxSquare = maxSquare;
     }
 
-    public int getMinCountRooms() {
-        return minCountRooms;
+    public int getMinNumberOfRooms() {
+        return minNumberOfRooms;
     }
 
-    public void setMinCountRooms(int minCountRooms) {
-        this.minCountRooms = minCountRooms;
+    public void setMinNumberOfRooms(int minNumberOfRooms) {
+        this.minNumberOfRooms = minNumberOfRooms;
     }
 
-    public int getMaxCountRooms() {
-        return maxCountRooms;
+    public int getMaxNumberOfRooms() {
+        return maxNumberOfRooms;
     }
 
-    public void setMaxCountRooms(int maxCountRooms) {
-        this.maxCountRooms = maxCountRooms;
+    public void setMaxNumberOfRooms(int maxNumberOfRooms) {
+        this.maxNumberOfRooms = maxNumberOfRooms;
     }
 
     public int getMinFloor() {
@@ -139,7 +139,8 @@ public class Demand {
 
     @Override
     public String toString() {
-        final StringBuilder demandStringBuilder = new StringBuilder("Потребность [");
+        final StringBuilder demandStringBuilder = new StringBuilder();
+
         if (client != null) {
             demandStringBuilder.append("Клиент:").append(client);
         }
@@ -164,11 +165,11 @@ public class Demand {
         if (maxSquare != 0) {
             demandStringBuilder.append(", Макс. площадь:").append(maxSquare);
         }
-        if (minCountRooms != 0) {
-            demandStringBuilder.append(", Мин. кол-во комнат:").append(minCountRooms);
+        if (minNumberOfRooms != 0) {
+            demandStringBuilder.append(", Мин. кол-во комнат:").append(minNumberOfRooms);
         }
-        if (maxCountRooms != 0) {
-            demandStringBuilder.append(", Макс. кол-во комнат:").append(maxCountRooms);
+        if (maxNumberOfRooms != 0) {
+            demandStringBuilder.append(", Макс. кол-во комнат:").append(maxNumberOfRooms);
         }
         if (minFloor != 0) {
             demandStringBuilder.append(", Мин. этаж:").append(minFloor);
@@ -182,7 +183,6 @@ public class Demand {
         if (maxNumberOfFloors != 0) {
             demandStringBuilder.append(", Макс. этажность дома:").append(maxNumberOfFloors);
         }
-        demandStringBuilder.append(']');
 
         return demandStringBuilder.toString();
     }
