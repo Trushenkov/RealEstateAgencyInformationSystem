@@ -67,7 +67,7 @@ public class Client {
     @Override
     public String toString() {
 
-        StringBuilder clientStringBuilder = new StringBuilder();
+        final StringBuilder clientStringBuilder = new StringBuilder();
 
         if (lastName != null) {
             clientStringBuilder.append(lastName).append(" ");
