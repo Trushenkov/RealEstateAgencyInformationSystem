@@ -42,7 +42,7 @@ CREATE TABLE `demands` (
   KEY `client_index_idx` (`client`),
   KEY `realtor_index_idx` (`realtor`),
   CONSTRAINT `client_index` FOREIGN KEY (`client`) REFERENCES `clients` (`lastName`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `realtor_index` FOREIGN KEY (`realtor`) REFERENCES `realtors` (`lastName`)
+  CONSTRAINT `realtor_index` FOREIGN KEY (`realtor`) REFERENCES `realtors` (`lastName`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -65,4 +65,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-03 19:10:03
+-- Dump completed on 2019-06-03 19:14:43
