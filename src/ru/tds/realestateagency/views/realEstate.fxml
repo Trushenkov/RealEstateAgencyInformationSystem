@@ -18,7 +18,7 @@
 <?import ru.tds.realestateagency.textfields.DoubleTextField?>
 <?import ru.tds.realestateagency.textfields.IntegerTextField?>
 <AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="600.0" prefWidth="1100.0" stylesheets="@../css/fullpackstyling.css"
+            prefHeight="700.0" prefWidth="1200.0" stylesheets="@../css/fullpackstyling.css"
             xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ru.tds.realestateagency.controllers.RealEstateController">
     <AnchorPane id="topPane" prefHeight="140.0" prefWidth="1000.0" style="-fx-background-color: #2D75E8"
@@ -218,7 +218,7 @@
                             <Cursor fx:constant="HAND"/>
                         </cursor>
                         <graphic>
-                            <FontAwesomeIconView fill="#2d75e8" glyphName="USER_PLUS" size="1.3em"/>
+                            <FontAwesomeIconView fill="#2d75e8" glyphName="PLUS" size="1.3em"/>
                         </graphic>
                     </Button>
                     <Button id="updateBtn" fx:id="updateFlatButton" mnemonicParsing="false" onAction="#updateFlat"
@@ -237,7 +237,7 @@
                         <Cursor fx:constant="HAND"/>
                     </cursor>
                     <graphic>
-                        <FontAwesomeIconView fill="#2d75e8" glyphName="USER_TIMES" size="1.5em"/>
+                        <FontAwesomeIconView fill="#2d75e8" glyphName="REMOVE" size="1.5em"/>
                     </graphic>
                 </Button>
             </VBox>
@@ -357,7 +357,7 @@
                             <Cursor fx:constant="HAND"/>
                         </cursor>
                         <graphic>
-                            <FontAwesomeIconView fill="#2d75e8" glyphName="USER_PLUS" size="1.3em"/>
+                            <FontAwesomeIconView fill="#2d75e8" glyphName="PLUS" size="1.3em"/>
                         </graphic>
                     </Button>
                     <Button id="updateBtn" fx:id="updateHomeButton" mnemonicParsing="false" onAction="#updateHome"
@@ -376,7 +376,7 @@
                         <Cursor fx:constant="HAND"/>
                     </cursor>
                     <graphic>
-                        <FontAwesomeIconView fill="#2d75e8" glyphName="USER_TIMES" size="1.5em"/>
+                        <FontAwesomeIconView fill="#2d75e8" glyphName="REMOVE" size="1.5em"/>
                     </graphic>
                 </Button>
             </VBox>
@@ -459,7 +459,7 @@
                     </DoubleTextField>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
-                    <FontAwesomeIconView fill="#2d75e8" glyphName="MAP_MARKER" size="1.3em"/>
+                    <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
                     <DoubleTextField fx:id="landTextFieldSquare" prefHeight="30.0" prefWidth="235.0"
                                      promptText="Площадь">
                         <font>
@@ -474,7 +474,7 @@
                             <Cursor fx:constant="HAND"/>
                         </cursor>
                         <graphic>
-                            <FontAwesomeIconView fill="#2d75e8" glyphName="USER_PLUS" size="1.3em"/>
+                            <FontAwesomeIconView fill="#2d75e8" glyphName="PLUS" size="1.3em"/>
                         </graphic>
                     </Button>
                     <Button id="updateBtn" fx:id="updateLandButton" mnemonicParsing="false" onAction="#updateLand"
@@ -493,7 +493,7 @@
                         <Cursor fx:constant="HAND"/>
                     </cursor>
                     <graphic>
-                        <FontAwesomeIconView fill="#2d75e8" glyphName="USER_TIMES" size="1.5em"/>
+                        <FontAwesomeIconView fill="#2d75e8" glyphName="REMOVE" size="1.5em"/>
                     </graphic>
                 </Button>
             </VBox>
