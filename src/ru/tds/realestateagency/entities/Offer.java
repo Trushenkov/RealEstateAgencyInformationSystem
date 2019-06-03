@@ -57,27 +57,21 @@ public class Offer {
     @Override
     public String toString() {
 
-        StringBuilder offerStringBuilder = new StringBuilder();
+        final StringBuilder offerStringBuilder = new StringBuilder();
 
         if (client != null) {
-            offerStringBuilder.append("Клиент=").append(client).append(", ");
+            offerStringBuilder.append("Клиент:").append(client).append(", ");
         }
         if (realtor != null) {
-            offerStringBuilder.append("Риэлтор=").append(realtor).append(", ");
+            offerStringBuilder.append("Риэлтор:").append(realtor).append(", ");
         }
         if (realEstate != null) {
-            offerStringBuilder.append("Объект недвижимости=").append(realEstate).append(", ");
+            offerStringBuilder.append("Объект недвижимости:").append(realEstate).append(", ");
         }
         if (price != 0) {
-            offerStringBuilder.append("Цена=").append(price).append(", ");
+            offerStringBuilder.append("Цена:").append(price);
         }
 
         return offerStringBuilder.toString();
-//        return "Предложение {" +
-//                "client=" + client +
-//                ", realtor=" + realtor +
-//                ", realEstate=" + realEstate +
-//                ", price=" + price +
-//                '}';
     }
 }
