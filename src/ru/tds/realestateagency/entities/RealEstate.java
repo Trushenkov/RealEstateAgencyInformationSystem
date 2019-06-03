@@ -41,7 +41,7 @@ public class RealEstate {
     @Override
     public String toString() {
 
-        StringBuilder realEstateStringBuilder = new StringBuilder();
+        final StringBuilder realEstateStringBuilder = new StringBuilder();
 
         if (home != null) {
             realEstateStringBuilder.append("Дом [").append(home).append("]");
