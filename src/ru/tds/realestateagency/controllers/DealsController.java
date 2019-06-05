@@ -15,11 +15,14 @@ import ru.tds.realestateagency.DatabaseHandler;
 import ru.tds.realestateagency.Helper;
 import ru.tds.realestateagency.entities.*;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import static de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon.ROUBLE;
 
 /**
  * Класс-контроллер для обработки событий на экране "Сделки"
@@ -65,8 +68,6 @@ public class DealsController {
     private static final String DEALS_ID_COLUMN = "id";
     private static final String DEALS_DEMAND_COLUMN = "demand";
     private static final String DEALS_OFFER_COLUMN = "offer";
-    private static final String ROUBLE = URLDecoder.decode("%E2%82%BD");
-
 
     @FXML
     public Label costOfServiceForClientSellerLabel;
@@ -328,11 +329,15 @@ public class DealsController {
                 //проверка на то, что
 
 
-                costOfServiceForClientSeller.setText(String.format("%.2f", sumClientSeller) + " " + ROUBLE);
-                costOfServiceForClientBuyer.setText(String.format("%.2f", sumClientBuyer) + " " + ROUBLE);
-                amountOfDeductionRealtorClientSeller.setText(String.format("%.2f", sumRealtorSeller) + " " + ROUBLE);
-                amountOfDeductionRealtorClientBuyer.setText(String.format("%.2f", sumRealtorBuyer) + " " + ROUBLE);
-                amountOfDeductionCompany.setText(String.format("%.2f", sumCompany) + " " + ROUBLE);
+                try {
+                    costOfServiceForClientSeller.setText(String.format("%.2f", sumClientSeller) + " " + URLDecoder.decode("%E2%82%BD", "UTF-8"));
+                    costOfServiceForClientBuyer.setText(String.format("%.2f", sumClientBuyer) + " " + URLDecoder.decode("%E2%82%BD", "UTF-8"));
+                    amountOfDeductionRealtorClientSeller.setText(String.format("%.2f", sumRealtorSeller) + " " + URLDecoder.decode("%E2%82%BD", "UTF-8"));
+                    amountOfDeductionRealtorClientBuyer.setText(String.format("%.2f", sumRealtorBuyer) + " " + URLDecoder.decode("%E2%82%BD", "UTF-8"));
+                    amountOfDeductionCompany.setText(String.format("%.2f", sumCompany) + " " + URLDecoder.decode("%E2%82%BD", "UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
 
 
                 //Видимость Label = true
