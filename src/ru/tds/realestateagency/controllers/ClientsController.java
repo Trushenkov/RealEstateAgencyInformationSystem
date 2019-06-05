@@ -90,10 +90,6 @@ public class ClientsController {
     private int idSelectedClient;//ID выбранного клиента
     private ObservableList<Client> listClients;//список клиентов
 
-    private HashSet<String> clientsWithOffersArray;
-    private HashSet<String> clientsWithDemandsArray;
-
-
     @FXML
     void initialize() {
 

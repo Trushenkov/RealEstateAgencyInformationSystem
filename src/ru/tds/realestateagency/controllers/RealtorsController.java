@@ -42,7 +42,7 @@ public class RealtorsController {
     private static final String REALTOR_COMMISSION_PART = "commissionPart";
 
     private static final String OFFERS_TABLE = "offers";
-    private static final String DEMANDS_TABLE= "demands";
+    private static final String DEMANDS_TABLE = "demands";
 
     //Элементы разметки интерфейса
     @FXML
@@ -247,29 +247,18 @@ public class RealtorsController {
             realtor.setFirstName(tfFirstName.getText());
             realtor.setMiddleName(tfMiddleName.getText());
 
-            //проверяем не пустое ли поле "Номер телефона"
-//            if (!tfCommissionPart.getText().isEmpty()) {
-                //проверка введенного числа
-                if (Integer.parseInt(tfCommissionPart.getText()) >= 0 && Integer.parseInt(tfCommissionPart.getText()) <= 100) {
-                    //устанавливаем значение для объекта
-                    realtor.setCommissionPart(Integer.parseInt(tfCommissionPart.getText()));
-                } else {
-                    //открываем диалоговое окно для уведомления об ошибке
-                    showAlert(
-                            "Ошибка добавление нового риэлтора",
-                            "Доля от комиссии - числовое поле, может принимать значение от 0 до 100",
-                            AlertType.ERROR);
-                    return;
-                }
-//            }
-//            else {
-//                //открываем диалоговое окно для уведомления об ошибке
-//                showAlert(
-//                        "Ошибка добавление нового риэлтора",
-//                        "Доля от комиссии - числовое поле, может принимать значение от 0 до 100",
-//                        AlertType.ERROR);
-//                return;
-//            }
+            //проверка введенного числа
+            if (Integer.parseInt(tfCommissionPart.getText()) >= 0 && Integer.parseInt(tfCommissionPart.getText()) <= 100) {
+                //устанавливаем значение для объекта
+                realtor.setCommissionPart(Integer.parseInt(tfCommissionPart.getText()));
+            } else {
+                //открываем диалоговое окно для уведомления об ошибке
+                showAlert(
+                        "Ошибка добавление нового риэлтора",
+                        "Доля от комиссии - числовое поле, может принимать значение от 0 до 100",
+                        AlertType.ERROR);
+                return;
+            }
 
             //SQL запрос для добавления нового риэлтора в базу данных
             String insertRealtor = String.format("INSERT INTO %s(%s, %s, %s, %s) VALUES (?,?,?,?);",

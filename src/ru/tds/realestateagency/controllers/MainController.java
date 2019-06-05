@@ -37,7 +37,7 @@ public class MainController {
 
         if (event.getSource().equals(clientsButton)) {
             Helper.openNewScreen("/ru/tds/realestateagency/views/client.fxml");
-        } if (event.getSource().equals(realtorsButton)) {
+        } else if (event.getSource().equals(realtorsButton)) {
             Helper.openNewScreen("/ru/tds/realestateagency/views/realtor.fxml");
         } else if (event.getSource().equals(realEstatesButton)) {
             Helper.openNewScreen("/ru/tds/realestateagency/views/realEstate.fxml");

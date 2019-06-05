@@ -13,7 +13,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import ru.tds.realestateagency.DatabaseHandler;
 import ru.tds.realestateagency.Helper;
-import ru.tds.realestateagency.entities.*;
+import ru.tds.realestateagency.entities.Deal;
+import ru.tds.realestateagency.entities.Demand;
+import ru.tds.realestateagency.entities.Offer;
+import ru.tds.realestateagency.entities.Realtor;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -21,8 +24,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import static de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon.ROUBLE;
 
 /**
  * Класс-контроллер для обработки событий на экране "Сделки"
@@ -111,7 +112,7 @@ public class DealsController {
     private ObservableList<Demand> listOfDemands;//список потребностей
     private ObservableList<Offer> listOfOffers;//список предложений
     private ObservableList<Realtor> listOfRealtors;//список риэлторов
-//    private ObservableList<Client> listOfClients;//список клиентов
+    //    private ObservableList<Client> listOfClients;//список клиентов
     private ArrayList<Integer> idDemandArray;//список id потрбеностей
     private ArrayList<Integer> idOfferArray;//список id предложений
     private ArrayList<Integer> idDealsArray;//список id сделок

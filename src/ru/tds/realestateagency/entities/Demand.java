@@ -144,7 +144,7 @@ public class Demand {
         if (client != null) {
             demandStringBuilder.append("Клиент:").append(client);
         }
-        if (realtor!= null) {
+        if (realtor != null) {
             demandStringBuilder.append(", Риэлтор:").append(realtor);
         }
         if (typeRealEstate != null) {

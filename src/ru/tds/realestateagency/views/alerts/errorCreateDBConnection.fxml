@@ -7,8 +7,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<GridPane hgap="14.0" maxHeight="+Infinity" maxWidth="+Infinity" minHeight="-Infinity" minWidth="-Infinity" vgap="20.0"
-          xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<GridPane xmlns:fx="http://javafx.com/fxml/1" hgap="14.0" maxHeight="+Infinity" maxWidth="+Infinity" minHeight="-Infinity" minWidth="-Infinity"
+          vgap="20.0" xmlns="http://javafx.com/javafx/8"
           fx:controller="ru.tds.realestateagency.controllers.alertControllers.ErrorCreateDBConnectionController">
     <children>
         <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="0"
@@ -46,7 +46,7 @@
                 <Pane maxWidth="+Infinity" HBox.hgrow="ALWAYS"/>
                 <HBox fx:id="okParent" alignment="CENTER">
                     <children>
-                        <Button fx:id="okButton"  minWidth="80.0" mnemonicParsing="false" text="Ok" HBox.hgrow="NEVER">
+                        <Button fx:id="okButton" minWidth="80.0" mnemonicParsing="false" text="Ok" HBox.hgrow="NEVER">
                             <HBox.margin>
                                 <Insets left="14.0"/>
                             </HBox.margin>

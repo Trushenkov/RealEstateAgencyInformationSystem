@@ -42,8 +42,7 @@ public class IntegerTextField extends TextField {
             if (text.matches("[0-9]") || text.isEmpty()) {
                 super.replaceText(start, end, text);
             }
-        }
-        else {
+        } else {
             // Получиаем текст в текстовом поле, прежде чем пользователь введет что-то
             String currentText = this.getText() == null ? "" : this.getText();
 
@@ -57,8 +56,7 @@ public class IntegerTextField extends TextField {
                 if (text.matches("[0-9]") || text.isEmpty()) {
                     super.replaceText(start, end, text);
                 }
-            }
-            else {
+            } else {
                 // В противном случае вырезаем текст, который собирался вставить пользователь
                 String cutInsertedText = text.substring(
                         0,

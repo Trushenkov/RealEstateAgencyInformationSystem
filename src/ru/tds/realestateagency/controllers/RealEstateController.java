@@ -1673,7 +1673,6 @@ public class RealEstateController {
             }
 
 
-
             //SQL запрос для добавления нового объекта недвижимости "Земля"
             String insertLand = String.format("INSERT INTO %s(%s, %s, %s, %s, %s, %s, %s) VALUES (?,?,?,?,?,?,?);",
                     LAND_TABLE,

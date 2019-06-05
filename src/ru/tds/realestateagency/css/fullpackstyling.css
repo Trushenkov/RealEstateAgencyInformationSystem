@@ -6,6 +6,7 @@
     -fx-font-size: 20px;
     -fx-text-fill: #6c6d6d;
 }
+
 .button:hover, #createBtn:hover, #updateBtn:hover, #deleteBtn:hover, #goBackBtn:hover {
     -fx-background-color: #A1C1F4;
 }
@@ -26,15 +27,15 @@
     -fx-font-size: 12px;
 }
 
-#side-button{
-    -fx-background-color:  #2D75E8;
+#side-button {
+    -fx-background-color: #2D75E8;
     -fx-border-color: none;
     -fx-text-fill: #fff;
     -fx-font-size: 14px;
     -fx-font-family: "Segoe UI";
 }
 
-#side-button:focused{
+#side-button:focused {
     -fx-background-color: #0d47a1;
 }
 
