@@ -23,6 +23,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.function.Predicate;
 
 /**
@@ -40,13 +41,16 @@ public class RealtorsController {
     private static final String REALTOR_MIDDLE_NAME = "middleName";
     private static final String REALTOR_COMMISSION_PART = "commissionPart";
 
+    private static final String OFFERS_TABLE = "offers";
+    private static final String DEMANDS_TABLE= "demands";
+
     //Элементы разметки интерфейса
     @FXML
     private AnchorPane mainPane;
     @FXML
     private Label totalRealtorsLabel;
     @FXML
-    private Label realtorsWithNeedsLabel;
+    private Label realtorsWithDemandsLabel;
     @FXML
     private Label realtorsWithOffersLabel;
     @FXML
@@ -106,17 +110,26 @@ public class RealtorsController {
         tableColumnMiddleName.setSortable(false);
         tableColumnCommisionPart.setSortable(false);
 
-        listRealtors = createListRealtors(getRealtorsTableContent());
+        listRealtors = createRealtorsListFromTable(getRealtorsTableContent());
 
         listRealtors.addListener((ListChangeListener<Realtor>) c -> {
             updateTableContent();
             totalRealtorsLabel.setText(String.valueOf(listRealtors.size()));
+
+            //установка значения для метки "Количество риэлторов, связанных с предложением"
+            realtorsWithOffersLabel.setText(String.valueOf(getRealtorsWithOffer().size()));
+            //установка значения для метки "Количество риэлторов, связанных с потребностью
+            realtorsWithDemandsLabel.setText(String.valueOf(getRealtorsWithDemand().size()));
         });
 
         //заполняем таблицу данным из БД
         tableRealtors.setItems(listRealtors);
         //устанавливаем количество риэлторов
         totalRealtorsLabel.setText(String.valueOf(listRealtors.size()));
+        //установка значения для метки "Количество риэлторов, связанных с предложением"
+        realtorsWithOffersLabel.setText(String.valueOf(getRealtorsWithOffer().size()));
+        //установка значения для метки "Количество риэлторов, связанных с потребностью
+        realtorsWithDemandsLabel.setText(String.valueOf(getRealtorsWithDemand().size()));
 
         //Заносим данные выделенного объекта в текстовые поля при клике на объект в таблице
         tableRealtors.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, selectedRealtor) -> {
@@ -196,6 +209,31 @@ public class RealtorsController {
 
 
     /**
+     * Метод для формирования коллекции с фамилиями риэлторов, связанных с потребностью
+     *
+     * @return уникальная коллекция фамилий риэлторов, связанных с потребностью
+     */
+    private HashSet<String> getRealtorsWithDemand() {
+        //список фамилий риэлторов из таблицы "Потребности"
+        ArrayList<String> listOfClientWithDemands = createListOfRealtors(getDataFromDb(DEMANDS_TABLE));
+        //массив, содержащий уникальные значения фамилий риэлторов из таблицы потребностей
+        return new HashSet<>(listOfClientWithDemands);
+    }
+
+    /**
+     * Метод для формирования коллекции с фамилиями риэлторов, связанных с предложением
+     *
+     * @return уникальная коллекция фамилий риэлторов, связанных с предложением
+     */
+    private HashSet<String> getRealtorsWithOffer() {
+        //список фамилий риэлторов из таблицы "Предложения"
+        ArrayList<String> listOfClientWithOffers = createListOfRealtors(getDataFromDb(OFFERS_TABLE));
+        //массив, содержащий уникальные значения фамилий риэлторов из таблицы предложений
+        return new HashSet<>(listOfClientWithOffers);
+    }
+
+
+    /**
      * Метод для добавления нового риэлтора при нажатии на кнопку "Создать"
      */
     public void createRealtor() {
@@ -203,14 +241,14 @@ public class RealtorsController {
         Realtor realtor = new Realtor();
 
         //проверка на то пустые ли поля "Фамилия", "Имя", "Отчество"
-        if (!tfLastName.getText().isEmpty() && !tfFirstName.getText().isEmpty() && !tfMiddleName.getText().isEmpty()) {
+        if (!tfLastName.getText().isEmpty() && !tfFirstName.getText().isEmpty() && !tfMiddleName.getText().isEmpty() && !tfCommissionPart.getText().isEmpty()) {
             //установка значений для объекта
             realtor.setLastName(tfLastName.getText());
             realtor.setFirstName(tfFirstName.getText());
             realtor.setMiddleName(tfMiddleName.getText());
 
             //проверяем не пустое ли поле "Номер телефона"
-            if (!tfCommissionPart.getText().isEmpty()) {
+//            if (!tfCommissionPart.getText().isEmpty()) {
                 //проверка введенного числа
                 if (Integer.parseInt(tfCommissionPart.getText()) >= 0 && Integer.parseInt(tfCommissionPart.getText()) <= 100) {
                     //устанавливаем значение для объекта
@@ -223,14 +261,15 @@ public class RealtorsController {
                             AlertType.ERROR);
                     return;
                 }
-            } else {
-                //открываем диалоговое окно для уведомления об ошибке
-                showAlert(
-                        "Ошибка добавление нового риэлтора",
-                        "Доля от комиссии - числовое поле, может принимать значение от 0 до 100",
-                        AlertType.ERROR);
-                return;
-            }
+//            }
+//            else {
+//                //открываем диалоговое окно для уведомления об ошибке
+//                showAlert(
+//                        "Ошибка добавление нового риэлтора",
+//                        "Доля от комиссии - числовое поле, может принимать значение от 0 до 100",
+//                        AlertType.ERROR);
+//                return;
+//            }
 
             //SQL запрос для добавления нового риэлтора в базу данных
             String insertRealtor = String.format("INSERT INTO %s(%s, %s, %s, %s) VALUES (?,?,?,?);",
@@ -274,7 +313,7 @@ public class RealtorsController {
             //открываем диалоговое окно для уведомления об ошибке
             showAlert(
                     "Ошибка добавления нового риэлтора",
-                    "Поля: фамилия, имя, отчество обязательны к заполнению.",
+                    "Все поля являются обязательными для заполнения.",
                     AlertType.ERROR);
         }
     }
@@ -293,17 +332,7 @@ public class RealtorsController {
                 REALTOR_COMMISSION_PART,
                 REALTOR_ID);
 
-        if (!tfLastName.getText().isEmpty() && !tfFirstName.getText().isEmpty() && !tfMiddleName.getText().isEmpty()) {
-
-            if (tfCommissionPart.getText().isEmpty()) {
-                //открываем диалоговое окно для уведомления об ошибке
-                showAlert(
-                        "Ошибка обновления риэлтора",
-                        "Доля от комиссии - обязательно числовое поле, которое может принимать значение от 0 до 100",
-                        AlertType.ERROR);
-                return;
-            }
-
+        if (!tfLastName.getText().isEmpty() && !tfFirstName.getText().isEmpty() && !tfMiddleName.getText().isEmpty() && !tfCommissionPart.getText().isEmpty()) {
             try {
                 PreparedStatement preparedStatement = new DatabaseHandler().createDbConnection().prepareStatement(updateRealtor);
                 //установка значений для вставки в запрос
@@ -327,7 +356,7 @@ public class RealtorsController {
                 preparedStatement.executeUpdate();
 
                 //обновление таблицы
-                tableRealtors.setItems(createListRealtors(getRealtorsTableContent()));
+                tableRealtors.setItems(createRealtorsListFromTable(getRealtorsTableContent()));
 
                 //открываем диалоговое окно для уведомления об успешном обновлении
                 showAlert(
@@ -351,7 +380,7 @@ public class RealtorsController {
             //открываем диалоговое окно для уведомления об ошибке
             showAlert(
                     "Ошибка обновления риэлтора",
-                    "Поля: фамилия, имя, отчество обязательны к заполнению.",
+                    "Все поля являются обязательными для заполнения.",
                     AlertType.ERROR);
         }
     }
@@ -380,13 +409,11 @@ public class RealtorsController {
             //выполнение запроса на удаление
             preparedStatement.executeUpdate();
 
-
             //открываем диалоговое окно для уведомления об успешном удалении
             showAlert(
                     "Операция успешно выполнена",
                     "Удаление риэлтора выполнено успешно!",
                     AlertType.INFORMATION);
-
 
             //обнуляем текстовые поля после удаления клиента
             clearTextFields();
@@ -448,7 +475,7 @@ public class RealtorsController {
      * @param resultSet Набор данных из таблицы риэлторов
      * @return ObservableList с объектами класса Realtor
      */
-    private ObservableList<Realtor> createListRealtors(ResultSet resultSet) {
+    private ObservableList<Realtor> createRealtorsListFromTable(ResultSet resultSet) {
         ObservableList<Realtor> list = FXCollections.observableArrayList();
         idRealtorsFromDatabase = new ArrayList<>();
         try {
@@ -476,17 +503,40 @@ public class RealtorsController {
     }
 
     /**
+     * Метод для формирования ArrayList с фамилиями риэлторов из набора данных
+     *
+     * @param resultSet набор данных из таблицы
+     * @return ArrayList с фамилиями риэлторов
+     */
+    private ArrayList<String> createListOfRealtors(ResultSet resultSet) {
+        ArrayList<String> list = new ArrayList<>();
+        try {
+            while (resultSet.next()) {
+                //добавляем предложение в список
+                list.add(resultSet.getString("realtor"));
+            }
+        } catch (SQLException e) {
+            //открываем диалоговое окно для уведомления об ошибке
+            showAlert(
+                    "Ошибка формирования коллекции с фамилиями риэлторов",
+                    "Возникла ошибка при формировании списка фамилий риэлторов из набора данных, полученных из базы",
+                    Alert.AlertType.ERROR);
+        }
+        return list;
+    }
+
+    /**
      * Метод для предоставления возможности поиска по ФИО
      */
     private void findByFullName() {
-        FilteredList<Realtor> filteredList = new FilteredList<>(createListRealtors(getRealtorsTableContent()));
+        FilteredList<Realtor> filteredList = new FilteredList<>(createRealtorsListFromTable(getRealtorsTableContent()));
         tfSearch.textProperty().addListener((observable, oldValue, newValue) ->
                 filteredList.setPredicate((Predicate<? super Realtor>) realtor -> {
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
                     }
 
-                    ObservableList<Realtor> list = createListRealtors(getRealtorsTableContent());
+                    ObservableList<Realtor> list = createRealtorsListFromTable(getRealtorsTableContent());
                     for (int i = 0; i < list.size(); i++) {
                         if (Helper.levenstain(newValue.toLowerCase(), realtor.getLastName().toLowerCase()) <= 3) {
                             return true;
@@ -508,10 +558,36 @@ public class RealtorsController {
     }
 
     /**
+     * Метод для получения содержимого таблицы из базы данных
+     *
+     * @return ResultSet - набор данных из таблицы
+     */
+    private ResultSet getDataFromDb(String tableName) {
+        //SQL запрос на выбор всех данных из таблицы `clients`
+        String selectClients = String.format("SELECT * FROM %s", tableName);
+
+        ResultSet resultSet = null;
+        try {
+            PreparedStatement ps = new DatabaseHandler().createDbConnection().prepareStatement(selectClients);
+            //выполняем запрос и сохраняем полученные значения в resultSet
+            resultSet = ps.executeQuery();
+        } catch (SQLException e) {
+            //открываем диалоговое окно для уведомления об ошибке
+            showAlert(
+                    "Ошибка получения данных из таблицы " + tableName,
+                    "Данные не получены из базы. Проверьте подключение к базе!",
+                    AlertType.ERROR);
+        }
+
+        return resultSet;
+    }
+
+
+    /**
      * Метод для заполнения таблицы данными из базы
      */
     private void updateTableContent() {
-        tableRealtors.setItems(createListRealtors(getRealtorsTableContent()));
+        tableRealtors.setItems(createRealtorsListFromTable(getRealtorsTableContent()));
     }
 
     /**

@@ -90,6 +90,10 @@ public class ClientsController {
     private int idSelectedClient;//ID выбранного клиента
     private ObservableList<Client> listClients;//список клиентов
 
+    private HashSet<String> clientsWithOffersArray;
+    private HashSet<String> clientsWithDemandsArray;
+
+
     @FXML
     void initialize() {
 
@@ -122,26 +126,23 @@ public class ClientsController {
         listClients.addListener((ListChangeListener<Client>) c -> {
             updateTableContent();
             numberOfClientsLabel.setText(String.valueOf(listClients.size()));
+
+            //установка значения для метки "Количество клиентов, связанных с предложением"
+            clientsWithOffersLabel.setText(String.valueOf(getClientsWithOffer().size()));
+            //установка значения для метки "Количество клиентов, связанных с потребностью
+            clientsWithDemandsLabel.setText(String.valueOf(getClientsWithDemand().size()));
         });
-
-        //список фамилий клиентов из таблицы "Предложения"
-        ArrayList<String> listOfClientWithOffers = createListOfClients(getDataFromDb(OFFERS_TABLE));
-        //массив, содержащий уникальные значения фамилий клиентов из таблицы предложений
-        HashSet<String> clientsWithOffersArray = new HashSet<>(listOfClientWithOffers);
-        //установка значения для метки "Количество клиентов, связанных с предложением"
-        clientsWithOffersLabel.setText(String.valueOf(clientsWithOffersArray.size()));
-
-        //список фамилий клиентов из таблицы "Потребности"
-        ArrayList<String> listOfClientWithDemands = createListOfClients(getDataFromDb(DEMANDS_TABLE));
-        //массив, содержащий уникальные значения фамилий клиентов из таблицы потребностей
-        HashSet<String> clientsWithDemandsArray = new HashSet<>(listOfClientWithDemands);
-        //установка значения для метки "Количество клиентов, связанных с потребностью"
-        clientsWithDemandsLabel.setText(String.valueOf(clientsWithDemandsArray.size()));
 
         //заполняем таблицу данным из БД
         tableClients.setItems(listClients);
         //считаем и устанавливаем количество клиентов
         numberOfClientsLabel.setText(String.valueOf(listClients.size()));
+
+        //установка значения для метки "Количество клиентов, связанных с предложением"
+        clientsWithOffersLabel.setText(String.valueOf(getClientsWithOffer().size()));
+        //установка значения для метки "Количество клиентов, связанных с потребностью
+        clientsWithDemandsLabel.setText(String.valueOf(getClientsWithDemand().size()));
+
 
         //Заносим данные выделенного объекта в текстовые поля при клике на объект в таблице
         tableClients.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, selectedClient) -> {
@@ -228,6 +229,30 @@ public class ClientsController {
         //Поиск клиента по ФИО
         findClientByFullName();
 
+    }
+
+    /**
+     * Метод для формирования коллекции с фамилиями клиентов, связанных с потребностью
+     *
+     * @return уникальная коллекция фамилий клиентов, связанных с потребностью
+     */
+    private HashSet<String> getClientsWithDemand() {
+        //список фамилий клиентов из таблицы "Потребности"
+        ArrayList<String> listOfClientWithDemands = createListOfClients(getDataFromDb(DEMANDS_TABLE));
+        //массив, содержащий уникальные значения фамилий клиентов из таблицы потребностей
+        return new HashSet<>(listOfClientWithDemands);
+    }
+
+    /**
+     * Метод для формирования коллекции с фамилиями клиентов, связанных с предложением
+     *
+     * @return уникальная коллекция фамилий клиентов, связанных с предложением
+     */
+    private HashSet<String> getClientsWithOffer() {
+        //список фамилий клиентов из таблицы "Предложения"
+        ArrayList<String> listOfClientWithOffers = createListOfClients(getDataFromDb(OFFERS_TABLE));
+        //массив, содержащий уникальные значения фамилий клиентов из таблицы предложений
+        return new HashSet<>(listOfClientWithOffers);
     }
 
     /**
