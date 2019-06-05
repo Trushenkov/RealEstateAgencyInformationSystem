@@ -58,37 +58,37 @@
 
 ## Результаты работы программы
 
-#### Главный экран приложения <br>
+#### Главный экран приложения
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/mainpage.png)
 
-#### Клиенты**<br>
+#### Клиенты
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/clients.png)
 
-#### Риэлторы**<br>
+#### Риэлторы
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/realtors.png)
 
-#### Объекты недвижимости. Дом <br>
+#### Объекты недвижимости. Дом
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/realestate_home.png)
 
-#### Объекты недвижимости. Квартира <br>
+#### Объекты недвижимости. Квартира
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/realestate_flat.png)
 
-#### Объекты недвижимости. Земля <br>
+#### Объекты недвижимости. Земля
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/realestate_land.png)
 
-#### Предложения <br>
+#### Предложения
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/offers.png)
 
-#### Потребности в доме <br>
+#### Потребности в доме
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/demand_home.png)
 
-#### Потребности в квартире <br>
+#### Потребности в квартире
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/demand_flat.png)
 
-#### Потребности в земле <br>
+#### Потребности в земле
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/demand_land.png)
 
-#### Сделки <br>
+#### Сделки
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/deals.png)
 
 #### Выбрана сделка
