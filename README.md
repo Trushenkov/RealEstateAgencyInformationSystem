@@ -7,7 +7,18 @@
 - [Основные понятия](#Основные-понятия)
 - [Основные бизнес процессы компании](#Основные-бизнес-процессы-компании)
 - [Результаты работы программы](#Результаты-работы-программы)
-  - Клиенты(#Клиенты)
+  - [Главный экран](#Главный-экран-приложения)
+  - [Клиенты](#Клиенты)
+  - [Риэлторы](#Риэлторы)
+  - [Объекты недвижимости. Дом](#Объекты-недвижимости.-Дом)
+  - [Объекты недвижимости. Квартира](#Объекты-недвижимости.-Квартира)
+  - [Объекты недвижимости. Земля](#Объекты-недвижимости.-Земля)
+  - [Предложения](#Предложения)
+  - [Потребности в доме](#Потребности-в-доме)
+  - [Потребности в квартире](#Потребности-в-квартире)
+  - [Потребности в земле](#Потребности-в-земле)
+  - [Сделки](#Сделки)
+  - [Выбрана сделка](#Выбрана-сделка)
 
 
 ## Задача
@@ -46,26 +57,40 @@
 4. Система рассчитывает размер комиссии, происходит оплата комиссии и перечисление средств риэлтору клиента-продавца и клиента-покупателя
 
 ## Результаты работы программы
-### Главный экран приложения
+
+**Главный экран приложения**<br>
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/mainpage.png)
-### Клиенты <br>
+
+**Клиенты**<br>
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/clients.png)
+
 **Риэлторы**<br>
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/realtors.png)
+
 **Объекты недвижимости. Дом**<br>
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/realestate_home.png)
+
 **Объекты недвижимости. Квартира**<br>
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/realestate_flat.png)
+
 **Объекты недвижимости. Земля**<br>
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/realestate_land.png)
+
 **Предложения**<br>
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/offers.png)
+
 **Потребности в доме**<br>
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/demand_home.png)
+
 **Потребности в квартире**<br>
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/demand_flat.png)
+
 **Потребности в земле**<br>
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/demand_land.png)
+
 **Сделки**<br>
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/deals.png)
+
+**Выбрана сделка**
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/deals_selected.png)
+
