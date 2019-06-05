@@ -6,6 +6,7 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import ru.tds.realestateagency.textfields.IntegerTextField?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
             minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0"
             stylesheets="@../css/fullpackstyling.css" xmlns="http://javafx.com/javafx/8.0.172-ea"
@@ -145,76 +146,76 @@
                 <HBox alignment="CENTER" layoutX="646.0" layoutY="275.0" prefHeight="25.0" prefWidth="188.0"
                       spacing="5.0" AnchorPane.rightAnchor="50.0">
                     <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
-                    <TextField fx:id="homeTextFieldMinPrice" prefHeight="30.0" prefWidth="235.0" promptText="Мин. цена">
+                    <IntegerTextField fx:id="homeTextFieldMinPrice" prefHeight="30.0" prefWidth="235.0" promptText="Мин. цена">
                         <font>
                             <Font name="Segoe UI" size="13.0"/>
                         </font>
-                    </TextField>
+                    </IntegerTextField>
                 </HBox>
                 <HBox alignment="CENTER" layoutX="646.0" layoutY="330.0" prefHeight="25.0" prefWidth="188.0"
                       spacing="5.0" AnchorPane.rightAnchor="50.0">
                     <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
-                    <TextField fx:id="homeTextFieldMaxPrice" prefHeight="30.0" prefWidth="235.0"
+                    <IntegerTextField fx:id="homeTextFieldMaxPrice" prefHeight="30.0" prefWidth="235.0"
                                promptText="Макс. цена">
                         <font>
                             <Font name="Segoe UI" size="13.0"/>
                         </font>
-                    </TextField>
+                    </IntegerTextField>
                 </HBox>
                 <HBox alignment="CENTER" layoutX="646.0" layoutY="385.0" prefHeight="25.0" prefWidth="188.0"
                       spacing="5.0" AnchorPane.rightAnchor="50.0">
                     <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
-                    <TextField fx:id="homeTextFieldMinSquare" prefHeight="30.0" prefWidth="235.0"
+                    <IntegerTextField fx:id="homeTextFieldMinSquare" prefHeight="30.0" prefWidth="235.0"
                                promptText="Мин. площадь">
                         <font>
                             <Font name="Segoe UI" size="13.0"/>
                         </font>
-                    </TextField>
+                    </IntegerTextField>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
                     <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
-                    <TextField fx:id="homeTextFieldMaxSquare" prefHeight="30.0" prefWidth="235.0"
+                    <IntegerTextField fx:id="homeTextFieldMaxSquare" prefHeight="30.0" prefWidth="235.0"
                                promptText="Макс. площадь">
                         <font>
                             <Font name="Segoe UI" size="13.0"/>
                         </font>
-                    </TextField>
+                    </IntegerTextField>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
                     <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
-                    <TextField fx:id="homeTextFieldMinNumberOfRooms" prefHeight="30.0" prefWidth="235.0"
+                    <IntegerTextField fx:id="homeTextFieldMinNumberOfRooms" prefHeight="30.0" prefWidth="235.0"
                                promptText="Мин. кол-во комнат">
                         <font>
                             <Font name="Segoe UI" size="13.0"/>
                         </font>
-                    </TextField>
+                    </IntegerTextField>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
                     <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
-                    <TextField fx:id="homeTextFieldMaxNumberOfRooms" prefHeight="30.0" prefWidth="235.0"
+                    <IntegerTextField fx:id="homeTextFieldMaxNumberOfRooms" prefHeight="30.0" prefWidth="235.0"
                                promptText="Макс. кол-во комнат">
                         <font>
                             <Font name="Segoe UI" size="13.0"/>
                         </font>
-                    </TextField>
+                    </IntegerTextField>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
                     <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
-                    <TextField fx:id="homeTextFieldMinNumberOfFloors" prefHeight="30.0" prefWidth="235.0"
+                    <IntegerTextField fx:id="homeTextFieldMinNumberOfFloors" prefHeight="30.0" prefWidth="235.0"
                                promptText="Мин. этажность дома">
                         <font>
                             <Font name="Segoe UI" size="13.0"/>
                         </font>
-                    </TextField>
+                    </IntegerTextField>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
                     <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
-                    <TextField fx:id="homeTextFieldMaxNumberOfFloors" prefHeight="30.0" prefWidth="235.0"
+                    <IntegerTextField fx:id="homeTextFieldMaxNumberOfFloors" prefHeight="30.0" prefWidth="235.0"
                                promptText="Макс. этажность дома">
                         <font>
                             <Font name="Segoe UI" size="13.0"/>
                         </font>
-                    </TextField>
+                    </IntegerTextField>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="28.0" prefWidth="260.0" spacing="20.0">
                     <Button id="createBtn" fx:id="createHomeDemandButton" mnemonicParsing="false"
@@ -296,40 +297,40 @@
                 <HBox alignment="CENTER" layoutX="646.0" layoutY="275.0" prefHeight="25.0" prefWidth="188.0"
                       spacing="5.0" AnchorPane.rightAnchor="50.0">
                     <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
-                    <TextField fx:id="landTextFieldMinPrice" prefHeight="30.0" prefWidth="235.0" promptText="Мин. цена">
+                    <IntegerTextField fx:id="landTextFieldMinPrice" prefHeight="30.0" prefWidth="235.0" promptText="Мин. цена">
                         <font>
                             <Font name="Segoe UI" size="13.0"/>
                         </font>
-                    </TextField>
+                    </IntegerTextField>
                 </HBox>
                 <HBox alignment="CENTER" layoutX="646.0" layoutY="330.0" prefHeight="25.0" prefWidth="188.0"
                       spacing="5.0" AnchorPane.rightAnchor="50.0">
                     <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
-                    <TextField fx:id="landTextFieldMaxPrice" prefHeight="30.0" prefWidth="235.0"
+                    <IntegerTextField fx:id="landTextFieldMaxPrice" prefHeight="30.0" prefWidth="235.0"
                                promptText="Макс. цена">
                         <font>
                             <Font name="Segoe UI" size="13.0"/>
                         </font>
-                    </TextField>
+                    </IntegerTextField>
                 </HBox>
                 <HBox alignment="CENTER" layoutX="646.0" layoutY="385.0" prefHeight="25.0" prefWidth="188.0"
                       spacing="5.0" AnchorPane.rightAnchor="50.0">
                     <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
-                    <TextField fx:id="landTextFieldMinSquare" prefHeight="30.0" prefWidth="235.0"
+                    <IntegerTextField fx:id="landTextFieldMinSquare" prefHeight="30.0" prefWidth="235.0"
                                promptText="Мин. площадь">
                         <font>
                             <Font name="Segoe UI" size="13.0"/>
                         </font>
-                    </TextField>
+                    </IntegerTextField>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
                     <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
-                    <TextField fx:id="landTextFieldMaxSquare" prefHeight="30.0" prefWidth="235.0"
+                    <IntegerTextField fx:id="landTextFieldMaxSquare" prefHeight="30.0" prefWidth="235.0"
                                promptText="Макс. площадь">
                         <font>
                             <Font name="Segoe UI" size="13.0"/>
                         </font>
-                    </TextField>
+                    </IntegerTextField>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="28.0" prefWidth="260.0" spacing="20.0">
                     <Button id="createBtn" fx:id="createLandDemandButton" mnemonicParsing="false"
@@ -417,74 +418,74 @@
                 <HBox alignment="CENTER" layoutX="646.0" layoutY="275.0" prefHeight="25.0" prefWidth="188.0"
                       spacing="5.0" AnchorPane.rightAnchor="50.0">
                     <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
-                    <TextField fx:id="flatTextFieldMinPrice" prefHeight="30.0" prefWidth="235.0" promptText="Мин. цена">
+                    <IntegerTextField fx:id="flatTextFieldMinPrice" prefHeight="30.0" prefWidth="235.0" promptText="Мин. цена">
                         <font>
                             <Font name="Segoe UI" size="13.0"/>
                         </font>
-                    </TextField>
+                    </IntegerTextField>
                 </HBox>
                 <HBox alignment="CENTER" layoutX="646.0" layoutY="330.0" prefHeight="25.0" prefWidth="188.0"
                       spacing="5.0" AnchorPane.rightAnchor="50.0">
                     <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
-                    <TextField fx:id="flatTextFieldMaxPrice" prefHeight="30.0" prefWidth="235.0"
+                    <IntegerTextField fx:id="flatTextFieldMaxPrice" prefHeight="30.0" prefWidth="235.0"
                                promptText="Макс. цена">
                         <font>
                             <Font name="Segoe UI" size="13.0"/>
                         </font>
-                    </TextField>
+                    </IntegerTextField>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
                     <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
-                    <TextField fx:id="flatTextFieldMinSquare" prefHeight="30.0" prefWidth="235.0"
+                    <IntegerTextField fx:id="flatTextFieldMinSquare" prefHeight="30.0" prefWidth="235.0"
                                promptText="Мин. площадь">
                         <font>
                             <Font name="Segoe UI" size="13.0"/>
                         </font>
-                    </TextField>
+                    </IntegerTextField>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
                     <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
-                    <TextField fx:id="flatTextFieldMaxSquare" prefHeight="30.0" prefWidth="235.0"
+                    <IntegerTextField fx:id="flatTextFieldMaxSquare" prefHeight="30.0" prefWidth="235.0"
                                promptText="Макс. площадь">
                         <font>
                             <Font name="Segoe UI" size="13.0"/>
                         </font>
-                    </TextField>
+                    </IntegerTextField>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
                     <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
-                    <TextField fx:id="flatTextFieldMinNumberOfRooms" prefHeight="30.0" prefWidth="235.0"
+                    <IntegerTextField fx:id="flatTextFieldMinNumberOfRooms" prefHeight="30.0" prefWidth="235.0"
                                promptText="Мин. кол-во комнат">
                         <font>
                             <Font name="Segoe UI" size="13.0"/>
                         </font>
-                    </TextField>
+                    </IntegerTextField>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
                     <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
-                    <TextField fx:id="flatTextFieldMaxNumberOfRooms" prefHeight="30.0" prefWidth="235.0"
+                    <IntegerTextField fx:id="flatTextFieldMaxNumberOfRooms" prefHeight="30.0" prefWidth="235.0"
                                promptText="Макс. кол-во комнат">
                         <font>
                             <Font name="Segoe UI" size="13.0"/>
                         </font>
-                    </TextField>
+                    </IntegerTextField>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
                     <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
-                    <TextField fx:id="flatTextFieldMinFloor" prefHeight="30.0" prefWidth="235.0" promptText="Мин. этаж">
+                    <IntegerTextField fx:id="flatTextFieldMinFloor" prefHeight="30.0" prefWidth="235.0" promptText="Мин. этаж">
                         <font>
                             <Font name="Segoe UI" size="13.0"/>
                         </font>
-                    </TextField>
+                    </IntegerTextField>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="25.0" prefWidth="188.0" spacing="5.0">
                     <FontAwesomeIconView fill="#2d75e8" glyphName="EDIT" size="1.3em"/>
-                    <TextField fx:id="flatTextFieldMaxFloor" prefHeight="30.0" prefWidth="235.0"
+                    <IntegerTextField fx:id="flatTextFieldMaxFloor" prefHeight="30.0" prefWidth="235.0"
                                promptText="Макс. этаж">
                         <font>
                             <Font name="Segoe UI" size="13.0"/>
                         </font>
-                    </TextField>
+                    </IntegerTextField>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="28.0" prefWidth="260.0" spacing="20.0">
                     <Button id="createBtn" fx:id="createFlatDemandButton" mnemonicParsing="false"
