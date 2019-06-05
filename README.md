@@ -6,6 +6,9 @@
 - [Общие требования](#Общие-требования)
 - [Основные понятия](#Основные-понятия)
 - [Основные бизнес процессы компании](#Основные-бизнес-процессы-компании)
+- [Результаты работы программы](#Результаты-работы-программы)
+  - Клиенты(#Клиенты)
+
 
 ## Задача
 Разработать информационную систему для агенства недвижимости, которое помогает своим клиентам купить/продать объекты недвижимости (без аренды).
@@ -41,3 +44,28 @@
 2. "Потребности" клиента назначается ответственный риэлтор. Он осуществляет поиск подходящих предложений
 3. Клиент выбирает предложение и заключается сделка
 4. Система рассчитывает размер комиссии, происходит оплата комиссии и перечисление средств риэлтору клиента-продавца и клиента-покупателя
+
+## Результаты работы программы
+### Главный экран приложения
+![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/mainpage.png)
+### Клиенты <br>
+![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/clients.png)
+**Риэлторы**<br>
+![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/realtors.png)
+**Объекты недвижимости. Дом**<br>
+![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/realestate_home.png)
+**Объекты недвижимости. Квартира**<br>
+![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/realestate_flat.png)
+**Объекты недвижимости. Земля**<br>
+![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/realestate_land.png)
+**Предложения**<br>
+![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/offers.png)
+**Потребности в доме**<br>
+![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/demand_home.png)
+**Потребности в квартире**<br>
+![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/demand_flat.png)
+**Потребности в земле**<br>
+![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/demand_land.png)
+**Сделки**<br>
+![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/deals.png)
+![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/deals_selected.png)
