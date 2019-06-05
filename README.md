@@ -58,39 +58,39 @@
 
 ## Результаты работы программы
 
-**Главный экран приложения**<br>
+#### Главный экран приложения <br>
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/mainpage.png)
 
-**Клиенты**<br>
+#### Клиенты**<br>
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/clients.png)
 
-**Риэлторы**<br>
+#### Риэлторы**<br>
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/realtors.png)
 
-**Объекты недвижимости. Дом**<br>
+#### Объекты недвижимости. Дом <br>
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/realestate_home.png)
 
-**Объекты недвижимости. Квартира**<br>
+#### Объекты недвижимости. Квартира <br>
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/realestate_flat.png)
 
-**Объекты недвижимости. Земля**<br>
+#### Объекты недвижимости. Земля <br>
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/realestate_land.png)
 
-**Предложения**<br>
+#### Предложения <br>
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/offers.png)
 
-**Потребности в доме**<br>
+#### Потребности в доме <br>
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/demand_home.png)
 
-**Потребности в квартире**<br>
+#### Потребности в квартире <br>
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/demand_flat.png)
 
-**Потребности в земле**<br>
+#### Потребности в земле <br>
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/demand_land.png)
 
-**Сделки**<br>
+#### Сделки <br>
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/deals.png)
 
-**Выбрана сделка**
+#### Выбрана сделка
 ![screenshot](https://github.com/Trushenkov/RealEstateAgencyInformationSystem/blob/master/src/screenshots/deals_selected.png)
 
