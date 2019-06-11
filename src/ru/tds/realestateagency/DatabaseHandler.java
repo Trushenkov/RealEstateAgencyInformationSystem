@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.prefs.Preferences;
 
 /**
  * Класс, содержащий методы для работы с базой данных
@@ -23,9 +24,14 @@ public class DatabaseHandler {
      * @return соединение с базой данных
      */
     public Connection createDbConnection() {
+
+        Preferences preferences = Preferences.userRoot();
+        String login = preferences.get("user_login", "");
+        String password = preferences.get("user_password", "");
+
         String connectionUrl = "jdbc:mysql://" + Const.DB_HOME_HOST + ":" + Const.DB_HOME_PORT + "/" + Const.DB_HOME_NAME + "?serverTimezone=UTC";
         try {
-            connection = DriverManager.getConnection(connectionUrl, Const.DB_HOME_USER, Const.DB_HOME_PASSWORD);
+            connection = DriverManager.getConnection(connectionUrl, login, password);
         } catch (Exception e) {
             //оповещение об ошибке при создании соединения с БД
             Alert alert = new Alert(AlertType.ERROR);
