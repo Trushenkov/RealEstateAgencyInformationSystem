@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0"
+            prefWidth="1200.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/8.0.171"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ru.tds.realestateagency.controllers.AuthorizationController">
+    <Pane prefHeight="140.0" prefWidth="943.0" style="-fx-background-color: #2D75E8;" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Label layoutX="128.0" layoutY="28.0" text="Агентство недвижимости" textFill="WHITE">
+            <font>
+                <Font size="48.0"/>
+            </font>
+        </Label>
+        <Label layoutX="128.0" layoutY="89.0" text="Авторизация" textFill="WHITE">
+            <font>
+                <Font size="13.0"/>
+            </font>
+        </Label>
+        <FontAwesomeIconView fill="WHITE" glyphName="HOME" layoutX="44.0" layoutY="95.0" size="80"/>
+    </Pane>
+    <AnchorPane layoutX="-2.0" layoutY="138.0" prefHeight="460.0" prefWidth="950.0" AnchorPane.bottomAnchor="0.0"
+                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="138.0">
+        <AnchorPane layoutX="375.0" layoutY="61.0" prefHeight="220.0" prefWidth="450.0"
+                    AnchorPane.bottomAnchor="281.0" AnchorPane.leftAnchor="375.0" AnchorPane.rightAnchor="375.0"
+                    AnchorPane.topAnchor="61.0">
+            <VBox alignment="CENTER" prefHeight="220.0" prefWidth="450.0" spacing="20.0"
+                  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                  AnchorPane.topAnchor="0.0">
+                <HBox alignment="CENTER" prefHeight="41.0" prefWidth="450.0" spacing="23.0">
+                    <VBox.margin>
+                        <Insets/>
+                    </VBox.margin>
+                    <Label text="Логин:"/>
+                    <TextField fx:id="loginTextField" prefHeight="31.0" prefWidth="380.0"/>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="41.0" prefWidth="450.0" spacing="14.0">
+                    <VBox.margin>
+                        <Insets/>
+                    </VBox.margin>
+                    <Label text="Пароль:"/>
+                    <PasswordField fx:id="passwordTextField" prefHeight="31.0" prefWidth="380.0"/>
+                </HBox>
+                <Button fx:id="authButton" accessibleRole="CHECK_BOX" alignment="CENTER"
+                        contentDisplay="CENTER" mnemonicParsing="false" onAction="#authorizationUser"
+                        prefHeight="30.0" prefWidth="150.0" text="Войти">
+                    <VBox.margin>
+                        <Insets top="20.0"/>
+                    </VBox.margin>
+                </Button>
+            </VBox>
+        </AnchorPane>
+    </AnchorPane>
+</AnchorPane>
